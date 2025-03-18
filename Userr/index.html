@@ -167,98 +167,14 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM 
                 <ul>
-                <li onmouseover="showFruits('Trái cây ngon')" onmouseout="hideFruits()">Trái cây ngon</li>
-                <li onmouseover="showFruits('Trái cây Việt')" onmouseout="hideFruits()">Trái cây Việt</li>
-                <li onmouseover="showFruits('Trái cây nhập khẩu')" onmouseout="hideFruits()">Trái cây nhập khẩu</li>
+                    <li><a href="./user/declious-fruits.html">Trái cây ngon </a></li>
+                    <li><a href="./user/Vietnamese-fruits.html">Trái cây Việt  </a></li>
+                    <li><a href="./user/cart-user.html">Trái cây Nhập Khẩu </a></li>
                 </ul>
             </div>  
-
-            <div class="fruit-list" id="fruitList" style="display: none;">
-                <h4 id="categoryTitle"></h4>
-                <ul id="fruitItems">
-                    <!-- Trái cây sẽ được thêm bằng JavaScript -->
-                </ul>
-            </div>
             
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-    const categoryButtons = document.querySelectorAll("..fruit-container"); 
-    const fruitList = document.getElementById("fruitList");
-
-    categoryButtons.forEach(button => {
-        button.addEventListener("mouseenter", function () {
-            showFruits(this.dataset.category);
-        });
-    });
-
-    fruitList.addEventListener("mouseenter", function () {
-        fruitList.classList.add("show");
-    });
-
-    fruitList.addEventListener("mouseleave", function () {
-        setTimeout(() => {
-            if (!fruitList.matches(":hover")) {
-                fruitList.classList.remove("show");
-            }
-        }, 200); // Giữ lại một chút để có thể chọn
-    });
-});
-
-function showFruits(category) {
-    let fruitList = document.getElementById("fruitList");
-    let categoryTitle = document.getElementById("categoryTitle");
-    let fruitItems = document.getElementById("fruitItems");
-
-    categoryTitle.textContent = category;
-    fruitItems.innerHTML = "";
-
-    const fruits = {
-        "Trái cây ngon": [
-            { name: "Dâu tây", link: "product-detail.html?name=dautay" },
-            { name: "Mận hậu", link: "product-detail.html?name=manhau" },
-            { name: "Xoài cát", link: "product-detail.html?name=xoaicat" },
-            { name: "Dưa hấu", link: "product-detail.html?name=duahau" },
-            { name: "Chôm chôm", link: "product-detail.html?name=chomchom" },
-            { name: "Ổi xá lị", link: "product-detail.html?name=oilaxi" }
-        ],
-        "Trái cây Việt": [
-            { name: "Mít Thái", link: "product-detail.html?name=mitthai" },
-            { name: "Sầu riêng Ri6", link: "product-detail.html?name=saurieng" },
-            { name: "Bưởi da xanh", link: "product-detail.html?name=buoidx" },
-            { name: "Bòn Bon", link: "product-detail.html?name=bonbon" },
-            { name: "Quýt đường", link: "product-detail.html?name=quytduong" },
-            { name: "Mận Hà Nội", link: "product-detail.html?name=manhn" }
-        ],
-        "Trái cây nhập khẩu": [
-            { name: "Nho Mỹ", link: "product-detail.html?name=nhomy" },
-            { name: "Táo Nhật", link: "product-detail.html?name=taonhat" },
-            { name: "Lê Hàn Quốc", link: "product-detail.html?name=lehan" },
-            { name: "Cherry Úc", link: "product-detail.html?name=cherryuc" },
-            { name: "Kiwi", link: "product-detail.html?name=kiwi" },
-            { name: "Lựu Ai Cập", link: "product-detail.html?name=luuaicap" }
-        ]
-    };
-
-    if (fruits[category]) {
-        fruits[category].forEach(fruit => {
-            let li = document.createElement("li");
-            let a = document.createElement("a");
-            a.textContent = fruit.name;
-            a.href = fruit.link;
-            a.target = "_blank"; // Mở trong tab mới nếu muốn
-            li.appendChild(a);
-            fruitItems.appendChild(li);
-        });
-    }
-
-    fruitList.classList.add("show");
-}
-
-            </script>
-            
-                    
             <div class="menu">  
-                <a href="./user/index.html" class="active">Trang chủ</a>  
+                <a href="index.html" class="active">Trang chủ</a>  
                 <a href="./user/introducelogin.html">Giới thiệu</a>  
                 <a href="./user/newslogin.html">Tin tức</a>  
                 <a href="./user/contactlogin.html">Liên hệ</a> 
