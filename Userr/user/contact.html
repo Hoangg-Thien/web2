@@ -31,6 +31,52 @@
             border-radius: 5px;  
             cursor: pointer;  
         }  
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .contact-container {
+            width: 90%;
+    max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+    margin: 30px auto; /* Giảm khoảng cách trên và dưới */
+    background: #fff;
+    padding: 30px; /* Tăng padding giúp nội dung thoáng hơn */
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+        }
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        .contact-info p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .contact-info strong {
+            color: #4CAF50;
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .contact-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .contact-form button:hover {
+            background-color: #333;
+        }
     </style>  
 </head>  
 <body>  
@@ -90,21 +136,29 @@
             </div> 
         </div>  
     </div> 
-    <div class="update-system-container">
-        <div class="update-message">
-            <i class="fas fa-tools"></i>
-            <h2>Hệ thống đang cập nhật</h2>
-            <p>Vui lòng quay lại sau!</p>
-            <a href="../user/usernologin.html" class="back-button">Quay về trang chủ</a>
-        </div>
+    
+    
+    <div class="contact-container">
+        
+            <h2>Liên Hệ</h2>
+            
+            <div class="contact-info">
+                <p><strong>Email:</strong> contactus@gmmail.com</p>
+                <p><strong>Hotline:</strong> 12345678</p>
+                <p><strong>Địa chỉ:</strong> 273 Đ. An Dương Vương, Phường 2, Quận 5, Hồ Chí Minh, Việt Nam</p>
+            </div>
+    
+            <h3>Gửi tin nhắn cho chúng tôi</h3>
+            <form class="contact-form">
+                <input type="text" name="name" placeholder="Họ và tên" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="phone" placeholder="Số điện thoại">
+                <textarea name="message" rows="5" placeholder="Nội dung tin nhắn" required></textarea>
+                <button type="submit">Gửi</button>
+            </form>
+        
     </div>
-    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
-        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
-        <div style="padding:10px;">
-            <div>Hotline: 0123456789</div>
-            <div>Email: AboutUs@gmail.com</div>
-        </div>
-    </div>
+    
     <div class="grid wide" style="justify-content: space-evenly;">
         <div class="row">
             <div class="col l-3 m-6 c-12">
