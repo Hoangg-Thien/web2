@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./pages/stylescss/adlog.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish&display=swap" rel="stylesheet">
+    <title>Login Page</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Đăng Nhập</h1>
+        <div class="login-form">
+            <form action="" method="post">
+                <div class="form-group">
+                    <label for="un" class="form-control-label">TÊN ĐĂNG NHẬP</label>
+                    <input type="text" class="form-control" name="un" onkeyup="daoNutDN()" id="un" autofocus autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="mk" class="form-control-label">MẬT KHẨU</label>
+                    <input type="password" class="form-control" name="mk" onkeyup="daoNutDN()" id="mk">
+                    <i class="fa fa-eye text-secondary" onclick="daoTT()"></i>
+                </div>
+                <div class="login-button text-center">
+                    <button type="submit" class="btn-btn-outline-primary" id="btndangnhap" name="btndangnhap" onclick="return validate()">Đăng nhập</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../admin/js/loginad.js"></script>
+
+</body>
+</html>
