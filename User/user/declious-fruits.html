@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../styles/index.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trái cây Việt </title>  
+    <title>Trái cây ngon </title>  
     <style>  
         .search-container {
             display: flex;
@@ -128,7 +128,83 @@
         .dropdown-button span{
             color: #333;
         }
-       
+        .modal {
+            display: none; /* Ban đầu ẩn */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Nội dung popup */
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Hiệu ứng mở popup */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Nút đóng popup */
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .close:hover {
+            color: red;
+        }
+
+        /* Tùy chỉnh select */
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Nút lọc */
+        button {
+            background: green;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
     </style>  
 </head>  
 <body>  
@@ -182,16 +258,39 @@
                 </a>  
             </div>  
             <div class="search-container">   
+                
                 <div >
                     <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
                     <button onclick="searchProducts()">Tìm kiếm</button>
-                </div>
+                    <button id="toggleSearch">Tìm kiếm nâng cao</button>
+                </div>  
                 <div id="searchResults"></div>
                 <div id="priorityFruits" class="hidden">
                     <ul>
                     </ul>
                 </div>   
+                <div id="searchModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Tìm kiếm nâng cao</h2>
+                        
+                        <label>Khoảng giá:</label>
+                        <select id="priceRange">
+                            <option>Tất cả</option>
+                            <option>30k-70k</option>
+                            <option>Trên 70k</option>
+                        </select>
+                
+                        <label>Danh mục:</label>
+                        <select id="sortedList">
+                            <option>A->Z</option>
+                            <option>Z->A</option>
+                        </select>
+                
+                        <button onclick="smartSearchProducts()">Lọc</button>
+                    </div>
             </div>  
+                </div>
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
@@ -209,101 +308,106 @@
 
     <div class="grid wide">
         <div class="list-product">  
-            <h1>TRÁI CÂY VIỆT</h1>  
+            <h1>TRÁI CÂY NGON</h1>  
         </div>  
-        <div class="image-container VietNam row" id="imageContainer">
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg" src="../img/dau-tay.jpg" alt="dau-tay" width="300" >  
-                    <div class="caption ">Dâu tây Đà Lạt <br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/strawberry.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div>  
-                </div>
-            </div>
-            <div class="col l-4 m-6 c-6"> 
-                <div class="fruit-background">  
-                    <img id="traicayvietImg1" src="../img/trai-man-do.jpg" alt="trai-man-do" width="300" >  
-                    <div class="caption ">Mận đỏ An Phước <br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/water-apple.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                       
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div> 
-                </div>
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg2" src="../img/man-Ha-Noi.jpg" alt="man-Ha-Noi" width="300">  
-                    <div class="caption ">Mận Hà Nội<br> 45.000đ/kg</div>
-                    <div class="icons">  
-                        <a href="../itemInfo/plum.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div>  
-                </div>
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg3" src="../img/trai-bon-bon.jpg" alt="trai-bon-bon" width="300" >  
-                    <div class="caption ">Bòn Bon <br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/langsat.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i>
-                        </button>
-                    </div>  
+        
+    <div class="image-container Delicous row" id="imageContainer">  
+        <div class="col l-4 m-6 c-6">
+            <div class="fruit-background">  
+                <img id="traicayngonImg" src="../img/trai-mang-cau.jpg" alt="trai-mang-cau" width="300" >  
+                <div class="caption" >Mãng cầu xiêm <br>45.000đ/kg</div> 
+                <div class="icons">  
+                    <a href="../itemInfo/custard-apple.html" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                 
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-cart-plus"></i>
+                    </button>
+                </div> 
+            </div> 
+        </div>
+        <div class="col l-4 m-6 c-6">
+            <div class="fruit-background">
+                <img id="traicayngonImg1" src="../img/trai-thanh-long-do.jpg" alt="trai-thanh-long-do" width="300" >
+                <div class="caption">Thanh long ruột đỏ <br> 45.000đ/kg </div>
+                <div class="icons">  
+                    <a href="../itemInfo/dragon-fruit.html" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-cart-plus"></i> 
+                    </button>
                 </div> 
             </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg4" src="../img/trai-quyt.jpg" alt="trai-quyt" width="300">  
-                    <div class="caption ">Quýt đường<br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/tangerine.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                       
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div> 
-                </div>   
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg5" src="../img/hinh-trai-buoi.jpg" alt="hinh-trai-buoi" width="300" >  
-                    <div class="caption ">Bưởi da xanh<br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/pomelo.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div> 
+        </div>
+        <div class="col l-4 m-6 c-6">
+            <div class="fruit-background">
+                <img id="traicayngonImg2" src="../img/trai-xoai.jpg" alt="trai-xoai" width="300" >
+                <div class="caption">Xoài cát <br> 45.000đ/kg</div>
+                <div class="icons">  
+                    <a href="../itemInfo/mango.html" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                   
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-cart-plus"></i> 
+                    </button>
                 </div> 
             </div>
-        </div >
-    </div> 
+        </div>  
+        <div class="col l-4 m-6 c-6">
+            <div class="fruit-background">
+                <img id="traicayngonImg3" src="../img/trai-dua-hau.webp" alt="trai-dua-hau" width="300" >
+                <div class="caption">Dưa hấu Long An <br>  45.000đ/kg </div>
+                <div class="icons">  
+                    <a href="../itemInfo/watermelon.html" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-cart-plus"></i> 
+                    </button>
+                </div> 
+            </div>
+
+        </div>
+        <div class="col l-4 m-6 c-6">
+            <div class="fruit-background">
+                <img id="traicayngonImg4" src="../img/trai-chom-chom.jpg" alt="trai-chom-chom" width="300" >
+                <div class="caption">Chôm chôm <br> 45.000đ/kg </div>
+                <div class="icons">  
+                    <a href="../itemInfo/rambutant.html" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-cart-plus"></i> 
+                    </button>
+                </div> 
+            </div>
+
+        </div>
+        <div class="col l-4 m-6 c-6">
+            <div class="fruit-background">
+                <img id="traicayngonImg5" src="../img/trai-oi.jpg" alt="trai-oi" width="300" >
+                <div class="caption">Ổi xá lị <br>  45.000đ/kg </div>
+                <div class="icons">  
+                    <a href="../itemInfo/guava.html" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-cart-plus"></i> 
+                    </button>
+                </div> 
+            </div>
+
+        </div>
+    </div>
+    </div>
+
     <div class="policy-container" >
         <div >
             <img src="../img/policy1.png" alt="policy1">
@@ -348,9 +452,9 @@
                         
                         <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -367,9 +471,9 @@
                         
                         <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -387,9 +491,10 @@
                         
                         <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        
                         
                     </ul>
                 </div>
@@ -428,87 +533,103 @@
 
     <script>
 
-        const fruits = [
-        { name: "Dâu tây Đà Lạt", link: "../itemInfo/strawberry.html", priority: 1 },
-        { name: "Mận đỏ An Phước", link: "../itemInfo/water-apple.html", priority: 2 },
-        { name: "Mận Hà Nội", link: "../itemInfo/plum.html", priority: 3 },
-        { name: "Bòn Bon", link: "../itemInfo/langsat.html", priority: 4 },
-        { name: "Quýt đường", link: "./itemInfo/tangerine.html", priority: 5 },
-        { name: "Bưởi da xanh", link: "./itemInfo/pomelo.html", priority: 6 }
-   ];
+         const fruits = [
+    { name: "Mãng cầu xiêm", link: "../itemInfo/custard-apple.html", priority: 1  },
+    { name: "Thanh long ruột đỏ", link: "../itemInfo/dragon-fruit.html", priority: 2  },
+    { name: "Xoài cát", link: "../itemInfo/mango.html", priority: 3 },
+    { name: "Dưa hấu Long An", link: "../itemInfo/watermelon.html", priority: 4 },
+    { name: "Chôm chôm", link: "../itemInfo/rambutant.html", priority: 55 },
+    { name: "Ổi xá lị", link: "./itemInfo/guava.html", priority: 6 }
+    ];
 
-   let debounceTimeout;
-   function searchProducts() 
-   {
-   clearTimeout(debounceTimeout);
-   debounceTimeout = setTimeout(() => {
-   const searchBox = document.getElementById("searchBox");
-   const searchQuery = searchBox.value.toLowerCase();
-   const searchResults = document.getElementById("searchResults");
-   const priorityFruits = document.getElementById("priorityFruits");
-   priorityFruits.style.display = "none";
-   searchResults.innerHTML = "";
-   const filteredProducts = fruits.filter(product =>
-       product.name.toLowerCase().includes(searchQuery)
-   );
-   filteredProducts.sort((a, b) => b.priority - a.priority);
+    let debounceTimeout;
+    function searchProducts() 
+    {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+    const searchBox = document.getElementById("searchBox");
+    const searchQuery = searchBox.value.toLowerCase();
+    const searchResults = document.getElementById("searchResults");
+    const priorityFruits = document.getElementById("priorityFruits");
+    priorityFruits.style.display = "none";
+    searchResults.innerHTML = "";
+    const filteredProducts = fruits.filter(product =>
+        product.name.toLowerCase().includes(searchQuery)
+    );
+    filteredProducts.sort((a, b) => b.priority - a.priority);
 
-   if (filteredProducts.length > 0) {
-       filteredProducts.forEach(product => {
-           const productLink = document.createElement("a");
-           productLink.href = product.link;
-           productLink.innerText = product.name;
-           productLink.classList.add("search-result"); 
-           searchResults.appendChild(productLink);
-       });
+    if (filteredProducts.length > 0) {
+        filteredProducts.forEach(product => {
+            const productLink = document.createElement("a");
+            productLink.href = product.link;
+            productLink.innerText = product.name;
+            productLink.classList.add("search-result"); 
+            searchResults.appendChild(productLink);
+        });
 
-       searchResults.style.display = "block";
-   } else {
-       searchResults.innerHTML = "<span class='empty'>Không tìm thấy sản phẩm nào</span>";
-       searchResults.style.display = "block";
-   }
+        searchResults.style.display = "block";
+    } else {
+        searchResults.innerHTML = "<span class='empty'>Không tìm thấy sản phẩm nào</span>";
+        searchResults.style.display = "block";
+    }
 
-
-   setTimeout(() => {
-       searchBox.value = ""; 
-       searchResults.style.display = "none"; 
-       searchResults.innerHTML = "";
-       priorityFruits.style.display = "block"; 
-   }, 5000); 
+ 
+    setTimeout(() => {
+        searchBox.value = ""; 
+        searchResults.style.display = "none"; 
+        searchResults.innerHTML = "";
+        priorityFruits.style.display = "block"; 
+    }, 5000); 
 }, 500); 
 }
 
 
 document.querySelectorAll('.add-to-cart-btn').forEach(button => {
 button.addEventListener('click', function() {
-   const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
-   if (isConfirmed) 
-   {
-       cartCount++;
-       document.getElementById('cart-count').textContent = cartCount;
-       localStorage.setItem('cartCount', cartCount);
-   }
+    const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
+    if (isConfirmed) 
+    {
+        cartCount++;
+        document.getElementById('cart-count').textContent = cartCount;
+        localStorage.setItem('cartCount', cartCount);
+    }
 });
 });
 
 
-        document.querySelector('.dropdown-button').addEventListener('click', function() {
-     const dropdown = this.parentElement;
-     dropdown.classList.toggle('active');
-   });
+         document.querySelector('.dropdown-button').addEventListener('click', function() {
+      const dropdown = this.parentElement;
+      dropdown.classList.toggle('active');
+    });
 
-   window.addEventListener('click', function(e) {
-     const dropdown = document.querySelector('.dropdown');
-     if (!dropdown.contains(e.target)) {
-       dropdown.classList.remove('active');
-     }
-   });
-   </script>
+    window.addEventListener('click', function(e) {
+      const dropdown = document.querySelector('.dropdown');
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    document.getElementById("toggleSearch").addEventListener("click", function () {
+        document.getElementById("searchModal").style.display = "flex";
+    });
+
+    document.querySelector(".close").addEventListener("click", function () {
+        document.getElementById("searchModal").style.display = "none";
+    });
+
+    // Đóng khi nhấn ra ngoài modal
+    window.onclick = function (event) {
+        let modal = document.getElementById("searchModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+    </script>
 
 <footer>  
-   <div>
-       Copyright by us<b>&#8482</b>
-   </div>
+    <div>
+        Copyright by us<b>&#8482</b>
+    </div>
 </footer>  
-   </body>
+    </body>
 </html>
