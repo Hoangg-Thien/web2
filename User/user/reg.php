@@ -13,13 +13,11 @@ if(isset($_POST['submit'])) {
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
 
-    // Kiểm tra dữ liệu nhập vào
     if (empty($fullname) || empty($username) || empty($email) || empty($password) || empty($phone) || empty($address)) {
         echo "<script>alert('Vui lòng điền đầy đủ thông tin.'); window.location.href='register.html';</script>";
         exit();
     }
 
-    // Kiểm tra xem username hoặc email đã tồn tại chưa
     $stmt = $conn->prepare("SELECT uid FROM dangky WHERE username = ? OR email = ?");
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . $conn->error);
@@ -34,10 +32,8 @@ if(isset($_POST['submit'])) {
     }
     $stmt->close();
 
-    // Mã hóa mật khẩu
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Chèn dữ liệu vào database
     $stmt = $conn->prepare("INSERT INTO dangky (fullname, username, email, password, phone, address) VALUES (?, ?, ?, ?, ?, ?)");
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . $conn->error);
