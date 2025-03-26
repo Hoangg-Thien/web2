@@ -11,41 +11,36 @@
 <body>
     <div class="form-container">
         <h2>Đăng Ký Tài Khoản</h2>
-        <form id="registration-form">
+        <form id="registration-form" action="reg.php" method="POST">
           <div class="input-group">
-            <input type="text" id="fullname" placeholder="Họ và Tên" required>
+            <input type="text" name="fullname" placeholder="Họ và Tên" required>
             <i class="fa-regular fa-user icon"></i>
           </div>
           <div class="input-group">
-            <input type="text" id="username" placeholder="Tên Đăng Nhập" required>
+            <input type="text" name="username" placeholder="Tên Đăng Nhập" required>
             <i class="fa-regular fa-user icon"></i>
           </div>
           <div class="input-group">
-            <input type="email" id="email" placeholder="Email" required>
+            <input type="email" name="email" placeholder="Email" required>
             <i class="fa-regular fa-envelope icon"></i>
           </div>
           <div class="input-group">
-            <input type="password" id="password" placeholder="Mật Khẩu" required>
+            <input type="password" name="password" placeholder="Mật Khẩu" required>
             <i class="fa-solid fa-lock icon"></i>
           </div>
+         
           <div class="input-group">
-            <input type="password" id="confirmPassword" placeholder="Xác Nhận Mật Khẩu" required>
-            <i class="fa-solid fa-lock icon"></i>
-          </div>
-          <div class="input-group">
-            <input type="tel" id="phone" placeholder="Số Điện Thoại" required>
+            <input type="tel" name="phone" placeholder="Số Điện Thoại" required>
             <i class="fa-solid fa-phone icon"></i>
           </div>
           <div class="input-group">
-            <input type="text" id="address" placeholder="Địa Chỉ" required>
+            <input type="text" name="address" placeholder="Địa Chỉ" required>
             <i class="fa-solid fa-location-dot icon"></i>
           </div>
-          <button type="submit">Đăng Ký</button>
+          <button type="submit" name="submit">Đăng Ký</button>
           <p>Bạn đã có tài khoản? <a target="_blank" href="../user/login-user.html">Đăng nhập ngay</a></p>
         </form>
         <div id="notification" class="hidden"></div>
     </div>
-
-    <script src="../js/scriptregis.js"></script>
 </body>
 </html>
