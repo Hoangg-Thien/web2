@@ -106,17 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
             rows.hide();
             rows.each(function() {
                 const address = $(this).find('td:nth-child(3)').text();
-                
-                if (location === 'TPHCM') {
-                    // Hiển thị tất cả đơn hàng ở TPHCM
-                    if (address.includes('TPHCM')) {
-                        $(this).show();
-                    }
-                } else {
-                    // Lọc theo quận cụ thể
-                    if (address.includes(location)) {
-                        $(this).show();
-                    }
+                // Lọc theo tỉnh/thành phố được chọn
+                if (address.includes(location)) {
+                    $(this).show();
                 }
             });
         }
@@ -148,19 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (location !== 'all') {
             $('tbody tr').each(function() {
                 const address = $(this).find('td:nth-child(3)').text();
-                
-                if (location === 'TPHCM') {
-                    if (address.includes('TPHCM')) {
-                        $(this).data('locationFilter', true);
-                    } else {
-                        $(this).data('locationFilter', false);
-                    }
+                if (address.includes(location)) {
+                    $(this).data('locationFilter', true);
                 } else {
-                    if (address.includes(location)) {
-                        $(this).data('locationFilter', true);
-                    } else {
-                        $(this).data('locationFilter', false);
-                    }
+                    $(this).data('locationFilter', false);
                 }
             });
         }
