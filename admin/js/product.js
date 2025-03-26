@@ -1,14 +1,16 @@
 function previewImage(input) {
-    const preview = document.getElementById('image-preview');
-    preview.innerHTML = '';
+    var preview = document.getElementById('image-preview');
     
     if (input.files && input.files[0]) {
-        const reader = new FileReader();
+        var reader = new FileReader();
         
         reader.onload = function(e) {
-            const img = document.createElement('img');
+            preview.innerHTML = '';
+            var img = document.createElement('img');
             img.src = e.target.result;
-            img.className = 'preview-img';
+            img.style.width = '100%';
+            img.style.height = 'auto';
+            img.style.objectFit = 'contain';
             preview.appendChild(img);
         }
         

@@ -98,7 +98,7 @@
                             <option value="status2">Hết hàng</option>
                         </select>
                     </div>
-                <form action="" method="POST" enctype="multipart/form-data">
+                <form action="../pages/test.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="product-image">Ảnh sản phẩm</label>
                         <div class="image-upload-container">
@@ -128,3 +128,30 @@
     
 </body>
 </html>
+
+<?php
+
+    require_once 'loadanh.php';
+
+    $dbhost = "localhost";
+    $dbuser = "";
+    $dbpass = "";
+    $dbname = "website";
+
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+
+    if($conn -> connect_error){
+        echo ("Ket noi that bai" . $conn->connect_error);
+    }
+
+    if($_SERVER["REQUEST_METHOD" == "POST"]){
+        $product_id = $_POST["product_id"];
+        $product_name = $_POST["product_name"];
+        $product_price = $_POST["product_price"];
+        $product_status = $_POST["product_status"];
+        $product_type = $_POST["product_type"];
+        $product_image = $_POST["product_image"];
+    
+    $stmt->close();
+    }
+?>
