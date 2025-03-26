@@ -30,6 +30,48 @@
             color: white;  
             border-radius: 5px;  
             cursor: pointer;  
+        }
+        .contact-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        .contact-info p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .contact-info strong {
+            color: #4CAF50;
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .contact-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .contact-form button:hover {
+            background-color: #333;
         }  
         .dropdown {
             position: relative;
@@ -73,6 +115,10 @@
         }
         button:hover {
             background-color: #45a049 !important;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
         }
     </style>  
 </head>  
@@ -140,20 +186,21 @@
               </div>
         </div>  
     </div> 
-    <div class="update-system-container">
-        <div class="update-message">
-            <i class="fas fa-tools"></i>
-            <h2>Hệ thống đang cập nhật</h2>
-            <p>Vui lòng quay lại sau!</p>
-            <a href="../index.html" class="back-button">Quay về trang chủ</a>
+    <div class="contact-container">
+        <h2>Liên Hệ</h2>
+        <div class="contact-info">
+            <p><strong>Email:</strong> AboutUs@gmmail.com</p>
+            <p><strong>Hotline:</strong> 1234567890</p>
+            <p><strong>Địa chỉ:</strong> 273 Đ. An Dương Vương, Phường 2, Quận 5, Hồ Chí Minh, Việt Nam</p>
         </div>
-    </div>
-    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
-        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
-        <div style="padding:10px;">
-            <div>Hotline: 0123456789</div>
-            <div>Email: AboutUs@gmail.com</div>
-        </div>
+        <h3>Gửi tin nhắn cho chúng tôi</h3>
+        <form class="contact-form">
+            <input type="text" name="name" placeholder="Họ và tên" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="phone" placeholder="Số điện thoại">
+            <textarea name="message" rows="5" placeholder="Nội dung tin nhắn" required></textarea>
+            <button type="submit">Gửi</button>
+        </form>
     </div>
     <div class="grid wide" style="justify-content: space-evenly;">
         <div class="row">
@@ -164,15 +211,16 @@
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="../user/introduce.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="../user/declious-fruits.html"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="../user/news.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="../user/contact.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        
                         
                     </ul>
                 </div>
@@ -185,15 +233,16 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="../user/introduce.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="../user/declious-fruits.html"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="../user/news.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="../user/contact.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        
                         
                     </ul>
                 </div>
