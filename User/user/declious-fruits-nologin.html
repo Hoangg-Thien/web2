@@ -245,18 +245,21 @@
                     <li><a href="./declious-fruits-nologin.html">Trái cây ngon </a></li>
                     <li><a href="./VietNamese-fruits-nolog.html">Trái cây Việt  </a></li>
                     <li><a href="./Imported-fruits-nologin.html">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables-nologin.html">Rau củ  </a></li>
+                    <li><a href="./Imported-fruits.html">Trái cây Khô</a></li>
+                    <li><a href="./Imported-fruits.html">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../user/usernologin.html" class="active">Trang chủ</a>  
-                <a href="../user/introduce.html">Giới thiệu</a>  
-                <a href="../user/news.html">Tin tức</a>  
-                <a href="../user/contact.html">Liên hệ</a> 
-                <a href="../user/cartusernologin.html" target="_blank" class="cart-icon" title="Go to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
-                </a>
-            </div>  
+                <a href="./usernologin.html" >Trang chủ</a>  
+                <a href="./introduce.html">Giới thiệu</a>  
+                <a href="./news.html">Tin tức</a>  
+                <a href="./contact.html">Liên hệ</a>   
+                <a href="./cartusernologin.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                    <i class="fas fa-shopping-cart"></i>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                </a>  
+            </div>    
             <div class="search-container">   
                 
                 <div >
@@ -310,7 +313,7 @@
                 <img id="traicayngonImg" src="../img/trai-mang-cau.jpg" alt="trai-mang-cau" width="300" >  
                 <div class="caption" >Mãng cầu xiêm <br>45.000đ/kg</div> 
                 <div class="icons">  
-                    <a href="../itemInfo/custard-apple.html" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="../itemInfo/cus-appnologin.html" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                  
@@ -325,7 +328,7 @@
                 <img id="traicayngonImg1" src="../img/trai-thanh-long-do.jpg" alt="trai-thanh-long-do" width="300" >
                 <div class="caption">Thanh long ruột đỏ <br> 45.000đ/kg </div>
                 <div class="icons">  
-                    <a href="../itemInfo/dragon-fruit.html" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="../itemInfo/dragonfruitnolog.html" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                     
@@ -340,7 +343,7 @@
                 <img id="traicayngonImg2" src="../img/trai-xoai.jpg" alt="trai-xoai" width="300" >
                 <div class="caption">Xoài cát <br> 45.000đ/kg</div>
                 <div class="icons">  
-                    <a href="../itemInfo/mango.html" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="../itemInfo/mangonolog.html" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                    
@@ -355,7 +358,7 @@
                 <img id="traicayngonImg3" src="../img/trai-dua-hau.webp" alt="trai-dua-hau" width="300" >
                 <div class="caption">Dưa hấu Long An <br>  45.000đ/kg </div>
                 <div class="icons">  
-                    <a href="../itemInfo/watermelon.html" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="../itemInfo/watermelonnolog.html" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                     
@@ -371,7 +374,7 @@
                 <img id="traicayngonImg4" src="../img/trai-chom-chom.jpg" alt="trai-chom-chom" width="300" >
                 <div class="caption">Chôm chôm <br> 45.000đ/kg </div>
                 <div class="icons">  
-                    <a href="../itemInfo/rambutant.html" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="../itemInfo/rambutantnolog.html" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                     
@@ -387,7 +390,7 @@
                 <img id="traicayngonImg5" src="../img/trai-oi.jpg" alt="trai-oi" width="300" >
                 <div class="caption">Ổi xá lị <br>  45.000đ/kg </div>
                 <div class="icons">  
-                    <a href="../itemInfo/guava.html" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="../itemInfo/guavanolog.html" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
                     
@@ -575,6 +578,16 @@
     }, 5000); 
 }, 500); 
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+        let addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                alert("Bạn cần phải đăng nhập để thêm vào giỏ hàng!");
+            });
+        });
+    });
 
 
 document.getElementById("toggleSearch").addEventListener("click", function () {
