@@ -49,8 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Ở đây bạn có thể thêm code để cập nhật dữ liệu vào database
         console.log('Dữ liệu cập nhật:', newData);
-
-        alert('Bạn chắc chắn lưu những thay đổi này chứ?');
             
         $('#ModalUP').modal('hide');
     });

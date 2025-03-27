@@ -163,31 +163,4 @@ document.addEventListener('DOMContentLoaded', function() {
         applyAllFilters();
     });
     
-    // Cập nhật form lọc theo ngày để sử dụng hàm kết hợp lọc
-    $('form').on('submit', function(e) {
-        e.preventDefault();
-        
-        const startDate = new Date($('#datein').val());
-        const endDate = new Date($('#dateout').val());
-        
-        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-            alert('Vui lòng chọn khoảng thời gian hợp lệ');
-            return;
-        }
-        
-        $('tbody tr').each(function() {
-            const dateText = $(this).find('td:nth-child(7)').text().split('\n')[0];
-            const parts = dateText.split('/');
-            const orderDate = new Date(parts[2], parts[1] - 1, parts[0]);
-            
-            if (orderDate >= startDate && orderDate <= endDate) {
-                $(this).data('dateFilter', true);
-            } else {
-                $(this).data('dateFilter', false);
-            }
-        });
-        
-        applyAllFilters();
-    });
-    
 });

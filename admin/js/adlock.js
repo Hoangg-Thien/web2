@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Cập nhật giao diện cho hàng bị khóa
         updateLockedRowAppearance(row);
         
-        // Thông báo đã khóa thành công
         alert(`Người dùng ${row.cells[0].textContent} đã khóa thành công!`);
     });
     
@@ -45,12 +44,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // Thay đổi màu và định dạng
         row.style.color = 'red';
         row.style.fontWeight = 'bold';
-        
-        // Vô hiệu hóa nút khóa và sửa
-        const lockButton = row.querySelector('.btn.lock');
-        
-        if (lockButton) {
-            lockButton.disabled = true;
-        }
     }
 });

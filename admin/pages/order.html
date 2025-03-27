@@ -68,8 +68,8 @@
                                                     aria-label="Status Filter">
                                                     <option value="all" selected>Tất cả</option>
                                                     <option value="cancelled">Đã hủy</option>
-                                                    <option value="pending">Chưa xử lí</option>
-                                                    <option value="shipping">Đang giao</option>
+                                                    <option value="pending">Chưa xác nhận</option>
+                                                    <option value="shipping">Đã xác nhận</option>
                                                     <option value="completed">Giao thành công</option>
                                                 </select>
                                             </div>
@@ -91,12 +91,12 @@
 
                                         <div class="row element-filter mx-0 mb-3">
                                             <div class="filter__date col-6 p-0">
-                                                <form action="">
+                                                <form action="" id="dateFilterForm">
                                                     <label for="datein">Từ ngày: </label>
                                                     <input type="date" name="datein" id="datein">
                                                     <label for="dateout">đến ngày: </label>
                                                     <input type="date" name="dateout" id="dateout">
-                                                    <input type="submit" class="btn-secondary" value="Áp dụng">
+                                                    <button type="submit" class="btn-secondary">Áp dụng</button>
                                                 </form>
                                             </div>
 
@@ -142,7 +142,7 @@
                                                     <td>2kg x Mãng cầu xiêm<br>5kg x Dâu tây Đà Lạt <br>1kg x Lựu Ai Cập
                                                     </td>
                                                     <td>475.000đ</td>
-                                                    <td><span class="status pending">Chưa xử lí</span></td>
+                                                    <td><span class="status pending">Chưa xác nhận</span></td>
                                                     <td>30/05/2024<br>16:07</td>
                                                     <td class="text-align-center">
                                                         <button style="outline: none;"
@@ -187,7 +187,7 @@
                                         <td>36, Lê Trọng Tấn, Quận Tân Phú, TPHCM</td>
                                         <td>1kg x Xoài cát<br>10kg x Mận Hà Nội</td>
                                         <td>495.000đ</td>
-                                        <td><span class="status shipping">Đang giao</span></td>
+                                        <td><span class="status shipping">Đã xác nhận</span></td>
                                         <td>02/06/2024<br>13:00</td>
                                         <td class="text-align-center">
                                             <button style="outline: none;"
