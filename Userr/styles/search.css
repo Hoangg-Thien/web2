@@ -1,0 +1,92 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#searchBox {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 80%;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#searchResults {
+    border: 1px solid #ccc;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: none;
+}
+
+#searchResults a {
+    display: block;
+    padding: 5px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+#searchResults a:hover {
+    text-decoration: underline;
+}
+
+#priorityFruits {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    display: none;
+    border-radius: 5px;
+}
+
+#priorityFruits ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#priorityFruits li {
+    margin-bottom: 8px;
+}
+
+#priorityFruits a {
+    color: blue;
+    text-decoration: none;
+}
+
+#priorityFruits a:hover {
+    text-decoration: underline;
+}
+
+.search-result {
+    display: block;
+    margin: 5px 0;
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.search-result:hover {
+    text-decoration: underline;
+}
+
+.empty {
+    color: red;
+    font-weight: bold;
+} 
