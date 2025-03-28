@@ -1,67 +1,67 @@
-@media screen and (max-width: 992px) {
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+    position: relative;
+}
+
+@media (max-width: 992px) {
     .sidebar {
         width: 250px;
         position: fixed;
-        left: -250px;
-        transition: all 0.3s;
-        z-index: 1000;
-        height: 100vh;
-        background: #fff;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        height: 100%;
         overflow-y: auto;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
     }
-
+    
     .sidebar.active {
-        left: 0;
+        transform: translateX(0);
     }
-
+    
     .main {
         width: 100%;
         margin-left: 0;
-        transition: all 0.3s;
+        padding: 15px;
+        transition: margin-left 0.3s ease-in-out;
     }
-
+    
     .main.shifted {
         margin-left: 250px;
     }
-
-    .toggle-sidebar {
+    
+    .menu-toggle {
         display: block;
         position: fixed;
-        top: 10px;
-        left: 10px;
+        top: 15px;
+        left: 15px;
         z-index: 1001;
-        cursor: pointer;
-        background: #4CAF50;
+        background: #007bff;
         color: white;
         border: none;
-        padding: 10px;
         border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
     }
-
+    
     .action-buttons-wrapper {
+        display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
     }
-
-    .action-buttons-wrapper button {
-        margin: 5px;
-    }
-
-    .filter__left,
-    .filter__right {
-        text-align: center;
-        width: 100%;
-    }
-
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+    
+    .action-buttons-wrapper .btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+        margin: 5px 0;
     }
 }
 
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
 
     .web-header {
         display: flex;
@@ -95,86 +95,85 @@
     .web-header a:hover {
         text-decoration: none;
     }
+    
+    table {
+        min-width: 800px;
+    }
+    
+    .filter__right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    
+    .search-hole {
+        margin-bottom: 10px;
+    }
+    
+    input[type="search"] {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .modal-dialog {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+}
 
+@media (max-width: 576px) {
+    .action-buttons-wrapper .btn {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    
+    .web-header {
+        display: flex;
+        position: fixed;
+        align-items: center;
+        justify-content: center; 
+        font-size: 30px;
+        padding: 10px 0;
+        border-bottom: 1px solid #333;
+        background-color: white;
+        z-index: 999;
+        top: 0;
+        right: 0;
+        left: 0;
+    }
+
+    .web-header img {
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .web-header a img {
+        width: 150px;
+        height: 100px;
+        border-radius: 5px; 
+        margin-right: 10px; 
+        margin-top: 10px;
+    }
+
+    .web-header a:hover {
+        text-decoration: none;
+    }
+    
     .order-management h1 {
         font-size: 24px;
     }
-
-    .action-buttons-wrapper .btn {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-}
-
-@media screen and (max-width: 576px) {
-    .web-header {
-        display: flex;
-        position: fixed;
-        align-items: center;
-        justify-content: center; 
-        font-size: 30px;
-        padding: 10px 0;
-        border-bottom: 1px solid #333;
-        background-color: white;
-        z-index: 999;
-        top: 0;
-        right: 0;
-        left: 0;
-    }
-
-    .web-header img {
-        max-width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-
-    .web-header a img {
-        width: 150px;
-        height: 100px;
-        border-radius: 5px; 
-        margin-right: 10px; 
-        margin-top: 10px;
-    }
-
-    .web-header a:hover {
-        text-decoration: none;
-    }
-
-    .action-buttons-wrapper .btn {
+    
+    .form-group {
         width: 100%;
-        margin: 5px 0;
     }
-
-    .search-hole {
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .filter__left,
-    .filter__right {
-        margin-top: 10px;
-    }
-
-    .modal-dialog {
-        width: 95%;
-        margin: 10px auto;
-    }
-}
-
-@media screen and (min-width: 993px) {
-    .toggle-sidebar {
-        display: none;
-    }
-
-    .sidebar {
-        position: fixed;
-        left: 0;
-        width: 250px;
-        height: 100vh;
-        overflow-y: auto;
-    }
-
-    .main {
-        margin-left: 250px;
+    
+    .modal-content {
+        padding: 10px;
     }
 }
