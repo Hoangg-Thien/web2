@@ -2,7 +2,8 @@ $(document).ready(function() {
     // Xử lý sự kiện khi nhấn nút chỉnh sửa
     $('.btn-outline-warning.edit').click(function() {
         // Hiển thị modal chỉnh sửa
-        $('#ModalUP').modal('show');
+        $('#editModal').modal('show');
+
     });
 
     // Xử lý sự kiện khi nhấn nút "Lưu lại"
