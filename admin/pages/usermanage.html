@@ -65,7 +65,7 @@
             <span class="search-hole">Tìm kiếm:</span>
             <input type="search" placeholder="">
 
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow-x: auto; width: 100%;"">
             <table>
                 <thead>
                     <tr>
@@ -292,20 +292,16 @@
     <script src="../js/adlock.js"></script>
     <script>
         $(document).ready(function() {
-               $("#toggleSidebar").click(function() {
-                   $("#sidebar").addClass("active");
-               });
-               
-               $("#closeBtn").click(function() {
-                   $("#sidebar").removeClass("active");
-               });
-               
-               $(document).click(function(event) {
-                   if (!$(event.target).closest('#sidebar, #toggleSidebar').length) {
-                       $("#sidebar").removeClass("active");
-                   }
-               });
-           });
+        $("#toggleSidebar").click(function() {
+            $("#sidebar").toggleClass("active");
+        });
+        
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
+                $("#sidebar").removeClass("active");
+            }
+        });
+    });
        </script>
 
 </body>

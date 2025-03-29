@@ -128,21 +128,17 @@
 
     <script src="../js/product.js"></script>
     <script>
-        $(document).ready(function() {
-               $("#toggleSidebar").click(function() {
-                   $("#sidebar").addClass("active");
-               });
-               
-               $("#closeBtn").click(function() {
-                   $("#sidebar").removeClass("active");
-               });
-               
-               $(document).click(function(event) {
-                   if (!$(event.target).closest('#sidebar, #toggleSidebar').length) {
-                       $("#sidebar").removeClass("active");
-                   }
-               });
-           });
+         $(document).ready(function() {
+        $("#toggleSidebar").click(function() {
+            $("#sidebar").toggleClass("active");
+        });
+        
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
+                $("#sidebar").removeClass("active");
+            }
+        });
+    });
        </script>
     
 </body>
