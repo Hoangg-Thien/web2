@@ -31,13 +31,10 @@ $(document).ready(function() {
             <small>Mã sản phẩm: ${productCode}</small>
         `);
         
-        // Hiển thị modal
         $('#ModalRM').modal('show');
     });
 
-    // Khi click nút "Đồng ý" trong modal
     $('#confirmDelete').click(function() {
-        // Chỉ đóng modal mà không thực hiện xóa
         $('#ModalRM').modal('hide');
     });
 });

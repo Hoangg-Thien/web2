@@ -7,20 +7,22 @@
     <title>Thống kê tình hình kinh doanh </title>
     <link rel="stylesheet" href="./stylescss/satistics.css">
     <link rel="stylesheet" href="./stylescss/responsive.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    <div class="sidebar">
+    <button class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></button>
+    <div class="sidebar" id="sidebar">
         <nav> 
             <ul style="margin-bottom: 10px;">
                 <li class="user-info">
                     <div class="img-edit">
                         <img class="img-head" src="../img/admin.jpg" alt="User Image">
                     </div>
-
                     <div class="role">Chào mừng trở lại, Huy!</div>
                 </li>
             </ul>
@@ -28,12 +30,14 @@
 
         <hr>
 
+        <ul class="sidebar-menu">
         <a class="icon-denim" href="./usermanage.html" target="_self"><i class="fa-solid fa-user-shield"></i> Quản lí người dùng</a>
         <a class="icon-denim" href="./order.html" target="_self"><i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
         <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
         <a class="icon-denim" href="./addpro.html" target="_self"><i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
         <a class="icon-denim icon-denim-active" href="./satistics.html" target="_self"><i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
         <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        </ul>
     </div>
 
     <header>
@@ -42,7 +46,7 @@
         </div>
     </header>
 
-        <main class="main">
+        <main class="main" id="main">
         <div class="order-management">
             <h1 style="font-weight: bold;">Thống Kê Tình Hình Kinh Doanh</h1>
         </div>
@@ -330,6 +334,19 @@
     </main>
 
     <script src="../js/statistic.js"></script>
+    <script>
+       $(document).ready(function() {
+        $("#toggleSidebar").click(function() {
+            $("#sidebar").toggleClass("active");
+        });
+        
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
+                $("#sidebar").removeClass("active");
+            }
+        });
+    });
+       </script>
 
 </body>
 </html>
