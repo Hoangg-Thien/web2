@@ -14,6 +14,19 @@ select, input, button, textarea {
     outline: none;
 }
 
+body.modal-open {
+    padding-right: 0 !important;
+    overflow: auto !important;
+}
+
+.modal {
+    padding-right: 0 !important;
+}
+
+.modal-dialog {
+    margin: 30px auto;
+}
+
 .action-buttons-wrapper a:hover{
     text-decoration: none;
 }
@@ -449,8 +462,6 @@ table th {
    margin-left: 1.5%;
 }
 
-/* Custom modal style */
-
 .modal-header {
     background-color: #f8d7da;
     color: #721c24;
@@ -467,7 +478,6 @@ table th {
     padding: 8px 16px;
 }
 
-/* Additional styling for the modal when it's active */
 .modal-backdrop.show {
     opacity: 0.7;
 }
@@ -555,26 +565,26 @@ input[type=search] {
 }
 
 #ModalUP .modal-footer .btn-secondary {
-    background-color: #dc3545 !important; /* Màu đỏ cho nút Hủy bỏ */
+    background-color: #dc3545 !important; 
     color: white !important;
     border-color: #dc3545 !important;
     transition: all 0.3s ease;
 }
 
 #ModalUP .modal-footer .btn-secondary:hover {
-    background-color: #c82333 !important; /* Màu đỏ đậm hơn khi hover */
+    background-color: #c82333 !important; 
     color: white !important;
 }
 
 #ModalUP .modal-footer .btn-primary {
-    background-color: #28a745 !important; /* Màu xanh lá cây cho nút Lưu lại */
+    background-color: #28a745 !important; 
     color: white !important;
     border-color: #28a745 !important;
     transition: all 0.3s ease;
 }
 
 #ModalUP .modal-footer .btn-primary:hover {
-    background-color: #218838 !important; /* Màu xanh lá cây đậm hơn khi hover */
+    background-color: #218838 !important; 
     color: white !important;
 }
 

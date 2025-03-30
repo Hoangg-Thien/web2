@@ -256,23 +256,6 @@
     </ul>
 </nav>
 
-<!--delete-->
-<div class="modal fade" id="ModalRM" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Xác Nhận Xóa Đơn Hàng</h5>
-            </div>
-            <div class="modal-body text-center">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy Bỏ</button>
-                <button type="button" class="btn btn-success" id="confirmDelete">Đồng Ý</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!--edit-->
 <div class="modal fade" id="ModalUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -305,14 +288,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelBtn">Hủy bỏ</button>
-                <button type="button" class="btn btn-primary" id="saveBtn">Lưu lại</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">Lưu lại</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="../js/filter.js"></script>
-<script src="../js/editpro.js"></script>
+<script src="../js/editorder.js"></script>
 <script>
     $(document).ready(function() {
         $("#toggleSidebar").click(function() {

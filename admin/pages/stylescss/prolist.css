@@ -477,27 +477,27 @@ input[type=search] {
     opacity: 0.8;
 }
 
-#ModalUP .modal-footer .btn-secondary {
-    background-color: #dc3545 !important; /* Màu đỏ cho nút Hủy bỏ */
+.btn-secondary {
+    background-color: #dc3545 !important; 
     color: white !important;
     border-color: #dc3545 !important;
     transition: all 0.3s ease;
 }
 
-#ModalUP .modal-footer .btn-secondary:hover {
-    background-color: #c82333 !important; /* Màu đỏ đậm hơn khi hover */
+.btn-secondary:hover {
+    background-color: #c82333 !important; 
     color: white !important;
 }
 
-#ModalUP .modal-footer .btn-primary {
-    background-color: #28a745 !important; /* Màu xanh lá cây cho nút Lưu lại */
+.btn-primary {
+    background-color: #28a745 !important; 
     color: white !important;
     border-color: #28a745 !important;
     transition: all 0.3s ease;
 }
 
-#ModalUP .modal-footer .btn-primary:hover {
-    background-color: #218838 !important; /* Màu xanh lá cây đậm hơn khi hover */
+.btn-primary:hover {
+    background-color: #218838 !important; 
     color: white !important;
 }
 
