@@ -28,7 +28,6 @@
 
         <hr>
 
-        
         <a class="icon-denim" href="./usermanage.html" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản lí người dùng</a>
         <a class="icon-denim" href="./order.html" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
         <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
@@ -52,12 +51,11 @@
 
         <div class="container">
             <div class="button-group">
-                <button><i class="fa-solid fa-square-plus" onclick=""></i> Thêm nhà cung cấp</button>
                 <button><i class="fa-solid fa-square-plus" onclick=""></i> Thêm danh mục</button>
                 <button><i class="fa-solid fa-square-plus" onclick=""></i> Thêm tình trạng</button>
             </div>
             
-            <form>
+            <form method="POST" enctype="multipart/form-data" action = "save_product.php">
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="product-code">Mã sản phẩm</label>
@@ -68,25 +66,17 @@
                         <input type="text" id="product-name" name="product-name">
                     </div>
                     <div class="form-group">
-                        <label for="supplier">Nhà cung cấp</label>
-                        <select id="supplier" name="supplier">
-                            <option value="">-- Chọn nhà cung cấp --</option>
-                            <option value="supplier1">Nhà cung cấp 1</option>
-                            <option value="supplier2">Nhà cung cấp 2</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="category">Danh mục</label>
                             <select id="category" name="category">
                                 <option value="">-- Chọn danh mục --</option>
-                                <option value="">Trái cây ngon</option>
-                                <option value="">Trái cây Việt</option>
-                                <option value="">Trái cây Nhập Khẩu</option>
+                                <option value="Trái cây Ngon">Trái cây Ngon</option>
+                                <option value="Trái cây Việt">Trái cây Việt</option>
+                                <option value="Trái cây Nhập Khẩu">Trái cây Nhập Khẩu</option>
                             </select>
                     </div>
                 </div>
                 
-            <div class="form-group-row">
+                <div class="form-group-row">
                     <div class="form-group">
                         <label for="price">Giá bán</label>
                         <input type="text" id="price" name="price">
@@ -95,11 +85,10 @@
                         <label for="status">Tình trạng</label>
                         <select id="status" name="status">
                             <option value="">-- Chọn tình trạng --</option>
-                            <option value="status1">Còn hàng</option>
-                            <option value="status2">Hết hàng</option>
+                            <option value="Còn hàng">Còn hàng</option>
+                            <option value="Hết hàng">Hết hàng</option>
                         </select>
                     </div>
-                <form action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="product-image">Ảnh sản phẩm</label>
                         <div class="image-upload-container">
@@ -109,8 +98,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
 
                 <div class="form-group">
                     <label for="description">Mô tả sản phẩm</label>

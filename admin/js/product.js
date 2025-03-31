@@ -1,16 +1,15 @@
 function previewImage(input) {
     var preview = document.getElementById('image-preview');
+    preview.innerHTML = '';
     
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         
         reader.onload = function(e) {
-            preview.innerHTML = '';
             var img = document.createElement('img');
             img.src = e.target.result;
-            img.style.width = '100%';
-            img.style.height = 'auto';
-            img.style.objectFit = 'contain';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
             preview.appendChild(img);
         }
         
