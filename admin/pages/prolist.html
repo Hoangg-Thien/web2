@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -36,12 +37,12 @@
         <hr>
 
         <ul class="sidebar-menu">
-            <a class="icon-denim" href="./usermanage.html" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản lí người dùng</a>
-            <a class="icon-denim" href="./order.html" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
-            <a class="icon-denim icon-denim-active" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
-            <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
-            <a class="icon-denim" href="./satistics.html" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
-            <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        <a class="icon-denim" href="./usermanage.html" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản lí người dùng</a>
+        <a class="icon-denim" href="./order.html" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
+        <a class="icon-denim icon-denim-active" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
+        <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
+        <a class="icon-denim" href="./satistics.html" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
+        <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
         </ul>
     </div>
 
@@ -58,10 +59,8 @@
         </div>
 
         <div class="action-buttons-wrapper">
-            <a href="./addpro.html"><button style="outline: none;" class="btn green"><i class="fa-solid fa-plus"></i>
-                    Tạo mới sản phẩm</button></a>
-            <button style="outline: none;" class="btn bluesky"><i class="fa-solid fa-file-arrow-up"></i> Tải từ
-                file</button>
+            <a href="./addpro.html"><button style="outline: none;" class="btn green"><i class="fa-solid fa-plus"></i> Tạo mới sản phẩm</button></a>
+            <button style="outline: none;" class="btn bluesky"><i class="fa-solid fa-file-arrow-up"></i> Tải từ file</button>
             <button style="outline: none;" class="btn orange"><i class="fa-solid fa-print"></i> In dữ liệu</button>
             <button style="outline: none;" class="btn yellow"><i class="fas fa-copy"></i> Sao chép</button>
             <button style="outline: none;" class="btn green"><i class="fas fa-file-excel"></i> Xuất Excel</button>
@@ -99,7 +98,7 @@
                     <th>Chức năng</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="productTable">
                 <tr>
                     <td><input type="checkbox"></td>
                     <td>F001</td>
@@ -109,12 +108,10 @@
                     <td>160.000đ/kg</td>
                     <td>Trái Cây Nhập Khẩu</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F001"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F001"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -126,12 +123,10 @@
                     <td>160.000đ/kg</td>
                     <td>Trái Cây Nhập Khẩu</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F002"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F002"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -143,12 +138,10 @@
                     <td>160.000đ/kg</td>
                     <td>Trái Cây Nhập Khẩu</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F003"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F003"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -160,12 +153,10 @@
                     <td>45.000đ/kg</td>
                     <td>Trái Cây Việt</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F004"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F004"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -177,12 +168,10 @@
                     <td>45.000đ/kg</td>
                     <td>Trái Cây Ngon</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F005"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"  title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F005"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -194,12 +183,10 @@
                     <td>160.000đ/kg</td>
                     <td>Trái Cây Nhập Khẩu</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F006"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F006"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -211,12 +198,10 @@
                     <td>45.000đ/kg</td>
                     <td>Trái Cây Việt</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F007"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F007"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -228,12 +213,10 @@
                     <td>45.000đ/kg</td>
                     <td>Trái Cây Việt</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F008"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F008"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -245,12 +228,10 @@
                     <td>45.000đ/kg</td>
                     <td>Trái Cây Việt</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F009"><i class="fa fa-edit"></i>
-                        </button>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F009"><i class="fa fa-edit"></i>
+                            </button>
                     </td>
                 </tr>
                 <tr>
@@ -262,11 +243,129 @@
                     <td>45.000đ/kg</td>
                     <td>Trái Cây Việt</td>
                     <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button"
-                            title="Xóa"><i class="fas fa-trash-alt"></i>
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F010"><i class="fa fa-edit"></i>
                         </button>
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-id="F010"><i class="fa fa-edit"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F011</td>
+                    <td>Dưa Hấu Long An</td>
+                    <td><img src="../img/trai-dua-hau.webp" alt="Dưa hấu Long An"></td>
+                    <td><span class="available">Còn hàng</span></td>
+                    <td>45.000đ/kg</td>
+                    <td>Trái Cây Việt</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F011"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F012</td>
+                    <td>Chôm chôm</td>
+                    <td><img src="../img/trai-chom-chom.jpg" alt="Chôm chôm"></td>
+                    <td><span class="out-of-stock">Hết hàng</span></td>
+                    <td>45.000đ/kg</td>
+                    <td>Trái Cây Ngon</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F012"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F013</td>
+                    <td>Xoài cát</td>
+                    <td><img src="../img/trai-xoai.jpg" alt="Xoài cát"></td>
+                    <td><span class="out-of-stock">Hết hàng</span></td>
+                    <td>45.000đ/kg</td>
+                    <td>Trái Cây Ngon</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F013"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F014</td>
+                    <td>Dâu tây Đà Lạt</td>
+                    <td><img src="../img/dau-tay.jpg" alt="Dâu tây Đà Lạt"></td>
+                    <td><span class="available">Còn hàng</span></td>
+                    <td>45.000đ/kg</td>
+                    <td>Trái Cây Việt</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F014"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F015</td>
+                    <td>Mận Hà Nội</td>
+                    <td><img src="../img/man-Ha-Noi.jpg" alt="Mận Hà Nội"></td>
+                    <td><span class="available">Còn hàng</span></td>
+                    <td>45.000đ/kg</td>
+                    <td>Trái Cây Việt</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F015"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F016</td>
+                    <td>Bưởi da xanh</td>
+                    <td><img src="../img/hinh-trai-buoi.jpg" alt="Bưởi da xanh"></td>
+                    <td><span class="out-of-stock">Hết hàng</span></td>
+                    <td>45.000đ/kg</td>
+                    <td>Trái Cây Việt</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F016"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F017</td>
+                    <td>Táo Envy</td>
+                    <td><img src="../img/trai-tao.webp" alt="Táo Envy"></td>
+                    <td><span class="out-of-stock">Hết hàng</span></td>
+                    <td>160.000đ/kg</td>
+                    <td>Trái Cây Nhập Khẩu</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F017"><i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>F018</td>
+                    <td>Cherry Úc</td>
+                    <td><img src="../img/trai-cherry-Uc.webp" alt="Cherry Úc"></td>
+                    <td><span class="available">Còn hàng</span></td>
+                    <td>160.000đ/kg</td>
+                    <td>Trái Cây Nhập Khẩu</td>
+                    <td class="text-align-center">
+                        <button style="outline: none;" class="btn btn-outline-danger btn-sm trash m-1" type="button" title="Xóa"><i class="fas fa-trash-alt"></i>
+                            </button>
+                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button" title="Sửa" data-id="F018"><i class="fa fa-edit"></i>
                         </button>
                     </td>
                 </tr>
@@ -275,22 +374,30 @@
     </main>
 
     <nav aria-label="Page navigation " class="page-center">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center" id="pagination">
             <li class="page-item">
-                <a class="page-link " href="#" aria-label="Lùi">
+                <a class="page-link" href="#" aria-label="Lùi" onclick="changePage(currentPage - 1)">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <!-- Các số trang sẽ được thêm vào đây bằng JavaScript -->
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Tiếp">
+                <a class="page-link" href="#" onclick="changePage(1)">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="changePage(2)">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="changePage(3)">3</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Tiếp" onclick="changePage(currentPage + 1)">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
     </nav>
+    
 
     <!--delete-->
     <div class="modal fade" id="ModalRM" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
@@ -310,77 +417,77 @@
     </div>
 
     <!--edit-->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Chỉnh sửa thông tin sản phẩm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chỉnh sửa thông tin sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Mã sản phẩm</label>
+                        <input class="form-control" type="text" id="product-code">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Tên sản phẩm</label>
+                        <input class="form-control" type="text" id="product-name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Giá bán</label>
+                        <input class="form-control" type="text" id="product-price">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Trạng thái</label>
+                        <select class="form-control" id="product-status">
+                            <option value="Còn hàng">Còn hàng</option>
+                            <option value="Hết hàng">Hết hàng</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Danh mục</label>
+                        <select class="form-control" id="product-type">
+                            <option value="Trái Cây Nhập Khẩu">Trái Cây Nhập Khẩu</option>
+                            <option value="Trái Cây Việt">Trái Cây Việt</option>
+                            <option value="Trái Cây Ngon">Trái Cây Ngon</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Ảnh</label>
+                        <img class="d-block mb-2" id="product-image" src="" alt="Hình ảnh sản phẩm" width="100%">
+                        <input type="file" id="image-upload" style="display: none;">
+                        <input type="button" id="edit-image" value="Chỉnh sửa">
+                        <input type="button" id="delete-image" value="Xoá ảnh">
+                    </div>
+                    
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Mã sản phẩm</label>
-                            <input class="form-control" type="text" id="product-code">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Tên sản phẩm</label>
-                            <input class="form-control" type="text" id="product-name">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Giá bán</label>
-                            <input class="form-control" type="text" id="product-price">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Trạng thái</label>
-                            <select class="form-control" id="product-status">
-                                <option value="Còn hàng">Còn hàng</option>
-                                <option value="Hết hàng">Hết hàng</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Danh mục</label>
-                            <select class="form-control" id="product-type">
-                                <option value="Trái Cây Nhập Khẩu">Trái Cây Nhập Khẩu</option>
-                                <option value="Trái Cây Việt">Trái Cây Việt</option>
-                                <option value="Trái Cây Ngon">Trái Cây Ngon</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Ảnh</label>
-                            <img class="d-block mb-2" id="product-image" src="" alt="Hình ảnh sản phẩm" width="100%">
-                            <input type="button" id="edit-image" value="Chỉnh sửa">
-                            <input type="button" id="delete-image" value="Xoá ảnh">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelBtn">Hủy
-                            bỏ</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">Lưu lại</button>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelBtn">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">Lưu lại</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <script src="../js/fetch_product.js"></script>
-        <script src="../js/deletepro.js"></script>
-        <script src="../js/editpro.js"> </script>
-        <script>
-            $(document).ready(function () {
-                $("#toggleSidebar").click(function () {
-                    $("#sidebar").toggleClass("active");
-                });
-
-                $(document).click(function (event) {
-                    if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
-                        $("#sidebar").removeClass("active");
-                    }
-                });
-            });
-        </script>
+<script src="../js/fetch_product.js"></script>
+<script src="../js/editpic.js"></script>
+<script src="../js/pagenavi.js"></script>
+<script>
+$(document).ready(function() {
+$("#toggleSidebar").click(function() {
+$("#sidebar").toggleClass("active");
+    });
+    
+    $(document).click(function(event) {
+        if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
+            $("#sidebar").removeClass("active");
+        }
+    });
+});
+</script>
 </body>
-
 </html>
