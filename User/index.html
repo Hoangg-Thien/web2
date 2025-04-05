@@ -205,6 +205,33 @@
         button:hover {
             background: #0056b3;
         }
+
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+    
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+    
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
     </style>
 </head>  
 <body>  
@@ -263,40 +290,42 @@
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
                 </a>
             </div>  
-            <div class="search-container">   
-                
-            <div >
-                <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                <button onclick="searchProducts()">Tìm kiếm</button>
-                <button id="toggleSearch">Tìm kiếm nâng cao</button>
-            </div>  
-            <div id="searchResults"></div>
-            <div id="priorityFruits" class="hidden">
-                <ul>
-                </ul>
-            </div>   
-            <div id="searchModal" class="modal" style="display:none;">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Tìm kiếm nâng cao</h2>
-                    
-                    <label>Khoảng giá:</label>
-                    <select id="priceRange">
-                        <option>Tất cả</option>
-                        <option>30k-70k</option>
-                        <option>Trên 70k</option>
-                    </select>
-            
-                    <label>Danh mục:</label>
-                    <select id="sortedList">
-                        <option>A->Z</option>
-                        <option>Z->A</option>
-                    </select>
-            
-                    <button onclick="smartSearchProducts()">Lọc</button>
+            <div class="search-container">
+                <div>
+                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm...">
+                    <div id="suggestBox" class="suggest-box" style="display: none;"></div>
+                    <button onclick="searchProducts()">Tìm kiếm</button>
+                    <button id="toggleSearch">Tìm kiếm nâng cao</button>
                 </div>
-        </div>  
+            
+                <div id="searchResults"></div>
+            
+                <!-- Giữ nguyên modal nâng cao -->
+                <div id="priorityFruits" class="hidden">
+                    <ul></ul>
+                </div>   
+                <div id="searchModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Tìm kiếm nâng cao</h2>
+                        <label>Khoảng giá:</label>
+                        <select id="priceRange">
+                            <option>Tất cả</option>
+                            <option>30k-70k</option>
+                            <option>Trên 70k</option>
+                        </select>
+            
+                        <label>Danh mục:</label>
+                        <select id="sortedList">
+                            <option>A->Z</option>
+                            <option>Z->A</option>
+                        </select>
+            
+                        <button onclick="smartSearchProducts()">Lọc</button>
+                    </div>
+                </div>
             </div>
+            
             
             <div class="dropdown">
                 <button class="dropdown-button">
@@ -314,7 +343,7 @@
     </div> 
 
     <div style="max-width: 100%; overflow: hidden; margin: auto;  margin-top: -190px;">  
-        <img src="./img/salefruit.webp" alt="salefruit" style="width: 100% ; height: 600px; display: block;">  
+        <img src="./img/salefruit.jpg" alt="salefruit" style="width: 100% ; height: 600px; display: block;">  
     </div>  
     
     <div class="grid wide">  
@@ -375,7 +404,7 @@
                 </div>  
                 <div class="col l-4 m-6 c-6">
                     <div class="fruit-background">
-                        <img id="traicayngonImg3" src="./img/trai-dua-hau.webp" alt="trai-dua-hau" width="300" style="display: none;">
+                        <img id="traicayngonImg3" src="./img/trai-dua-hau.jpg" alt="trai-dua-hau" width="300" style="display: none;">
                         <div class="caption">Dưa hấu Long An <br>  45.000đ/kg </div>
                         <div class="icons">  
                             <a href="./itemInfo/watermelon.html" class="info-icon" title="Xem thông tin chi tiết">
@@ -519,7 +548,7 @@
             <div class="image-container Abroad row" id="imageContainer" >
                 <div class="col l-4 m-6 c-6">
                     <div class="fruit-background">  
-                        <img id="traicaynhapkhauImg" src="./img/trai-nho-My.webp" alt="trai-nho-My" width="300" style="display:none;">  
+                        <img id="traicaynhapkhauImg" src="./img/trai-nho-My.jpg" alt="trai-nho-My" width="300" style="display:none;">  
                         <div class="caption ">Nho Mỹ <br> 160.000đ/kg</div> 
                         <div class="icons">  
                             <a href="./itemInfo/grapes.html" class="info-icon" title="Xem thông tin chi tiết">
@@ -534,7 +563,7 @@
                 </div>
                 <div class="col l-4 m-6 c-6">
                     <div class="fruit-background">  
-                        <img id="traicaynhapkhauImg1" src="./img/trai-cherry-Uc.webp" alt="trai-cherry-Uc" width="300" style="display:none;">  
+                        <img id="traicaynhapkhauImg1" src="./img/trai-cherry-Uc.jpg" alt="trai-cherry-Uc" width="300" style="display:none;">  
                         <div class="caption ">Cherry Úc <br> 160.000đ/kg</div> 
                         <div class="icons">  
                             <a href="./itemInfo/cherry.html" class="info-icon" title="Xem thông tin chi tiết">
@@ -594,7 +623,7 @@
                 </div>
                 <div class="col l-4 m-6 c-6">
                     <div class="fruit-background">  
-                        <img id="traicaynhapkhauImg5" src="./img/trai-tao.webp" alt="trai-tao" width="300" style="display:none;">  
+                        <img id="traicaynhapkhauImg5" src="./img/trai-tao.jpg" alt="trai-tao" width="300" style="display:none;">  
                         <div class="caption ">Táo Envy  <br> 160.000đ/kg</div> 
                         <div class="icons">  
                             <a href="./itemInfo/apple.html" class="info-icon" title="Xem thông tin chi tiết">
@@ -614,7 +643,7 @@
     
 
     <div style="max-width: 100%; overflow: hidden; margin: auto;  margin-top: 100px;">  
-        <img src="./img/banner-quang-cao.webp" alt="banner-quang-cao" style="width: 100%; display: block;">  
+        <img src="./img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; display: block;">  
     </div>
     
     <div class="policy-container" >
@@ -629,7 +658,7 @@
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
         </div>
         <div>
-            <img src="./img/policy3.webp" alt="policy3">
+            <img src="./img/policy3.jpg" alt="policy3">
             <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
         </div>
