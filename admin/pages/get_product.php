@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require 'connect.php'; // Kết nối Database
+require 'connect.php'; 
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo json_encode(["error" => "Không có product ID"]);
