@@ -334,19 +334,19 @@ table th {
     white-space: nowrap;
 }
 
-.status.pending {
+.pending {
     background-color: #efb11e;
 }
 
-.status.completed {
+.completed {
     background-color: #4CAF50;
 }
 
-.status.shipping {
+.confirmed {
     background-color: #3c97e6;
 }
 
-.status.cancelled {
+.cancelled {
     background-color: #e54432;
 }
 

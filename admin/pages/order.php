@@ -9,7 +9,29 @@ if (isset($_POST['add_sale'])) {
     print_r($_POST);
     die();
 }
+
+$order_sql = "SELECT d.*, nd.fullname, sp.product_name, sp.product_price  
+              FROM dathang d 
+              LEFT JOIN nguoidung nd ON d.user_name = nd.user_name
+              LEFT JOIN sanpham sp ON d.product_id = sp.product_id
+              ORDER BY d.order_date DESC";
+$order_result = mysqli_query($conn, $order_sql);
+
+$status_map_to_code = [
+    'Chưa xác nhận' => 'pending',
+    'Đã xác nhận' => 'confirmed',
+    'Giao thành công' => 'completed',
+    'Đã hủy' => 'cancelled'
+];
+
+$status_map_to_text = [
+    'pending' => 'Chưa xác nhận',
+    'confirmed' => 'Đã xác nhận',
+    'completed' => 'Giao thành công',
+    'cancelled' => 'Đã hủy'
+];
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -45,7 +67,7 @@ if (isset($_POST['add_sale'])) {
         <ul class="sidebar-menu"></ul>
         <a class="icon-denim" href="./usermanage.html" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản
             lí người dùng</a>
-        <a class="icon-denim icon-denim-active" href="./order.html" target="_self"> <i
+        <a class="icon-denim icon-denim-active" href="./order.php" target="_self"> <i
                 class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
         <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản
             phẩm</a>
@@ -160,99 +182,90 @@ if (isset($_POST['add_sale'])) {
                     </tr>
                 </thead>
                 <tbody>
+                    <?php
+                    if ($order_result && mysqli_num_rows($order_result) > 0) {
+                        while ($order = mysqli_fetch_assoc($order_result)) {
+                            $order_id = $order['order_id'];
+                            
+                            $status_class = '';
+                            $status_text = '';
+                            
+                            if (isset($status_map_to_text[$order['order_status']])) {
+                                $status_class = $order['order_status'];
+                                $status_text = $status_map_to_text[$order['order_status']];
+                            } else if (isset($status_map_to_code[$order['order_status']])) {
+                                $status_class = $status_map_to_code[$order['order_status']];
+                                $status_text = $order['order_status'];
+                            } else {
+                                $status_class = 'pending';
+                                $status_text = 'Chưa xác nhận';
+                            }
+                            
+                            $date = date('d/m/Y', strtotime($order['order_date']));
+                            $time = date('H:i', strtotime($order['order_date']));
+                    ?>
                     <tr>
-                        <td>SF01</td>
-                        <td>Quang Trung</td>
-                        <td>273, An Dương Vương, Quận 5, TPHCM</td>
-                        <td>2kg x Mãng cầu xiêm<br>5kg x Dâu tây Đà Lạt <br>1kg x Lựu Ai Cập
+                        <td><?php echo $order['order_id']; ?></td>
+                        <td><?php echo $order['fullname']; ?></td>
+                        <td>
+                            <?php 
+                            if (!empty($order['address'])) {
+                                echo $order['address'];
+                            } else {
+                                $user_name = $order['user_name'];
+                                $user_sql = "SELECT user_address FROM nguoidung WHERE user_name = '$user_name'";
+                                $user_result = mysqli_query($conn, $user_sql);
+                                if ($user_result && mysqli_num_rows($user_result) > 0) {
+                                    $user_data = mysqli_fetch_assoc($user_result);
+                                    echo $user_data['user_address'];
+                                } else {
+                                    echo "Không có địa chỉ";
+                                }
+                            }
+                            ?>
                         </td>
-                        <td>475.000đ</td>
-                        <td><span class="status pending">Chưa xác nhận</span></td>
-                        <td>30/05/2024<br>16:07</td>
+                        <td>
+                            <?php
+                            if (!empty($order['product_name'])) {
+                                $quantity = isset($order['quantity']) ? $order['quantity'] : 1;
+                                echo $quantity . "kg x " . $order['product_name'] . "<br>";
+                            } else {
+                                echo "Không có sản phẩm";
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <?php 
+                            if (isset($order['product_price'])) {
+                                $quantity = isset($order['quantity']) && !empty($order['quantity']) ? $order['quantity'] : 1;
+                                $total = $order['product_price'] * $quantity;
+                                echo number_format($total, 0, ',', '.') . 'đ';
+                            } else {
+                                echo "N/A";
+                            }
+                            ?>
+                        </td>
+                        <td><span class="status <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
+                        <td><?php echo $date; ?><br><?php echo $time; ?></td>
                         <td class="text-align-center">
                             <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
                                 title="Sửa">
                                 <i class="fa fa-edit"></i>
                             </button>
                         </td>
-                        <td><a target="_blank" href="../allbill/bill3.html">
+                        <td><a target="_blank" href="../allbill/bill.php?id=<?php echo $order['order_id']; ?>">
                                 <i class="fa-solid fa-bars"></i></a></td>
                     </tr>
-                    <td>SF10</td>
-                    <td>Hoàng Khang</td>
-                    <td>11, Lý Thái Tổ, Quận 1, TPHCM</td>
-                    <td>3kg x Kiwi<br>6kg x Chôm chôm</td>
-                    <td>750.000đ</td>
-                    <td><span class="status completed">Giao thành công</span></td>
-                    <td>01/06/2024<br>10:15</td>
-                    <td class="text-align-center">
-                        <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                            title="Sửa" data-bs-toggle="modal" data-bs-target="#ModalUP"><i class="fa fa-edit"> </i>
-                        </button>
-                    </td>
-                    <td><a target="_blank" href="../allbill/bill3.html">
-                            <i class="fa-solid fa-bars"></i></a>
-                    </td>
-                    </tr>
-
+                    <?php
+                        }
+                    } else {
+                    ?>
                     <tr>
-                        <td>SF15</td>
-                        <td>Uy Vủ</td>
-                        <td>36, Lê Trọng Tấn, Quận Tân Phú, TPHCM</td>
-                        <td>1kg x Xoài cát<br>10kg x Mận Hà Nội</td>
-                        <td>495.000đ</td>
-                        <td><span class="status shipping">Đã xác nhận</span></td>
-                        <td>02/06/2024<br>13:00</td>
-                        <td class="text-align-center">
-                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                                title="Sửa">
-                                <i class="fa fa-edit"> </i>
-                            </button>
-                        </td>
-                        <td>
-                            <a target="_blank" href="../allbill/bill3.html">
-                                <i class="fa-solid fa-bars"></i></a>
-                        </td>
+                        <td colspan="9" class="text-center">Không có đơn hàng nào</td>
                     </tr>
-
-                    <tr>
-                        <td>SF23</td>
-                        <td>Gia Huy</td>
-                        <td>198, Tên Lửa, Quận Bình Tân, TPHCM</td>
-                        <td>2kg x Dưa hấu Long An<br>5kg x Táo Envy</td>
-                        <td>890.000đ</td>
-                        <td><span class="status cancelled">Đã hủy</span></td>
-                        <td>05/06/2024<br>09:30</td>
-                        <td class="text-align-center">
-                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                                title="Sửa">
-                                <i class="fa fa-edit"> </i></button>
-                        </td>
-                        <td>
-                            <a target="_blank" href="../allbill/bill3.html">
-                                <i class="fa-solid fa-bars"></i></a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>SF30</td>
-                        <td>Minh Đạt</td>
-                        <td>267, Đa Kao, Quận 1, TPHCM</td>
-                        <td>6kg x Ổi xá lị<br>3kg x Nho Mỹ <br>2kg x Quýt đường</td>
-                        <td>840.000đ</td>
-                        <td><span class="status completed">Giao thành công</span></td>
-                        <td>07/06/2024<br>11:45</td>
-                        <td class="text-align-center">
-                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
-                                title="Sửa">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <a target="_blank" href="../allbill/bill3.html">
-                                <i class="fa-solid fa-bars"></i></a>
-                        </td>
-                    </tr>
+                    <?php
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -277,7 +290,7 @@ if (isset($_POST['add_sale'])) {
     </nav>
 
     <!--edit-->
-    <form action="getOrder.php" method="POST" enctype="multipart/form-data">
+    <form action="getOrderDetail.php" method="POST" enctype="multipart/form-data">
         <div class="modal fade" id="ModalUP" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -303,7 +316,12 @@ if (isset($_POST['add_sale'])) {
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="control-label">Trạng thái</label>
-                                <input name="status" class="form-control" type="text" value="">
+                                <select name="status" class="form-control" id="statusSelect">
+                                    <option value="Chưa xác nhận">Chưa xác nhận</option>
+                                    <option value="Đã xác nhận">Đã xác nhận</option>
+                                    <option value="Giao thành công">Giao thành công</option>
+                                    <option value="Đã hủy">Đã hủy</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -318,7 +336,6 @@ if (isset($_POST['add_sale'])) {
     </form>
 
     <script src="../js/filter.js"></script>
-    <script src="../js/editorder.js"></script>
     <script src="../js/filterProDis.js"></script>
     <script>
         $(document).ready(function () {
@@ -327,9 +344,116 @@ if (isset($_POST['add_sale'])) {
             });
 
             $(document).click(function (event) {
-                if (!$(event.target).closest('.sidebar, #toggleSidebar').length) {
+                if (!$(event.target).closest('.sidebar, #toggleSidebar').length){
                     $(".sidebar").removeClass("active");
                 }
+            });
+
+            $('.btn-outline-warning').click(function() {
+                var order_id = $(this).closest('tr').find('td:first-child').text();
+                
+                $.ajax({
+                    url: 'getOrderDetail.php',
+                    type: 'GET',
+                    data: { order_id: order_id },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            var order = response.data;
+                            $('input[name="bill_id"]').val(order.order_id);
+                            $('input[name="customer_name"]').val(order.fullname);
+                            $('input[name="address"]').val(order.address || '');
+                            
+                            $('#statusSelect').val(order.order_status);
+                            
+                            $('#statusSelect').data('current-status', order.order_status);
+                            
+                            disableInvalidOptions(order.order_status);
+                            
+                            $('#ModalUP').modal('show');
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi lấy thông tin đơn hàng');
+                    }
+                });
+            });
+
+            function disableInvalidOptions(currentStatus) {
+                $('#statusSelect option').prop('disabled', false);
+                
+                var statusOrder = {
+                    'Chưa xác nhận': 1,
+                    'Đã xác nhận': 2,
+                    'Giao thành công': 3,
+                    'Đã hủy': 4
+                };
+                
+                $('#statusSelect option').each(function() {
+                    var optionValue = $(this).val();
+                    
+                    if (currentStatus === 'Giao thành công' && optionValue === 'Đã hủy') {
+                        $(this).prop('disabled', true);
+                    }
+                    else if (optionValue !== 'Đã hủy') {
+                        if (statusOrder[optionValue] < statusOrder[currentStatus]) {
+                            $(this).prop('disabled', true);
+                        }
+                    }
+                });
+            }
+            
+            $('#saveBtn').click(function() {
+                var order_id = $('input[name="bill_id"]').val();
+                var status = $('#statusSelect').val();
+                var currentStatus = $('#statusSelect').data('current-status');
+                
+                console.log('Cập nhật đơn hàng: ' + order_id + ', từ: ' + currentStatus + ', sang: ' + status);
+                
+                var statusOrder = {
+                    'Chưa xác nhận': 1,
+                    'Đã xác nhận': 2,
+                    'Giao thành công': 3,
+                    'Đã hủy': 4
+                };
+                
+                if (status === currentStatus) {
+                    alert('Không có thay đổi trạng thái');
+                    return;
+                }
+                
+                if (currentStatus === 'Giao thành công' && status === 'Đã hủy') {
+                    alert('Đơn hàng đã giao thành công không thể hủy');
+                    return;
+                }
+                
+                if (statusOrder[status] < statusOrder[currentStatus] && status !== 'Đã hủy') {
+                    alert('Không thể cập nhật trạng thái đơn hàng ngược lại trạng thái trước đó');
+                    return;
+                }
+                
+                $.ajax({
+                    url: 'updateOrderStatus.php',
+                    type: 'POST',
+                    data: { 
+                        order_id: order_id,
+                        status: status
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Cập nhật trạng thái đơn hàng thành công');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi cập nhật đơn hàng');
+                    }
+                });
             });
         });
     </script>
