@@ -10,11 +10,50 @@ if (isset($_POST['add_sale'])) {
     die();
 }
 
-$order_sql = "SELECT d.*, nd.fullname, sp.product_name, sp.product_price  
+// Kiểm tra lọc theo tỉnh/thành và quận/huyện
+$where_clause = "";
+if (isset($_GET['province']) && !empty($_GET['province'])) {
+    $province_id = $_GET['province'];
+    // Lấy tên tỉnh/thành từ ID
+    $province_sql = "SELECT name FROM province WHERE province_id = '$province_id'";
+    $province_result = mysqli_query($conn, $province_sql);
+    if ($province_result && mysqli_num_rows($province_result) > 0) {
+        $province_data = mysqli_fetch_assoc($province_result);
+        $province_name = mysqli_real_escape_string($conn, trim($province_data['name']));
+        $where_clause .= " AND (nd.city LIKE '%$province_name%' OR nd.user_address LIKE '%$province_name%')";
+    }
+}
+
+if (isset($_GET['district']) && !empty($_GET['district'])){
+    $district_id = $_GET['district'];
+    // Lấy tên quận/huyện từ ID
+    $district_sql = "SELECT name FROM district WHERE district_id = '$district_id'";
+    $district_result = mysqli_query($conn, $district_sql);
+    if ($district_result && mysqli_num_rows($district_result) > 0) {
+        $district_data = mysqli_fetch_assoc($district_result);
+        $district_name = mysqli_real_escape_string($conn, trim($district_data['name']));
+        $where_clause .= " AND (nd.district LIKE '%$district_name%' OR nd.user_address LIKE '%$district_name%')";
+    }
+}
+
+// Lọc theo ngày
+if (isset($_GET['datein']) && !empty($_GET['datein'])) {
+    $date_in = mysqli_real_escape_string($conn, $_GET['datein']);
+    $where_clause .= " AND DATE(d.order_date) >= '$date_in'";
+}
+
+if (isset($_GET['dateout']) && !empty($_GET['dateout'])) {
+    $date_out = mysqli_real_escape_string($conn, $_GET['dateout']);
+    $where_clause .= " AND DATE(d.order_date) <= '$date_out'";
+}
+
+$order_sql = "SELECT d.*, nd.fullname, nd.district, nd.city, nd.user_address, sp.product_name, sp.product_price  
               FROM dathang d 
               LEFT JOIN nguoidung nd ON d.user_name = nd.user_name
               LEFT JOIN sanpham sp ON d.product_id = sp.product_id
+              WHERE 1=1 $where_clause
               ORDER BY d.order_date DESC";
+
 $order_result = mysqli_query($conn, $order_sql);
 
 $status_map_to_code = [
@@ -129,20 +168,24 @@ $status_map_to_text = [
                 </select>
             </div>
             <div class="form-group">
-                        <label for="district">Quận/Huyện</label>
-                        <select id="district" name="district" class="form-control">
-                            <option value="">Chọn một quận/huyện</option>
-                        </select>
-                </div>
+                          <label for="district">Quận/Huyện</label>
+                          <select id="district" name="district" class="form-control">
+                              <option value="">Chọn một quận/huyện</option>
+                          </select>
+                  </div>
+            <div class="col-12 p-0" style="margin-top: 10px;">
+                <button style="outline: none; margin-bottom: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
+                <button style="outline: none; margin-bottom: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
+            </div>
         </div>
 
         <div class="row element-filter mx-0 mb-3">
             <div class="filter__date col-6 p-0">
                 <form action="" id="dateFilterForm">
                     <label for="datein">Từ ngày: </label>
-                    <input type="date" name="datein" id="datein">
+                    <input type="date" name="datein" id="datein" value="<?php echo isset($_GET['datein']) ? htmlspecialchars($_GET['datein']) : ''; ?>">
                     <label for="dateout">đến ngày: </label>
-                    <input type="date" name="dateout" id="dateout">
+                    <input type="date" name="dateout" id="dateout" value="<?php echo isset($_GET['dateout']) ? htmlspecialchars($_GET['dateout']) : ''; ?>">
                     <button type="submit" class="btn-secondary">Áp dụng</button>
                 </form>
             </div>
@@ -212,12 +255,20 @@ $status_map_to_text = [
                             if (!empty($order['address'])) {
                                 echo $order['address'];
                             } else {
-                                $user_name = $order['user_name'];
-                                $user_sql = "SELECT user_address FROM nguoidung WHERE user_name = '$user_name'";
-                                $user_result = mysqli_query($conn, $user_sql);
-                                if ($user_result && mysqli_num_rows($user_result) > 0) {
-                                    $user_data = mysqli_fetch_assoc($user_result);
-                                    echo $user_data['user_address'];
+                                if (!empty($order['user_address'])) {
+                                    echo $order['user_address'];
+                                    if (!empty($order['district']) || !empty($order['city'])) {
+                                        echo ', ';
+                                        if (!empty($order['district'])) {
+                                            echo $order['district'];
+                                            if (!empty($order['city'])) {
+                                                echo ', ';
+                                            }
+                                        }
+                                        if (!empty($order['city'])) {
+                                            echo $order['city'];
+                                        }
+                                    }
                                 } else {
                                     echo "Không có địa chỉ";
                                 }
@@ -348,6 +399,73 @@ $status_map_to_text = [
                     $(".sidebar").removeClass("active");
                 }
             });
+
+            //  lọc theo ngày
+            $('#dateFilterForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var datein = $('#datein').val();
+                var dateout = $('#dateout').val();
+                
+                var url = 'order.php?';
+                var params = [];
+                
+                if (datein) {
+                    params.push('datein=' + datein);
+                }
+                
+                if (dateout) {
+                    params.push('dateout=' + dateout);
+                }
+                
+                window.location.href = url + params.join('&');
+            });
+
+            $('#applyLocationFilter').click(function() {
+                var province = $('#province').val();
+                var district = $('#district').val();
+                
+                var url = 'order.php?';
+                var params = [];
+                
+                if (province) {
+                    params.push('province=' + province);
+                }
+                
+                if (district) {
+                    params.push('district=' + district);
+                }
+                
+                window.location.href = url + params.join('&');
+            });
+            
+            $('#resetLocationFilter').click(function() {
+                window.location.href = 'order.php';
+            });
+
+            <?php if(isset($_GET['province']) && !empty($_GET['province'])): ?>
+            $('#province').val('<?php echo $_GET['province']; ?>');
+            $.ajax({
+                url: '../pages/get_district.php',
+                method: 'GET',
+                dataType: "json",
+                data: {
+                    province_id: '<?php echo $_GET['province']; ?>'
+                },
+                success: function(data) {
+                    $('#district').empty();
+                    $.each(data, function(i, district) {
+                        $('#district').append($('<option>', {
+                            value: district.id,
+                            text: district.name
+                        }));
+                    });
+                    <?php if(isset($_GET['district']) && !empty($_GET['district'])): ?>
+                    $('#district').val('<?php echo $_GET['district']; ?>');
+                    <?php endif; ?>
+                }
+            });
+            <?php endif; ?>
 
             $('.btn-outline-warning').click(function() {
                 var order_id = $(this).closest('tr').find('td:first-child').text();
