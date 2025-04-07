@@ -17,7 +17,7 @@
             $target_file = $upload_dir . $file_name;
             
             if(move_uploaded_file($_FILES['product-image']['tmp_name'], $target_file)) {
-                $image_path = '..img/' . $file_name;
+                $image_path = '../img/' . $file_name;
             }
         }
         $sql = "INSERT INTO sanpham(product_id, product_name, product_type, product_price, product_status, product_image, product_description)
