@@ -10,7 +10,7 @@ if (isset($_POST['add_sale'])) {
     die();
 }
 
-// Kiểm tra lọc theo tỉnh/thành và quận/huyện
+//lọc theo tỉnh/thành và quận/huyện
 $where_clause = "";
 if (isset($_GET['province']) && !empty($_GET['province'])) {
     $province_id = $_GET['province'];
@@ -104,7 +104,7 @@ $status_map_to_text = [
         <hr>
 
         <ul class="sidebar-menu"></ul>
-        <a class="icon-denim" href="./usermanage.html" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản
+        <a class="icon-denim" href="./usermanage.php" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản
             lí người dùng</a>
         <a class="icon-denim icon-denim-active" href="./order.php" target="_self"> <i
                 class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
@@ -366,6 +366,14 @@ $status_map_to_text = [
                                 <input name="address" class="form-control" type="text" readonly value="">
                             </div>
                             <div class="form-group col-md-6">
+                                <label class="control-label">Quận/Huyện</label>
+                                <input name="district" class="form-control" type="text" readonly value="">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Tỉnh/Thành phố</label>
+                                <input name="city" class="form-control" type="text" readonly value="">
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label class="control-label">Trạng thái</label>
                                 <select name="status" class="form-control" id="statusSelect">
                                     <option value="Chưa xác nhận">Chưa xác nhận</option>
@@ -481,6 +489,8 @@ $status_map_to_text = [
                             $('input[name="bill_id"]').val(order.order_id);
                             $('input[name="customer_name"]').val(order.fullname);
                             $('input[name="address"]').val(order.address || '');
+                            $('input[name="district"]').val(order.district || '');
+                            $('input[name="city"]').val(order.city || '');
                             
                             $('#statusSelect').val(order.order_status);
                             
@@ -542,7 +552,7 @@ $status_map_to_text = [
                     return;
                 }
                 
-                if (currentStatus === 'Giao thành công' && status === 'Đã hủy') {
+                if (currentStatus === 'Giao thành công' && status === 'Đã hủy'){
                     alert('Đơn hàng đã giao thành công không thể hủy');
                     return;
                 }

@@ -14,9 +14,9 @@ var attempt = 3;
 function validate() {
     var username = document.getElementById("un").value;
     var password = document.getElementById("mk").value;
-  if (username == "admin" && password == "admin123") {
+  if (username == "admin" && password == "admin123"){
     alert("Đăng nhập thành công!");
-    window.location.replace("/web2/admin/pages/usermanage.html"); 
+    window.location.replace("/web2/admin/pages/usermanager.php"); 
   return false;
    } else {
     alert("Mật khẩu sai! Vui lòng nhập lại");

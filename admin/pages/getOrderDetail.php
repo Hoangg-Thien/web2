@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 if (isset($_GET['order_id'])) {
     $order_id = $_GET['order_id'];
 
-    $sql = "SELECT d.*, nd.fullname, nd.user_name, nd.user_address, sp.product_name, sp.product_price 
+    $sql = "SELECT d.*, nd.fullname, nd.user_name, nd.user_address, nd.district, nd.city, sp.product_name, sp.product_price 
             FROM dathang d
             LEFT JOIN nguoidung nd ON d.user_name = nd.user_name
             LEFT JOIN sanpham sp ON d.product_id = sp.product_id
