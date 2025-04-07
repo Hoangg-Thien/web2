@@ -2,10 +2,12 @@
 <html lang="en">  
 <head>  
     <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/contact.css">  
-    <link rel="stylesheet" href="../styles/grid.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../styles/index.css">
+    <link href="../styles/contact.css" rel="stylesheet"/>
+    <link href="../styles/grid.css" rel="stylesheet"/>
+
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
     <title>Trang Liên Hệ</title>  
     <style>  
@@ -113,14 +115,14 @@
         </div>  
 
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM
+            <div class="product-category">DANH MỤC SẢN PHẨM 
                 <ul>
-                    <li><a href="./declious-fruits-nologin.html">Trái cây ngon </a></li>
-                    <li><a href="./VietNamese-fruits-nolog.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits-nologin.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables-nologin.html">Rau củ  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Khô</a></li>
-                    <li><a href="./Imported-fruits.html">Các loại hạt  </a></li>
+                    <li><a href="./user/declious-fruits.html">Trái cây ngon </a></li>
+                    <li><a href="./user/Vietnamese-fruits.html">Trái cây Việt  </a></li>
+                    <li><a href="./user/Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./user/vegetables.html">Rau củ  </a></li>
+                    <li><a href="./user/Imported-fruits.html">Trái cây Khô</a></li>
+                    <li><a href="./user/nut-fruits.html">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
@@ -159,7 +161,7 @@
             </div>
     
             <h3>Gửi tin nhắn cho chúng tôi</h3>
-            <form class="contact-form">
+            <form class="contact-form" id="contactForm">
                 <input type="text" name="name" placeholder="Họ và tên" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="text" name="phone" placeholder="Số điện thoại">
@@ -275,11 +277,17 @@
     </footer>  
 </body>  
 </html>
-=======
-</body>
-<footer style="width: 100% ;">
-    <div>
-        Copyright by us<b>&#8482</b>
-    </div>
-</footer>
->>>>>>> 60a4174d1192692a819498c77b307cef73039227
+
+<script>
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // Ngăn chặn reload trang nếu form chưa thực sự gửi đi
+  
+      // TODO: Nếu có gửi form lên server thì viết fetch/ajax ở đây
+  
+      alert("Thông tin của bạn đã đến được với chúng tôi!");
+      
+      // Reset form nếu muốn
+      this.reset();
+    });
+  </script>
+  
