@@ -4,10 +4,14 @@ $username = 'root';
 $password = '';
 $dbname = 'website';
 
-$conn = new mysqLi($host, $username, $password, $dbname);
+// Tạo kết nối
+$conn = new mysqli($host, $username, $password, $dbname);
+
+// Kiểm tra kết nối
 if ($conn->connect_error) {
     die("Kết nối thất bại: " . $conn->connect_error);
 }
-echo "Kết nối thành công!";
-$conn->set_charset("utf8");
+
+// Đặt bộ mã ký tự để hỗ trợ tiếng Việt
+$conn->set_charset("utf8mb4");
 ?>
