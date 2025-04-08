@@ -10,7 +10,7 @@ if (isset($_POST['add_sale'])) {
     die();
 }
 
-//lọc theo tỉnh/thành và quận/huyện
+// lọc theo tỉnh/thành và quận/huyện
 $where_clause = "";
 if (isset($_GET['province']) && !empty($_GET['province'])) {
     $province_id = $_GET['province'];
@@ -20,7 +20,7 @@ if (isset($_GET['province']) && !empty($_GET['province'])) {
     if ($province_result && mysqli_num_rows($province_result) > 0) {
         $province_data = mysqli_fetch_assoc($province_result);
         $province_name = mysqli_real_escape_string($conn, trim($province_data['name']));
-        $where_clause .= " AND (nd.city LIKE '%$province_name%' OR nd.user_address LIKE '%$province_name%')";
+        $where_clause .= " AND (hd.city LIKE '%$province_name%' OR hd.address LIKE '%$province_name%')";
     }
 }
 
@@ -32,27 +32,26 @@ if (isset($_GET['district']) && !empty($_GET['district'])){
     if ($district_result && mysqli_num_rows($district_result) > 0) {
         $district_data = mysqli_fetch_assoc($district_result);
         $district_name = mysqli_real_escape_string($conn, trim($district_data['name']));
-        $where_clause .= " AND (nd.district LIKE '%$district_name%' OR nd.user_address LIKE '%$district_name%')";
+        $where_clause .= " AND (hd.district LIKE '%$district_name%' OR hd.address LIKE '%$district_name%')";
     }
 }
 
 // Lọc theo ngày
 if (isset($_GET['datein']) && !empty($_GET['datein'])) {
     $date_in = mysqli_real_escape_string($conn, $_GET['datein']);
-    $where_clause .= " AND DATE(d.order_date) >= '$date_in'";
+    $where_clause .= " AND DATE(hd.order_date) >= '$date_in'";
 }
 
 if (isset($_GET['dateout']) && !empty($_GET['dateout'])) {
     $date_out = mysqli_real_escape_string($conn, $_GET['dateout']);
-    $where_clause .= " AND DATE(d.order_date) <= '$date_out'";
+    $where_clause .= " AND DATE(hd.order_date) <= '$date_out'";
 }
 
-$order_sql = "SELECT d.*, nd.fullname, nd.district, nd.city, nd.user_address, sp.product_name, sp.product_price  
-              FROM dathang d 
-              LEFT JOIN nguoidung nd ON d.user_name = nd.user_name
-              LEFT JOIN sanpham sp ON d.product_id = sp.product_id
+$order_sql = "SELECT hd.*, nd.fullname, nd.district, nd.city, nd.user_address 
+              FROM hoadon hd 
+              LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
               WHERE 1=1 $where_clause
-              ORDER BY d.order_date DESC";
+              ORDER BY hd.order_date DESC";
 
 $order_result = mysqli_query($conn, $order_sql);
 
@@ -252,34 +251,42 @@ $status_map_to_text = [
                         <td><?php echo $order['fullname']; ?></td>
                         <td>
                             <?php 
+                            $address_parts = [];
+                            
                             if (!empty($order['address'])) {
-                                echo $order['address'];
+                                $address_parts[] = $order['address'];
+                            } else if (!empty($order['user_address'])) {
+                                $address_parts[] = $order['user_address'];
+                            }
+                            
+                            if (!empty($order['district'])) {
+                                $address_parts[] = $order['district'];
+                            }
+                            
+                            if (!empty($order['city'])) {
+                                $address_parts[] = $order['city'];
+                            }
+                            
+                            if (!empty($address_parts)) {
+                                echo implode(', ', $address_parts);
                             } else {
-                                if (!empty($order['user_address'])) {
-                                    echo $order['user_address'];
-                                    if (!empty($order['district']) || !empty($order['city'])) {
-                                        echo ', ';
-                                        if (!empty($order['district'])) {
-                                            echo $order['district'];
-                                            if (!empty($order['city'])) {
-                                                echo ', ';
-                                            }
-                                        }
-                                        if (!empty($order['city'])) {
-                                            echo $order['city'];
-                                        }
-                                    }
-                                } else {
-                                    echo "Không có địa chỉ";
-                                }
+                                echo "Không có địa chỉ";
                             }
                             ?>
                         </td>
                         <td>
                             <?php
-                            if (!empty($order['product_name'])) {
-                                $quantity = isset($order['quantity']) ? $order['quantity'] : 1;
-                                echo $quantity . "kg x " . $order['product_name'] . "<br>";
+                            $order_detail_sql = "SELECT cthd.*, sp.product_name, sp.product_price
+                                                FROM chitiethoadon cthd
+                                                LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
+                                                WHERE cthd.order_id = '$order_id'";
+                            $order_detail_result = mysqli_query($conn, $order_detail_sql);
+                            
+                            if ($order_detail_result && mysqli_num_rows($order_detail_result) > 0) {
+                                while ($detail = mysqli_fetch_assoc($order_detail_result)) {
+                                    $quantity = isset($detail['quantity']) ? $detail['quantity'] : 1;
+                                    echo $quantity . "kg x " . $detail['product_name'] . "<br>";
+                                }
                             } else {
                                 echo "Không có sản phẩm";
                             }
@@ -287,9 +294,15 @@ $status_map_to_text = [
                         </td>
                         <td>
                             <?php 
-                            if (isset($order['product_price'])) {
-                                $quantity = isset($order['quantity']) && !empty($order['quantity']) ? $order['quantity'] : 1;
-                                $total = $order['product_price'] * $quantity;
+                            $total_sql = "SELECT SUM(cthd.quantity * sp.product_price) as total_amount
+                                        FROM chitiethoadon cthd
+                                        LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
+                                        WHERE cthd.order_id = '$order_id'";
+                            $total_result = mysqli_query($conn, $total_sql);
+                            
+                            if ($total_result && mysqli_num_rows($total_result) > 0){
+                                $total_row = mysqli_fetch_assoc($total_result);
+                                $total = $total_row['total_amount'];
                                 echo number_format($total, 0, ',', '.') . 'đ';
                             } else {
                                 echo "N/A";

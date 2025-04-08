@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    $check_sql = "SELECT * FROM dathang WHERE order_id = '$order_id'";
+    $check_sql = "SELECT * FROM hoadon WHERE order_id = '$order_id'";
     $check_result = mysqli_query($conn, $check_sql);
     
     if (!$check_result || mysqli_num_rows($check_result) == 0) {
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    $sql = "UPDATE dathang SET order_status = '$status' WHERE order_id = '$order_id'";
+    $sql = "UPDATE hoadon SET order_status = '$status' WHERE order_id = '$order_id'";
     $result = mysqli_query($conn, $sql);
     
     if ($result) {

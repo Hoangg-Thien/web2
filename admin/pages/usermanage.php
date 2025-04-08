@@ -187,7 +187,7 @@ $result = $conn->query($sql);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="control-label">Tên người dùng</label>
-                            <input class="form-control" type="text" id="edit_username" placeholder="Nhập tên người dùng" readonly>
+                            <input class="form-control" type="text" id="edit_username" placeholder="Nhập tên người dùng">
                         </div>
                         <div class="form-group col-md-6">
                             <label class="control-label">Họ và tên</label>

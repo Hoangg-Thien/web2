@@ -5,11 +5,11 @@ header('Content-Type: application/json');
 if (isset($_GET['order_id'])) {
     $order_id = $_GET['order_id'];
 
-    $sql = "SELECT d.*, nd.fullname, nd.user_name, nd.user_address, nd.district, nd.city, sp.product_name, sp.product_price 
-            FROM dathang d
-            LEFT JOIN nguoidung nd ON d.user_name = nd.user_name
-            LEFT JOIN sanpham sp ON d.product_id = sp.product_id
-            WHERE d.order_id = ?";
+    // Lấy thông tin đơn hàng và thông tin người dùng
+    $sql = "SELECT hd.*, nd.fullname, nd.user_name, nd.user_address, nd.district, nd.city
+            FROM hoadon hd
+            LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
+            WHERE hd.order_id = ?";
     
     $stmt = mysqli_prepare($conn, $sql);
     
@@ -23,9 +23,34 @@ if (isset($_GET['order_id'])) {
         if ($result && mysqli_num_rows($result) > 0) {
             $order = mysqli_fetch_assoc($result);
             
-            if (isset($order['product_price'])) {
-                $quantity = isset($order['quantity']) && !empty($order['quantity']) ? $order['quantity'] : 1;
-                $order['total_amount'] = $order['product_price'] * $quantity;
+            // Lấy thông tin sản phẩm từ bảng chitiethoadon
+            $detail_sql = "SELECT ct.*, sp.product_name, sp.product_price 
+                        FROM chitiethoadon ct
+                        LEFT JOIN sanpham sp ON ct.product_id = sp.product_id
+                        WHERE ct.order_id = ?";
+                        
+            $detail_stmt = mysqli_prepare($conn, $detail_sql);
+            
+            if ($detail_stmt) {
+                mysqli_stmt_bind_param($detail_stmt, "s", $order_id);
+                mysqli_stmt_execute($detail_stmt);
+                $detail_result = mysqli_stmt_get_result($detail_stmt);
+                
+                $products = [];
+                $total_amount = 0;
+                
+                if ($detail_result && mysqli_num_rows($detail_result) > 0) {
+                    while ($detail = mysqli_fetch_assoc($detail_result)) {
+                        $products[] = $detail;
+                        $quantity = isset($detail['quantity']) ? $detail['quantity'] : 1;
+                        $total_amount += $detail['product_price'] * $quantity;
+                    }
+                }
+                
+                $order['products'] = $products;
+                $order['total_amount'] = $total_amount;
+                
+                mysqli_stmt_close($detail_stmt);
             }
             
             if (empty($order['address']) && !empty($order['user_address'])) {
