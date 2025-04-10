@@ -52,7 +52,7 @@ $result = $conn->query($sql);
                 sản phẩm</a>
             <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản
                 phẩm</a>
-            <a class="icon-denim" href="./satistics.html" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống
+            <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống
                 kê tình hình</a>
             <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
                 xuất</a>

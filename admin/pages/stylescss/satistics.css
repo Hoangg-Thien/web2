@@ -301,23 +301,6 @@ table th {
    margin-left: 1.5%;
 }
 
-.btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-
-.btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-}
-
-.btn-success:focus,
-.btn-success:active {
-    background-color: #28a745 !important; 
-    color: white !important; 
-    outline: none !important;  
-}
-
 .modal-backdrop.show {
     opacity: 0.7;
 }
@@ -325,4 +308,24 @@ table th {
 .icon-denim-active {
     background-color: #3f51b5;
     border-radius: 10px;
+}
+
+button.btn.btn-filter {
+    background-color: #099427;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button.btn.btn-filter:active {
+    color: white !important;
+}
+
+button.btn.btn-reset {
+    background-color: #dc3545;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button.btn.btn-reset:active {
+    color: white !important;
 }

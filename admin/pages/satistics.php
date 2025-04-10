@@ -1,3 +1,43 @@
+<?php
+require 'connect.php';
+
+$where_clause = "";
+
+// Lọc theo ngày
+if (isset($_GET['datein']) && !empty($_GET['datein'])) {
+    $date_in = mysqli_real_escape_string($conn, $_GET['datein']);
+    $where_clause .= " AND DATE(hd.order_date) >= '$date_in'";
+}
+
+if (isset($_GET['dateout']) && !empty($_GET['dateout'])) {
+    $date_out = mysqli_real_escape_string($conn, $_GET['dateout']);
+    $where_clause .= " AND DATE(hd.order_date) <= '$date_out'";
+}
+
+$order_sql = "SELECT hd.*, nd.fullname, nd.district, nd.city, nd.user_address,
+              (SELECT SUM(cthd.quantity * sp.product_price) 
+               FROM chitiethoadon cthd 
+               JOIN sanpham sp ON cthd.product_id = sp.product_id 
+               WHERE cthd.order_id = hd.order_id) as total_amount
+              FROM hoadon hd 
+              LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
+              WHERE 1=1 $where_clause
+              ORDER BY total_amount DESC";
+
+$order_result = mysqli_query($conn, $order_sql);
+
+$top_customers_sql = "SELECT nd.fullname, SUM(cthd.quantity * sp.product_price) as total_spent
+                    FROM hoadon hd
+                    JOIN nguoidung nd ON hd.user_name = nd.user_name
+                    JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
+                    JOIN sanpham sp ON cthd.product_id = sp.product_id
+                    WHERE 1=1 $where_clause
+                    GROUP BY nd.user_name, nd.fullname
+                    ORDER BY total_spent DESC
+                    LIMIT 5";
+
+$top_customers_result = mysqli_query($conn, $top_customers_sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +79,7 @@
                 sản phẩm</a>
             <a class="icon-denim" href="./addpro.html" target="_self"><i class="fa-solid fa-cart-plus"></i> Thêm sản
                 phẩm</a>
-            <a class="icon-denim icon-denim-active" href="./satistics.html" target="_self"><i
+            <a class="icon-denim icon-denim-active" href="./satistics.php" target="_self"><i
                     class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
             <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
                 xuất</a>
@@ -58,90 +98,89 @@
             <h1 style="font-weight: bold;">Thống Kê Tình Hình Kinh Doanh</h1>
         </div>
 
-        <label for="filter__select">Thống kê: </label>
-        <select name="filter__select" id="filter__select" class="mr-3">
-            <option value="">Tất cả</option>
-            <option value="">Doanh số</option>
-            <option value="">Sản phẩm bán chạy</option>
-            <option value="">Sản phẩm bán ế</option>
-        </select>
-        <label for="product">Loại sản phẩm: </label>
-        <select name="" id="product" class="mr-3">
-            <option value="">Tất cả</option>
-            <option value="">Trái cây ngon</option>
-            <option value="">Trái cây Việt</option>
-            <option value="">Trái cây Nhập Khẩu</option>
-        </select>
-        <label for="filter__date">Từ</label>
-        <input type="date" id="filter__date">
-        <label for="filter__dateout">đến</label>
-        <input type="date" id="filter__dateout">
-        <br>
-        <br>
-        <button style="outline: none;" type="submit" class="btn btn-success mx-auto mt-3 d-block center-page">Lọc dữ
-            liệu</button>
+        <form action="" id="dateFilterForm">
+                    <label for="datein">Từ ngày: </label>
+                    <input type="date" name="datein" id="datein" value="<?php echo isset($_GET['datein']) ? htmlspecialchars($_GET['datein']) : ''; ?>">
+                    <label for="dateout">đến ngày: </label>
+                    <input type="date" name="dateout" id="dateout" value="<?php echo isset($_GET['dateout']) ? htmlspecialchars($_GET['dateout']) : ''; ?>">
+                </form>
+        <button style="outline: none; margin-top: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
+        <button style="outline: none; margin-top: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
 
         <div>
-            <h3 class="tile-title">KHÁCH HÀNG</h3>
+            <h3 class="tile-title">5 KHÁCH HÀNG CÓ MỨC MUA CAO NHẤT</h3>
         </div>
         <div class="tile-body">
             <table class="table table-hover table-bordered" id="sampleTable">
                 <thead>
                     <tr>
-                        <th>ID đơn hàng</th>
-                        <th>Khách hàng</th>
+                        <th>STT</th>
+                        <th>Mã đơn</th>
+                        <th>Tên Khách hàng</th>
                         <th>Đơn hàng</th>
-                        <th>Số lượng</th>
                         <th>Tổng tiền</th>
+                        <th>Ngày</th>
                         <th>Hóa đơn</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>SF23</td>
-                        <td>Gia Huy </td>
-                        <td>2kg x Dưa hấu Long An, 5kg x Táo Envy</td>
-                        <td>2 sản phẩm</td>
-                        <td>890.000đ</td>
-                        <td><a target="_blank" href="../allbill/bill4.html"><i class="fa-solid fa-bars"></i></a></td>
-                    </tr>
+                <?php
+                    if ($top_customers_result) {
+                        mysqli_data_seek($top_customers_result, 0);
+                    }
 
+                    $rank = 1;
+                    
+                    if ($order_result && mysqli_num_rows($order_result) > 0) {
+                        while ($order = mysqli_fetch_assoc($order_result)) {
+                            $order_id = $order['order_id'];
+                            
+                            $date = date('d/m/Y', strtotime($order['order_date']));
+                            $time = date('H:i', strtotime($order['order_date']));
+                    ?>
                     <tr>
-                        <td>SF30</td>
-                        <td>Minh Đạt</td>
-                        <td>6kg x Ổi xá lị, 3kg x Nho Mỹ, 2kg x Quýt đường</td>
-                        <td>3 sản phẩm</td>
-                        <td>840.000đ</td>
-                        <td><a target="_blank" href="../allbill/bill5.html"><i class="fa-solid fa-bars"></i></a></td>
+                        <td><?php echo $rank++; ?></td>
+                        <td><?php echo $order['order_id']; ?></td>
+                        <td><?php echo $order['fullname']; ?></td>
+                        <td>
+                            <?php
+                            $order_detail_sql = "SELECT cthd.*, sp.product_name, sp.product_price
+                                                FROM chitiethoadon cthd
+                                                LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
+                                                WHERE cthd.order_id = '$order_id'";
+                            $order_detail_result = mysqli_query($conn, $order_detail_sql);
+                            
+                            if ($order_detail_result && mysqli_num_rows($order_detail_result) > 0) {
+                                while ($detail = mysqli_fetch_assoc($order_detail_result)) {
+                                    $quantity = isset($detail['quantity']) ? $detail['quantity'] : 1;
+                                    echo $quantity . "kg x " . $detail['product_name'] . "<br>";
+                                }
+                            } else {
+                                echo "Không có đơn";
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <?php 
+                            if (isset($order['total_amount']) && $order['total_amount'] > 0) {
+                                echo number_format($order['total_amount'], 0, ',', '.') . 'đ';
+                            } else {
+                                echo "N/A";
+                            }
+                            ?>
+                        </td>
+                        <td><?php echo $date; ?><br><?php echo $time; ?></td>
                     </tr>
+                    <?php
+                        }
+                    } else {
+                    ?>
                     <tr>
-                        <td>SF10</td>
-                        <td>Hoàng Khang</td>
-                        <td>3kg x Kiwi, 6kg x Chôm chôm</td>
-                        <td>2 sản phẩm</td>
-                        <td>590.000đ</td>
-                        <td><a target="_blank" href="../allbill/bill2.html"><i class="fa-solid fa-bars"></i></a></td>
+                        <td colspan="6" class="text-center">Không có đơn hàng nào</td>
                     </tr>
-                    <tr>
-                        <td>SF15</td>
-                        <td>Uy Vủ</td>
-                        <td>1kg x Xoài cát, 10kg x Mận Hà Nội</td>
-                        <td>2 sản phẩm</td>
-                        <td>495.000đ</td>
-                        <td><a target="_blank" href="../allbill/bill3.html"><i class="fa-solid fa-bars"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>SF01</td>
-                        <td>Quang Trung</td>
-                        <td>2kg x Mãng cầu xiêm, 5kg x Dâu tây Đà Lạt, 1kg x Lựu Ai Cập</td>
-                        <td>3 sản phẩm</td>
-                        <td>475.000đ</td>
-                        <td><a target="_blank" href="../allbill/bill1.html"><i class="fa-solid fa-bars"></i></a></td>
-                    </tr>
-                    <tr>
-                        <th colspan="4">Tổng cộng:</th>
-                        <td>3.290.000đ</td>
-                    </tr>
+                    <?php
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -344,9 +383,39 @@
                     $("#sidebar").removeClass("active");
                 }
             });
+
+            // lọc theo ngày
+            $('#applyLocationFilter').on('click', function(e) {
+                e.preventDefault();
+                
+                var datein = $('#datein').val();
+                var dateout = $('#dateout').val();
+                
+                var url = 'satistics.php?';
+                var params = [];
+                
+                if (datein) {
+                    params.push('datein=' + datein);
+                }
+                
+                if (dateout) {
+                    params.push('dateout=' + dateout);
+                }
+                
+                window.location.href = url + params.join('&');
+            });
+            
+            $('#resetLocationFilter').on('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'satistics.php';
+            });
+            
+            $('#dateFilterForm').on('submit', function(e) {
+                e.preventDefault();
+                $('#applyLocationFilter').click();
+            });
         });
     </script>
 
 </body>
-
 </html>

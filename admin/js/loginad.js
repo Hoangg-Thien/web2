@@ -16,7 +16,7 @@ function validate() {
     var password = document.getElementById("mk").value;
   if (username == "admin" && password == "admin123"){
     alert("Đăng nhập thành công!");
-    window.location.replace("/web2/admin/pages/usermanager.php"); 
+    window.location.replace("/web2/admin/pages/usermanage.php"); 
   return false;
    } else {
     alert("Mật khẩu sai! Vui lòng nhập lại");
