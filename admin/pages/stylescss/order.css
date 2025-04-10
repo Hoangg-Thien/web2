@@ -334,19 +334,19 @@ table th {
     white-space: nowrap;
 }
 
-.status.pending {
+.pending {
     background-color: #efb11e;
 }
 
-.status.completed {
+.completed {
     background-color: #4CAF50;
 }
 
-.status.shipping {
+.confirmed {
     background-color: #3c97e6;
 }
 
-.status.cancelled {
+.cancelled {
     background-color: #e54432;
 }
 
@@ -602,4 +602,34 @@ input[type=search] {
 #ModalUP .modal-footer .btn:focus {
     box-shadow: 0 0 0 3px rgba(0,123,255,0.3);
     outline: none;
+}
+
+.btn-filter {
+    background-color: #099427;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-filter:active {
+    color: white !important;
+}
+
+.btn-reset {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-reset:active {
+    color: white !important;
 }

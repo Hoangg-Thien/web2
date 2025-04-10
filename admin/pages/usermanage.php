@@ -1,3 +1,9 @@
+<?php
+require 'connect.php';
+
+$sql = "SELECT user_name, fullname, user_address, user_email, phone, user_role, user_status, district, city FROM nguoidung";
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -22,28 +28,34 @@
 <body>
     <button class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></button>
     <div class="sidebar" id="sidebar">
-            <div class="sidebar-content">
-        <nav>
-            <ul style="margin-bottom: 10px;">
-                <li class="user-info">
-                    <div class="img-edit">
-                        <img class="img-head" src="../img/admin.jpg" alt="User Image">
-                    </div>
-                    <div class="role">Chào mừng trở lại, Huy!</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
+        <div class="sidebar-content">
+            <nav>
+                <ul style="margin-bottom: 10px;">
+                    <li class="user-info">
+                        <div class="img-edit">
+                            <img class="img-head" src="../img/admin.jpg" alt="User Image">
+                        </div>
+                        <div class="role">Chào mừng trở lại, Huy!</div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 
         <hr>
 
         <ul class="sidebar-menu">
-        <a class="icon-denim icon-denim-active" href="./usermanage.html" target="_self"> <i class="fa-solid fa-user-shield"></i> <span>Quản lí người dùng</span></a>
-        <a class="icon-denim" href="./order.html" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
-        <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
-        <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
-        <a class="icon-denim" href="./satistics.html" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
-        <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+            <a class="icon-denim icon-denim-active" href="./usermanage.php" target="_self"> <i
+                    class="fa-solid fa-user-shield"></i> <span>Quản lí người dùng</span></a>
+            <a class="icon-denim" href="./order.php" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý
+                đơn hàng</a>
+            <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả
+                sản phẩm</a>
+            <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản
+                phẩm</a>
+            <a class="icon-denim" href="./satistics.html" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống
+                kê tình hình</a>
+            <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
+                xuất</a>
         </ul>
     </div>
 
@@ -60,12 +72,17 @@
             <h1 style="font-weight: bold;">Danh Sách Người Dùng</h1>
         </div>
         <div class="action-buttons-wrapper">
-            <button style="outline: none;" class="btn green1" onclick=""><i class="fa-solid fa-plus"></i> Thêm mới</button>
-            <button style="outline: none;" class="btn bluesky" onclick=""><i class="fa-solid fa-file-arrow-up"></i> Tải từ file</button>
-            <button style="outline: none;" class="btn orange" onclick=""><i class="fa-solid fa-print"></i> In dữ liệu</button>
+            <button style="outline: none;" class="btn green1" onclick=""><i class="fa-solid fa-plus"></i> Thêm
+                mới</button>
+            <button style="outline: none;" class="btn bluesky" onclick=""><i class="fa-solid fa-file-arrow-up"></i> Tải
+                từ file</button>
+            <button style="outline: none;" class="btn orange" onclick=""><i class="fa-solid fa-print"></i> In dữ
+                liệu</button>
             <button style="outline: none;" class="btn yellow" onclick=""><i class="fas fa-copy"></i> Sao chép</button>
-            <button style="outline: none;" class="btn green" onclick=""><i class="fas fa-file-excel"></i> Xuất Excel</button>
-            <button style="outline: none;" class="btn red" onclick=""><i class="fas fa-trash-alt"></i> Xóa tất cả</button>
+            <button style="outline: none;" class="btn green" onclick=""><i class="fas fa-file-excel"></i> Xuất
+                Excel</button>
+            <button style="outline: none;" class="btn red" onclick=""><i class="fas fa-trash-alt"></i> Xóa tất
+                cả</button>
         </div>
         <div class="filter__right col-6 p-0 text-right">
             <span class="search-hole">Tìm kiếm:</span>
@@ -79,66 +96,43 @@
                         <th>Họ và tên</th>
                         <th>Địa chỉ</th>
                         <th>Email</th>
+                        <th>Số điện thoại</th>
                         <th>Vai trò</th>
+                        <th>Trạng thái</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                    ?>
                     <tr>
-                        <td>TeamOne</td>
-                        <td>Lưu Gia Huy</td>
-                        <td>273, An Dương Vương, Quận 5, Tp HCM</td>
-                        <td>TeamOne@gmail.com</td>
-                        <td>Khách Hàng Cao Cấp ⭐</td>
+                        <td><?php echo $row["user_name"]; ?></td>
+                        <td><?php echo $row["fullname"]; ?></td>
+                        <td><?php echo $row["user_address"] . ", " . $row["district"] . ", " . $row["city"]; ?></td>
+                        <td><?php echo $row["user_email"]; ?> </td>
+                        <td><?php echo $row["phone"]; ?></td>
+                        <td><?php echo $row["user_role"]; ?></td>
+                        <td><?php echo $row["user_status"]; ?></td>
                         <td>
-                            <button style="outline: none;" class="btn delete" onclick=""><i class="fa-solid fa-lock-open"></i></button>
+                            <button style="outline: none;" class="btn delete" onclick=""><i
+                                class="fa-solid fa-lock-open"></i></button>
                             <button style="outline: none;" class="btn gear" onclick=""><i class="fa fa-edit"></i></button>
                             <button style="outline: none;" class="btn lock" onclick=""><i
-                                    class="fa-solid fa-lock"></i></button>
+                                class="fa-solid fa-lock"></i></button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Kaka</td>
-                        <td>Châu Uy Vủ</td>
-                        <td>273, An Dương Vương, Quận 5, Tp HCM</td>
-                        <td>chauuyvu0809@gmail.com</td>
-                        <td>Khách Hàng</td>
-                        <td>
-                            <button style="outline: none;" class="btn delete" onclick=""><i class="fa-solid fa-lock-open"></i></button>
-                            <button style="outline: none;" class="btn gear" onclick=""><i class="fa fa-edit"></i></button>
-                            <button style="outline: none;" class="btn lock" onclick=""><i
-                                    class="fa-solid fa-lock"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>7Siu</td>
-                        <td>Hoàng Thiên</td>
-                        <td>273, An Dương Vương, Quận 5, Tp HCM</td>
-                        <td>leviethoangthien2005@gmail.com</td>
-                        <td>Khách Hàng</td>
-                        <td>
-                            <button style="outline: none;" class="btn delete" onclick=""><i class="fa-solid fa-lock-open"></i></button>
-                            <button style="outline: none;" class="btn gear" onclick=""><i class="fa fa-edit"></i></button>
-                            <button style="outline: none;" class="btn lock" onclick=""><i
-                                    class="fa-solid fa-lock"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Mờ Mười</td>
-                        <td>Lưu Gia Huy</td>
-                        <td>273, An Dương Vương, Quận 5, Tp HCM</td>
-                        <td>luugiahuy11082005@gmail.com</td>
-                        <td>Quản Lý</td>
-                        <td>
-                            <button style="outline: none;" class="btn delete" onclick=""><i class="fa-solid fa-lock-open"></i></button>
-                            <button style="outline: none;" class="btn gear" onclick=""><i class="fa fa-edit"></i></button>
-                            <button style="outline: none;" class="btn lock" onclick=""><i
-                                    class="fa-solid fa-lock"></i></button>
-                        </td>
-                    </tr>
+                    <?php
+                        }
+                    } else {
+                        echo "<tr><td colspan='10' style='text-align:center'>Không có dữ liệu người dùng</td></tr>";
+                    }
+                    $conn->close();
+                    ?>
                 </tbody>
-            </table>
-        </div>
+                </table>
+            </div>
     </main>
 
     <nav aria-label="Page navigation " class="page-center">
@@ -170,8 +164,10 @@
                 <div class="modal-body text-center">
                 </div>
                 <div class="modal-footer">
-                    <button style="outline: none; border: none;" type="button" class="btn btn-danger" data-dismiss="modal">Hủy Bỏ</button>
-                    <button style="outline: none; border: none;" type="button" class="btn btn-success" data-dismiss="modal" id="confirmDelete">Đồng Ý</button>
+                    <button style="outline: none; border: none;" type="button" class="btn btn-danger"
+                        data-dismiss="modal">Hủy Bỏ</button>
+                    <button style="outline: none; border: none;" type="button" class="btn btn-success"
+                        data-dismiss="modal" id="confirmDelete">Đồng Ý</button>
                 </div>
             </div>
         </div>
@@ -191,33 +187,46 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="control-label">Tên người dùng</label>
-                            <input class="form-control" type="text" placeholder="Nhập tên người dùng">
+                            <input class="form-control" type="text" id="edit_username" placeholder="Nhập tên người dùng">
                         </div>
                         <div class="form-group col-md-6">
                             <label class="control-label">Họ và tên</label>
-                            <input class="form-control" type="text" placeholder="Nhập họ và tên">
+                            <input class="form-control" type="text" id="edit_fullname" placeholder="Nhập họ và tên">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Địa chỉ</label>
-                            <input class="form-control" type="text" placeholder="Nhập địa chỉ">
+                            <input class="form-control" type="text" id="edit_address" placeholder="Nhập địa chỉ">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Email</label>
-                            <input class="form-control" type="text" placeholder="Nhập email">
+                            <input class="form-control" type="text" id="edit_email" placeholder="Nhập email">
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label class="control-label">Số điện thoại</label>
+                            <input class="form-control" type="text" id="edit_phone" placeholder="Nhập số điện thoại">
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label class="control-label">Quận</label>
+                            <input class="form-control" type="text" id="edit_district" placeholder="Nhập quận">
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label class="control-label">Thành phố</label>
+                            <input class="form-control" type="text" id="edit_city" placeholder="Nhập thành phố">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Vai trò</label>
-                            <input class="form-control" type="text" placeholder="Nhập vai trò">
+                            <input class="form-control" type="text" id="edit_role" placeholder="Nhập vai trò">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Trạng thái</label>
-                            <input class="form-control" type="text" placeholder="Trạng thái"">
+                            <input class="form-control" type="text" id="edit_status" placeholder="Nhập trạng thái">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelBtn">Hủy
                             bỏ</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">Đồng ý</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">Đồng
+                            ý</button>
                     </div>
                 </div>
             </div>
@@ -235,8 +244,10 @@
                 <div class="modal-body text-center">
                 </div>
                 <div class="modal-footer">
-                    <button style="outline: none; border: none;" type="button" class="btn btn-danger" data-dismiss="modal" id="cancelBtn">Hủy Bỏ</button>
-                    <button style="outline: none; border: none;" type="button" class="btn btn-success" data-dismiss="modal" id="saveBtn">Đồng Ý</button>
+                    <button style="outline: none; border: none;" type="button" class="btn btn-danger"
+                        data-dismiss="modal" id="cancelBtn">Hủy Bỏ</button>
+                    <button style="outline: none; border: none;" type="button" class="btn btn-success"
+                        data-dismiss="modal" id="saveBtn">Đồng Ý</button>
                 </div>
             </div>
         </div>
@@ -256,31 +267,39 @@
                     <div class="row">
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Tên người dùng</label>
-                            <input class="form-control" type="text" placeholder="Nhập tên người dùng">
+                            <input class="form-control" type="text" id="username" placeholder="Nhập tên người dùng">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Mật khẩu</label>
-                            <input class="form-control" type="text" placeholder="Nhập mật khẩu">
+                            <input class="form-control" type="text" id="password" placeholder="Nhập mật khẩu">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Họ và tên</label>
-                            <input class="form-control" type="text" placeholder="Nhập họ và tên">
+                            <input class="form-control" type="text" id="fullname" placeholder="Nhập họ và tên">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Số điện thoại</label>
-                            <input class="form-control" type="email" placeholder="Nhập số điện thoại">
+                            <input class="form-control" type="email" id="phone" placeholder="Nhập số điện thoại">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Địa chỉ</label>
-                            <input class="form-control" type="email" placeholder="Nhập địa chỉ">
+                            <input class="form-control" type="email" id="address" placeholder="Nhập địa chỉ">
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label class="control-label">Quận</label>
+                            <input class="form-control" type="text" id="district" placeholder="Nhập quận">
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label class="control-label">Thành phố</label>
+                            <input class="form-control" type="text" id="city" placeholder="Nhập thành phố">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Email</label>
-                            <input class="form-control" type="email" placeholder="Nhập email">
+                            <input class="form-control" type="email" id="email" placeholder="Nhập email">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Vai trò</label>
-                            <input class="form-control" type="text" placeholder="Nhập vai trò">
+                            <input class="form-control" type="text" id="role" placeholder="Nhập vai trò">
                         </div>
                     </div>
                 </div>
@@ -294,23 +313,6 @@
         </div>
     </div>
 
-    <script src="../js/adduser.js"></script>
-    <script src="../js/openuser.js"></script>
-    <script src="../js/adedit.js"></script>
-    <script src="../js/adlock.js"></script>
-    <script>
-        $(document).ready(function() {
-        $("#toggleSidebar").click(function() {
-            $("#sidebar").toggleClass("active");
-        });
-        
-        $(document).click(function(event) {
-            if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
-                $("#sidebar").removeClass("active");
-            }
-        });
-    });
-       </script>
-
+    <script src="../js/adjust_user.js"></script>
 </body>
 </html>
