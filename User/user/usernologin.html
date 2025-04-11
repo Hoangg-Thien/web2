@@ -169,6 +169,32 @@
         button:hover {
             background: #0056b3;
         }
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+    
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+    
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
         </style>
     </head>  
     <body>  
@@ -226,13 +252,19 @@
                         <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
                     </a>
                 </div>  
-                <div class="search-container">   
-                    <div >
-                        <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                        <button onclick="searchProducts()">Tìm kiếm</button>
-                        <button id="toggleSearch">Tìm kiếm nâng cao</button>
-                    </div>  
+                <div class="search-container">
+                    <form action="./searchProducts-nologin.php" method="GET">
+                    <!-- Tìm kiếm đơn giản -->
+                    <div>
+                        <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+                        <div id="suggestBox" class="autocomplete-suggestions"></div>
+                        <button type="submit">Tìm kiếm</button>
+                        <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+                    </div>
+                
+                    <!-- Kết quả -->
                     <div id="searchResults"></div>
+                
                     <div id="priorityFruits" class="hidden">
                         <ul>
                         </ul>
@@ -258,7 +290,9 @@
                             <button onclick="smartSearchProducts()">Lọc</button>
                         </div>
                     </div>  
-                    </div>
+                    </form>
+                </div>
+            
                 <div class="auth-buttons">  
                     <a href="../user/regis.html" title="Đăng ký" target="_blank">Đăng ký</a>  
                     <span>|</span>  
@@ -729,67 +763,36 @@
 }  
 showCategory('ngon');  
 localStorage.setItem('cartCount', 0);
-const fruits = [
-    { name: "Nho Mỹ", link: "../itemInfo/grapesnololog.html", priority: 1 },
-    { name: "Bòn Bon", link: "../itemInfo/langsatnolog.html", priority: 2 },
-    { name: "Kiwi", link: "../itemInfo/kiwinolog.html", priority: 3 },
-    { name: "Mãng cầu xiêm", link: "../itemInfo/cus-appnologin.html", priority: 4 },
-    { name: "Thanh long ruột đỏ", link: "../itemInfo/dragonfruitnolog.html", priority: 5 },
-    { name: "Xoài cát", link: "../itemInfo/mangonolog.html", priority: 6 },
-    { name: "Dưa hấu Long An", link: "../itemInfo/watermelonnolog.html", priority: 7 },
-    { name: "Chôm chôm", link: "../itemInfo/rambutantnolog.html", priority: 8 },
-    { name: "Ổi xá lị", link: "../itemInfo/guavanolog.html", priority: 9 },
-    { name: "Dâu tây Đà Lạt", link: "../itemInfo/strawberrynolog.html", priority: 10 },
-    { name: "Mận đỏ An Phước", link: "../itemInfo/water-appnolog.html", priority: 11 },
-    { name: "Mận Hà Nội", link: "../itemInfo/plumnolog.html", priority: 12 },
-    { name: "Quýt đường", link: "../itemInfo/tangerinenolog.html", priority: 13 },
-    { name: "Bưởi da xanh", link: "../itemInfo/pomelonolog.html", priority: 14 },
-    { name: "Cherry Úc", link: "../itemInfo/cherrynologin.html", priority: 15 },
-    { name: "Chuối chín Nam Mỹ", link: "../itemInfo/banananologin.html", priority: 16 },
-    { name: "Lựu Ai Cập", link: "../itemInfo/pomegranitenolog.html", priority: 17 },
-    { name: "Táo Envy", link: "../itemInfo/applenologin.html", priority: 18 }
-];
-let debounceTimeout;
-function searchProducts() 
-{
-clearTimeout(debounceTimeout);
-debounceTimeout = setTimeout(() => {
-    const searchBox = document.getElementById("searchBox");
-    const searchQuery = searchBox.value.toLowerCase();
-    const searchResults = document.getElementById("searchResults");
-    const priorityFruits = document.getElementById("priorityFruits");
-    priorityFruits.style.display = "none";
-    searchResults.innerHTML = "";
-    const filteredProducts = fruits.filter(product =>
-        product.name.toLowerCase().includes(searchQuery)
-    );
-    filteredProducts.sort((a, b) => b.priority - a.priority);
-
-    if (filteredProducts.length > 0) {
-        filteredProducts.forEach(product => {
-            const productLink = document.createElement("a");
-            productLink.href = product.link;
-            productLink.innerText = product.name;
-            productLink.classList.add("search-result"); 
-            searchResults.appendChild(productLink);
-        });
-
-        searchResults.style.display = "block";
-    } else {
-        searchResults.innerHTML = "<span class='empty'>Không tìm thấy sản phẩm nào</span>";
-        searchResults.style.display = "block";
-    }
-
- 
-    setTimeout(() => {
-        searchBox.value = ""; 
-        searchResults.style.display = "none"; 
-        searchResults.innerHTML = "";
-        priorityFruits.style.display = "block"; 
-    }, 5000); 
-}, 500); 
-}
-
+const input = document.getElementById("searchInput");
+    const suggestBox = document.getElementById("suggestBox");
+    
+    input.addEventListener("keyup", function () {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestBox.innerHTML = "";
+                    data.forEach(item => {
+                        const div = document.createElement("div");
+                        div.textContent = item;
+                        div.onclick = () => {
+                            input.value = item;
+                            suggestBox.innerHTML = "";
+                        };
+                        suggestBox.appendChild(div);
+                    });
+                });
+        } else {
+            suggestBox.innerHTML = "";
+        }
+    });
+    
+    document.addEventListener("click", function (e) {
+        if (e.target !== input) {
+            suggestBox.innerHTML = "";
+        }
+    });
     document.addEventListener("DOMContentLoaded", function () {
         let addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
 

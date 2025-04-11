@@ -267,32 +267,37 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits.html">Trái cây ngon </a></li>
-                    <li><a href="./Vietnamese-fruits.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.html">Rau củ  </a></li>
+                    <li><a href="./declious-fruits-nologin.html">Trái cây ngon </a></li>
+                    <li><a href="./VietNamese-fruits-nolog.html">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits-nologin.html">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables-nologin.html">Rau củ  </a></li>
                     <li><a href="./Imported-fruits.html">Trái cây Khô</a></li>
                     <li><a href="./Imported-fruits.html">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../index.html" >Trang chủ</a>  
-                <a href="../user/introducelogin.html">Giới thiệu</a>  
-                <a href="../user/newslogin.html">Tin tức</a>  
-                <a href="../user/contactlogin.html">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="./usernologin.html" >Trang chủ</a>  
+                <a href="./introduce.html">Giới thiệu</a>  
+                <a href="./news.html">Tin tức</a>  
+                <a href="./contact.html">Liên hệ</a>   
+                <a href="./cartusernologin.html" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
-            </div>  
-            <div class="search-container">   
-                
-                <div >
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                    <button onclick="searchProducts()">Tìm kiếm</button>
-                    <button id="toggleSearch">Tìm kiếm nâng cao</button>
-                </div>  
+            </div>    
+            <div class="search-container">
+                <form action="searchProducts.php" method="GET">
+                <!-- Tìm kiếm đơn giản -->
+                <div>
+                    <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+                    <div id="suggestBox" class="autocomplete-suggestions"></div>
+                    <button type="submit">Tìm kiếm</button>
+                    <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+                </div>
+            
+                <!-- Kết quả -->
                 <div id="searchResults"></div>
+            
                 <div id="priorityFruits" class="hidden">
                     <ul>
                     </ul>
@@ -317,20 +322,14 @@
                 
                         <button onclick="smartSearchProducts()">Lọc</button>
                     </div>
-            </div>  
-                </div>
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
-                </div>
+                </div>  
+                </form>
             </div>
+            <div class="auth-buttons">  
+                <a href="../user/regis.html" title="Đăng ký" target="_blank">Đăng ký</a>  
+                <span>|</span>  
+                <a href="../user/login-user.html" title="Đăng nhập" target="_blank">Đăng nhập</a>  
+            </div> 
         </div>  
     </div> 
 
@@ -540,32 +539,50 @@ $conn->close();
     </div>
 
     <script>
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-button.addEventListener('click', function() {
-    const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
-    if (isConfirmed) 
-    {
-        cartCount++;
-        document.getElementById('cart-count').textContent = cartCount;
-        localStorage.setItem('cartCount', cartCount);
-    }
-});
-});
+const input = document.getElementById("searchInput");
+    const suggestBox = document.getElementById("suggestBox");
+    
+    input.addEventListener("keyup", function () {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestBox.innerHTML = "";
+                    data.forEach(item => {
+                        const div = document.createElement("div");
+                        div.textContent = item;
+                        div.onclick = () => {
+                            input.value = item;
+                            suggestBox.innerHTML = "";
+                        };
+                        suggestBox.appendChild(div);
+                    });
+                });
+        } else {
+            suggestBox.innerHTML = "";
+        }
+    });
+    
+    document.addEventListener("click", function (e) {
+        if (e.target !== input) {
+            suggestBox.innerHTML = "";
+        }
+    });
+        
 
+    document.addEventListener("DOMContentLoaded", function () {
+        let addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
 
-         document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
+        addToCartButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                alert("Bạn cần phải đăng nhập để thêm vào giỏ hàng!");
+            });
+        });
     });
 
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
 
-    document.getElementById("toggleSearch").addEventListener("click", function () {
+document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
 
