@@ -36,6 +36,12 @@ if (isset($_GET['district']) && !empty($_GET['district'])){
     }
 }
 
+// Lọc theo trạng thái
+if (isset($_GET['status']) && !empty($_GET['status']) && $_GET['status'] !== 'all') {
+    $status = mysqli_real_escape_string($conn, $_GET['status']);
+    $where_clause .= " AND (hd.order_status) = '$status'";
+}
+
 // Lọc theo ngày
 if (isset($_GET['datein']) && !empty($_GET['datein'])) {
     $date_in = mysqli_real_escape_string($conn, $_GET['datein']);
@@ -68,10 +74,30 @@ $status_map_to_text = [
     'completed' => 'Giao thành công',
     'cancelled' => 'Đã hủy'
 ];
+
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 5;
+$offset = ($page - 1) * $limit; 
+
+$order_sql = "SELECT hd.*, nd.fullname, nd.district, nd.city, nd.user_address 
+              FROM hoadon hd 
+              LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
+              WHERE 1=1 $where_clause
+              ORDER BY hd.order_date DESC
+              LIMIT $limit OFFSET $offset"; 
+
+$order_result = mysqli_query($conn, $order_sql);
+
+// Lấy tổng số đơn hàng để tính số trang
+$total_sql = "SELECT COUNT(*) as total FROM hoadon hd WHERE 1=1 $where_clause";
+$total_result = mysqli_query($conn, $total_sql);
+$total_row = mysqli_fetch_assoc($total_result);
+$total_orders = $total_row['total'];
+$total_pages = ceil($total_orders / $limit);
 ?>
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -134,13 +160,13 @@ $status_map_to_text = [
         <div class="row element-filter mx-0 mb-3">
             <div class="col-6 p-0" style="margin-bottom: 10px;">
                 <label for="statusFilter">Lọc theo tình trạng:</label>
-                <select id="statusFilter" class="form-select px-3" aria-label="Status Filter">
-                    <option value="all" selected>Tất cả</option>
-                    <option value="cancelled">Đã hủy</option>
-                    <option value="pending">Chưa xác nhận</option>
-                    <option value="confirmed">Đã xác nhận</option>
-                    <option value="completed">Giao thành công</option>
-                </select>
+                    <select id="statusFilter" class="form-select px-3">
+                        <option value="all" selected>Tất cả</option>
+                        <option value="cancelled">Đã hủy</option>
+                        <option value="pending">Chưa xác nhận</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="completed">Giao thành công</option>
+                    </select>
             </div>
 
             <div class="col-6 p-0" style="margin-bottom: 10px;">
@@ -307,23 +333,32 @@ $status_map_to_text = [
         </div>
     </main>
 
-    <nav aria-label="Page navigation " class="page-center">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link " href="#" aria-label="Lùi">
+    <?php
+    if($total_orders > 0){
+    ?>
+        <nav aria-label="Page navigation " class="page-center">
+            <ul class="pagination justify-content-center" id="pagination">
+                <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Lùi">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" amlria-label="Tiếp">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+            <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+                <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Tiếp">
                     <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <?php
+    }else{
+    }
+    ?>
 
     <!--edit-->
     <form action="getOrderDetail.php" method="POST" enctype="multipart/form-data">
@@ -379,8 +414,8 @@ $status_map_to_text = [
         </div>
     </form>
 
-    <script src="../js/filter.js"></script>
     <script src="../js/filterProDis.js"></script>
+    <script src = "../js/nextpage.js"></script>
     <script>
         $(document).ready(function () {
             $("#toggleSidebar").click(function () {
@@ -414,21 +449,32 @@ $status_map_to_text = [
                 window.location.href = url + params.join('&');
             });
 
+            // lọc theo trạng thái, tỉnh, huyện ...
             $('#applyLocationFilter').click(function() {
                 var province = $('#province').val();
                 var district = $('#district').val();
-                
+                var status = $('#statusFilter').val(); 
+
+                console.log("Giá trị tỉnh:", province);
+                console.log("Giá trị quận:", district);
+                console.log("Giá trị trạng thái:", status);
+
                 var url = 'order.php?';
                 var params = [];
+
                 
                 if (province) {
                     params.push('province=' + province);
                 }
-                
+
                 if (district) {
                     params.push('district=' + district);
                 }
-                
+
+                if (status) {
+                    params.push('status=' + status); 
+                }
+
                 window.location.href = url + params.join('&');
             });
             

@@ -3,9 +3,24 @@ require 'connect.php';
 
 $sql = "SELECT user_name, fullname, user_address, user_email, phone, user_role, user_status, district, city FROM nguoidung";
 $result = $conn->query($sql);
+
+// Lấy trang hiện tại từ URL, mặc định là 1
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 4; 
+$offset = ($page - 1) * $limit;
+
+$sql = "SELECT user_name, fullname, user_address, user_email, phone, user_role, user_status, district, city FROM nguoidung LIMIT $limit OFFSET $offset";
+$result = $conn->query($sql);
+
+// Lấy tổng số người dùng để tính số trang
+$totalSql = "SELECT COUNT(*) as total FROM nguoidung";
+$totalResult = $conn->query($totalSql);
+$totalRow = $totalResult->fetch_assoc();
+$totalUsers = $totalRow['total'];
+$totalPages = ceil($totalUsers / $limit);
 ?>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -71,10 +86,8 @@ $result = $conn->query($sql);
         <div class="order-management">
             <h1 style="font-weight: bold;">Danh Sách Người Dùng</h1>
         </div>
-        <div class="action-buttons-wrapper">
             <button style="outline: none; margin-bottom: 24px;" class="btn green1" onclick=""><i class="fa-solid fa-plus"></i> Thêm
                 mới</button>
-        </div>
 
             <div class="table-responsive" style="overflow-x: auto; width: 100%;"">
             <table>
@@ -123,23 +136,25 @@ $result = $conn->query($sql);
             </div>
     </main>
 
-    <nav aria-label="Page navigation " class="page-center">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link " href="#" aria-label="Lùi">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
+    <<nav aria-label="Page navigation " class="page-center">
+    <ul class="pagination justify-content-center" id="pagination">
+        <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Lùi">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Tiếp">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+        <?php endfor; ?>
+        <li class="page-item <?= $page == $totalPages ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Tiếp">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
     <!--mo-->
     <div class="modal fade" id="ModalRM" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
@@ -305,5 +320,6 @@ $result = $conn->query($sql);
     </div>
 
     <script src="../js/adjust_user.js"></script>
+    <script src = "../js/nextpage.js"></script>
 </body>
 </html>

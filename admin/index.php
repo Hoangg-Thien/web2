@@ -3,7 +3,7 @@
 
     require './pages/connect.php';
 
-    if (isset($_POST['btndangnhap'])) {
+    if (isset($_POST['login'])) {
         $username = $_POST['user'];
         $password = $_POST['pass'];
         
@@ -48,7 +48,9 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        background-color: #f5f5f5;
+        background-image: url('./img/background.jpg');
+        background-size: cover; 
+        background-position: center;
     }
     
     .login-container {
@@ -160,26 +162,28 @@
 
 </style>
 <body>
-    <div class="login-container">
-        <div class="left-panel">
-            <h2>Hello, Welcome!</h2>
+        <div class="login-container">
+            <div class="left-panel">
+                <h2>Hello, Welcome!</h2>
+            </div>
+            <div class="right-panel">
+                <h2>Đăng nhập</h2>
+                <div class="input-group">
+                    <input id="user" name="user" type="text" placeholder="Username">
+                    <i>👤</i>
+                </div>
+                <form method="POST" action="">
+                    <div class="input-group">
+                        <input id="pass" name="pass" type="password" placeholder="Password">
+                        <i>🔒</i>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="./index.php">Forgot password?</a>
+                    </div>
+                    <button type="submit" id="login" name="login" class="login-btn" onclick="return validate()">Đăng nhập</button>
+                </form>
+            </div>
         </div>
-        <div class="right-panel">
-            <h2>Login</h2>
-            <div class="input-group">
-                <input id="user" name="user" type="text" placeholder="Username">
-                <i>👤</i>
-            </div>
-            <div class="input-group">
-                <input id="pass" name="pass" type="password" placeholder="Password">
-                <i>🔒</i>
-            </div>
-            <div class="forgot-password">
-                <a href="./index.html">Forgot password?</a>
-            </div>
-            <button type="submit" id="login" name="login" class="login-btn" onclick="return validate()">Đăng nhập</button>
-        </div>
-    </div>
 
     <script src="./js/loginad.js"></script>
 </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,10 +55,8 @@
         <div class="order-management">
             <h1 style="font-weight: bold;">Danh Sách Sản Phẩm</h1>
         </div>
-
-        <div class="action-buttons-wrapper">
-            <a href="./addpro.html"><button style="outline: none;" class="btn green"><i class="fa-solid fa-plus"></i> Tạo mới sản phẩm</button></a>
-        </div>
+        
+            <a href="./addpro.php"><button style="outline: none;" class="btn green"><i class="fa-solid fa-plus"></i> Tạo mới sản phẩm</button></a>
 
         <br>
 
