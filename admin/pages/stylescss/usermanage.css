@@ -300,25 +300,6 @@ nav ul li a.active {
     color: #fff;
 }  
 
-.btn.bluesky {  
-    background-color: #17a2b8;
-    color: #fff;
-}  
-
-.btn.orange {  
-    background-color: #ffc107;
-    color: #333;
-}  
-
-.btn.yellow{  
-    background-color: #ffcf33;
-    color: #333;
-}  
-.btn.red{
-    background-color: #dc3545;
-    color: #fff;
-}
-
 header {
     position: fixed;
     top: 0;

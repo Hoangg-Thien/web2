@@ -30,10 +30,10 @@
 
         <a class="icon-denim" href="./usermanage.php" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản lí người dùng</a>
         <a class="icon-denim" href="./order.php" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
-        <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
-        <a class="icon-denim icon-denim-active" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
+        <a class="icon-denim" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
+        <a class="icon-denim icon-denim-active" href="./addpro.php" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
         <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
-        <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
     </div>
 
     <hr>
@@ -50,10 +50,6 @@
         </div>
 
         <div class="container">
-            <div class="button-group">
-                <button><i class="fa-solid fa-square-plus" onclick=""></i> Thêm danh mục</button>
-                <button><i class="fa-solid fa-square-plus" onclick=""></i> Thêm tình trạng</button>
-            </div>
             
             <form method="POST" enctype="multipart/form-data" action = "save_product.php">
                 <div class="form-group-row">

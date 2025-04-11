@@ -37,10 +37,10 @@
         <ul class="sidebar-menu">
         <a class="icon-denim" href="./usermanage.php" target="_self"> <i class="fa-solid fa-user-shield"></i></i> Quản lí người dùng</a>
         <a class="icon-denim" href="./order.php" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
-        <a class="icon-denim icon-denim-active" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
-        <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
+        <a class="icon-denim icon-denim-active" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
+        <a class="icon-denim" href="./addpro.php" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
         <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
-        <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
         </ul>
     </div>
 
@@ -58,27 +58,6 @@
 
         <div class="action-buttons-wrapper">
             <a href="./addpro.html"><button style="outline: none;" class="btn green"><i class="fa-solid fa-plus"></i> Tạo mới sản phẩm</button></a>
-            <button style="outline: none;" class="btn bluesky"><i class="fa-solid fa-file-arrow-up"></i> Tải từ file</button>
-            <button style="outline: none;" class="btn orange"><i class="fa-solid fa-print"></i> In dữ liệu</button>
-            <button style="outline: none;" class="btn yellow"><i class="fas fa-copy"></i> Sao chép</button>
-            <button style="outline: none;" class="btn green"><i class="fas fa-file-excel"></i> Xuất Excel</button>
-            <button style="outline: none;" class="btn red"><i class="fas fa-trash-alt"></i> Xóa tất cả</button>
-        </div>
-
-        <div class="filter__right col-6 p-0 text-right">
-            <span class="search-hole">Tìm kiếm:</span>
-            <input type="search" placeholder="">
-        </div>
-
-        <div class="filter__left col-6 p-0 mt-3">
-            <span>Hiện</span>
-            <select class="form-select px-3" aria-label="Default select">
-                <option selected>10</option>
-                <option value="1">15</option>
-                <option value="2">20</option>
-                <option value="3">25</option>
-            </select>
-            <span>sản phẩm</span>
         </div>
 
         <br>

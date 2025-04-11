@@ -107,13 +107,13 @@ $status_map_to_text = [
             lí người dùng</a>
         <a class="icon-denim icon-denim-active" href="./order.php" target="_self"> <i
                 class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
-        <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản
+        <a class="icon-denim" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản
             phẩm</a>
-        <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản
+        <a class="icon-denim" href="./addpro.php" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản
             phẩm</a>
         <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê
             tình hình</a>
-        <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
         </ul>
     </div>
 
@@ -127,16 +127,6 @@ $status_map_to_text = [
 
         <div class="order-management">
             <h1 style="font-weight: bold;">Danh Sách Đơn Hàng</h1>
-        </div>
-
-        <div class="action-buttons-wrapper">
-            <button style="outline: none;" class="btn green"><i class="fa-solid fa-plus"></i> Tạo mới đơn hàng</button>
-            <button style="outline: none;" class="btn bluesky"><i class="fa-solid fa-file-arrow-up"></i> Tải từ
-                file</button>
-            <button style="outline: none;" class="btn orange"><i class="fa-solid fa-print"></i> In dữ liệu</button>
-            <button style="outline: none;" class="btn yellow"><i class="fas fa-copy"></i> Sao chép</button>
-            <button style="outline: none;" class="btn green"><i class="fas fa-file-excel"></i> Xuất Excel</button>
-            <button style="outline: none;" class="btn red"><i class="fas fa-trash-alt"></i> Xóa tất cả</button>
         </div>
 
         <br>
@@ -189,21 +179,6 @@ $status_map_to_text = [
                 </form>
             </div>
 
-            <div class="filter__right col-6 p-0 text-right">
-                <span class="search-hole">Tìm kiếm:</span>
-                <input type="search" placeholder="">
-            </div>
-
-            <div class="filter__left col-6 p-0 mt-3">
-                <span>Hiện</span>
-                <select class="form-select px-3" aria-label="Default select">
-                    <option selected>5</option>
-                    <option value="1">10</option>
-                    <option value="2">15</option>
-                    <option value="3">20</option>
-                </select>
-                <span>đơn hàng</span>
-            </div>
         </div>
 
         <br>
@@ -220,7 +195,6 @@ $status_map_to_text = [
                         <th>Trạng Thái</th>
                         <th>Ngày</th>
                         <th>Hành Động</th>
-                        <th>Hóa Đơn </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -317,8 +291,6 @@ $status_map_to_text = [
                                 <i class="fa fa-edit"></i>
                             </button>
                         </td>
-                        <td><a target="_blank" href="../allbill/bill.php?id=<?php echo $order['order_id']; ?>">
-                                <i class="fa-solid fa-bars"></i></a></td>
                     </tr>
                     <?php
                         }

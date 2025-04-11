@@ -48,13 +48,13 @@ $result = $conn->query($sql);
                     class="fa-solid fa-user-shield"></i> <span>Quản lí người dùng</span></a>
             <a class="icon-denim" href="./order.php" target="_self"> <i class="fa-solid fa-cart-shopping"></i> Quản lý
                 đơn hàng</a>
-            <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả
+            <a class="icon-denim" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả
                 sản phẩm</a>
-            <a class="icon-denim" href="./addpro.html" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản
+            <a class="icon-denim" href="./addpro.php" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản
                 phẩm</a>
             <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống
                 kê tình hình</a>
-            <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
+            <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
                 xuất</a>
         </ul>
     </div>
@@ -72,21 +72,9 @@ $result = $conn->query($sql);
             <h1 style="font-weight: bold;">Danh Sách Người Dùng</h1>
         </div>
         <div class="action-buttons-wrapper">
-            <button style="outline: none;" class="btn green1" onclick=""><i class="fa-solid fa-plus"></i> Thêm
+            <button style="outline: none; margin-bottom: 24px;" class="btn green1" onclick=""><i class="fa-solid fa-plus"></i> Thêm
                 mới</button>
-            <button style="outline: none;" class="btn bluesky" onclick=""><i class="fa-solid fa-file-arrow-up"></i> Tải
-                từ file</button>
-            <button style="outline: none;" class="btn orange" onclick=""><i class="fa-solid fa-print"></i> In dữ
-                liệu</button>
-            <button style="outline: none;" class="btn yellow" onclick=""><i class="fas fa-copy"></i> Sao chép</button>
-            <button style="outline: none;" class="btn green" onclick=""><i class="fas fa-file-excel"></i> Xuất
-                Excel</button>
-            <button style="outline: none;" class="btn red" onclick=""><i class="fas fa-trash-alt"></i> Xóa tất
-                cả</button>
         </div>
-        <div class="filter__right col-6 p-0 text-right">
-            <span class="search-hole">Tìm kiếm:</span>
-            <input type="search" placeholder="">
 
             <div class="table-responsive" style="overflow-x: auto; width: 100%;"">
             <table>
@@ -219,7 +207,10 @@ $result = $conn->query($sql);
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Trạng thái</label>
-                            <input class="form-control" type="text" id="edit_status" placeholder="Nhập trạng thái">
+                            <select class="form-control" id = "edit_status">
+                              <option value="Hoạt động">Hoạt động</option>
+                              <option value="Đã khóa">Đã khóa</option>
+                          </select>
                         </div>
                     </div>
                     <div class="modal-footer">

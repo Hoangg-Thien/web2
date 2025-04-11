@@ -22,7 +22,8 @@ $order_sql = "SELECT hd.*, nd.fullname, nd.district, nd.city, nd.user_address,
               FROM hoadon hd 
               LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
               WHERE 1=1 $where_clause
-              ORDER BY total_amount DESC";
+              ORDER BY total_amount DESC
+              LIMIT 5";
 
 $order_result = mysqli_query($conn, $order_sql);
 
@@ -75,13 +76,13 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                 lí người dùng</a>
             <a class="icon-denim" href="./order.php" target="_self"><i class="fa-solid fa-cart-shopping"></i> Quản lý
                 đơn hàng</a>
-            <a class="icon-denim" href="./prolist.html" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả
+            <a class="icon-denim" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả
                 sản phẩm</a>
-            <a class="icon-denim" href="./addpro.html" target="_self"><i class="fa-solid fa-cart-plus"></i> Thêm sản
+            <a class="icon-denim" href="./addpro.php" target="_self"><i class="fa-solid fa-cart-plus"></i> Thêm sản
                 phẩm</a>
             <a class="icon-denim icon-denim-active" href="./satistics.php" target="_self"><i
                     class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
-            <a class="icon-denim" href="../index.html" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
+            <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng
                 xuất</a>
         </ul>
     </div>
@@ -115,7 +116,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                 <thead>
                     <tr>
                         <th>STT</th>
-                        <th>Mã đơn</th>
                         <th>Tên Khách hàng</th>
                         <th>Đơn hàng</th>
                         <th>Tổng tiền</th>
@@ -140,7 +140,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                     ?>
                     <tr>
                         <td><?php echo $rank++; ?></td>
-                        <td><?php echo $order['order_id']; ?></td>
                         <td><?php echo $order['fullname']; ?></td>
                         <td>
                             <?php
@@ -195,7 +194,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                         <th>Tên sản phẩm</th>
                         <th>Số lượng bán ra</th>
                         <th>Giá tiền</th>
-                        <th>Hóa đơn</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -205,7 +203,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                         <td>Mận Hà Nội</td>
                         <td>30kg</td>
                         <td>45.000đ/kg</td>
-                        <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a></td>
                     </tr>
 
                     <tr>
@@ -215,7 +212,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                         <td>Chôm chôm</td>
                         <td>25kg</td>
                         <td>45.000đ/kg</td>
-                        <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a></td>
                     </tr>
 
                     <tr>
@@ -224,7 +220,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                         <td>Ổi xá lị</td>
                         <td>19kg</td>
                         <td>45.000đ/kg</td>
-                        <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a></td>
                     </tr>
 
                     <tr>
@@ -233,7 +228,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                         <td>Dâu tây Đà Lạt</td>
                         <td>15kg</td>
                         <td>160.000đ/kg</td>
-                        <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a></td>
                     </tr>
 
                     <tr>
@@ -242,7 +236,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                         <td>Kiwi</td>
                         <td>10kg</td>
                         <td>160.000đ/kg</td>
-                        <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a></td>
                     </tr>
 
                     <tr>
@@ -263,7 +256,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <th>Tên sản phẩm</th>
                             <th>Số lượng bán ra</th>
                             <th>Giá tiền</th>
-                            <th>Hóa đơn</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -273,7 +265,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <td>Mận Hà Nội</td>
                             <td>30kg</td>
                             <td>45.000đ/kg</td>
-                            <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a>
                             </td>
                         </tr>
 
@@ -284,7 +275,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <td>Chôm chôm</td>
                             <td>25kg</td>
                             <td>45.000đ/kg</td>
-                            <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a>
                             </td>
                         </tr>
 
@@ -294,7 +284,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <td>Ổi xá lị</td>
                             <td>19kg</td>
                             <td>45.000đ/kg</td>
-                            <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a>
                             </td>
                         </tr>
 
@@ -316,7 +305,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <th>Tên sản phẩm</th>
                             <th>Số lượng bán ra</th>
                             <th>Giá tiền</th>
-                            <th>Hóa đơn</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -326,7 +314,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <td>Chuối chín Nam Mỹ</td>
                             <td>0kg</td>
                             <td>45.000đ/kg</td>
-                            <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a>
                             </td>
                         </tr>
 
@@ -336,7 +323,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <td>Mận đỏ An Phước</td>
                             <td>1kg</td>
                             <td>45.000đ/kg</td>
-                            <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a>
                             </td>
                         </tr>
 
@@ -347,7 +333,6 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             <td>Bưởi da xanh</td>
                             <td>0kg</td>
                             <td>45.000đ/kg</td>
-                            <td><a target="_blank" href="../billpro/probill.html"><i class="fa-solid fa-bars"></i></a>
                             </td>
                         </tr>
 
