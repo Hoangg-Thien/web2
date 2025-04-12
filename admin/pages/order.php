@@ -188,23 +188,18 @@ $total_pages = ceil($total_orders / $limit);
                               <option value="">Chọn một quận/huyện</option>
                           </select>
                   </div>
-            <div class="col-12 p-0" style="margin-top: 10px;">
-                <button style="outline: none; margin-bottom: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
-                <button style="outline: none; margin-bottom: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
-            </div>
-        </div>
 
-        <div class="row element-filter mx-0 mb-3">
-            <div class="filter__date col-6 p-0">
-                <form action="" id="dateFilterForm">
+                  <form action="" id="dateFilterForm">
                     <label for="datein">Từ ngày: </label>
                     <input type="date" name="datein" id="datein" value="<?php echo isset($_GET['datein']) ? htmlspecialchars($_GET['datein']) : ''; ?>">
                     <label for="dateout">đến ngày: </label>
                     <input type="date" name="dateout" id="dateout" value="<?php echo isset($_GET['dateout']) ? htmlspecialchars($_GET['dateout']) : ''; ?>">
-                    <button type="submit" class="btn-secondary">Áp dụng</button>
                 </form>
-            </div>
 
+            <div class="col-12 p-0" style="margin-top: 20px;">
+                <button style="outline: none; margin-bottom: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
+                <button style="outline: none; margin-bottom: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
+            </div>
         </div>
 
         <br>
@@ -428,32 +423,13 @@ $total_pages = ceil($total_orders / $limit);
                 }
             });
 
-            //  lọc theo ngày
-            $('#dateFilterForm').on('submit', function(e) {
-                e.preventDefault();
-                
-                var datein = $('#datein').val();
-                var dateout = $('#dateout').val();
-                
-                var url = 'order.php?';
-                var params = [];
-                
-                if (datein) {
-                    params.push('datein=' + datein);
-                }
-                
-                if (dateout) {
-                    params.push('dateout=' + dateout);
-                }
-                
-                window.location.href = url + params.join('&');
-            });
-
-            // lọc theo trạng thái, tỉnh, huyện ...
+            // lọc theo ngày, trạng thái, tỉnh, huyện ...
             $('#applyLocationFilter').click(function() {
                 var province = $('#province').val();
                 var district = $('#district').val();
                 var status = $('#statusFilter').val(); 
+                var datein = $('#datein').val();
+                var dateout = $('#dateout').val();
 
                 console.log("Giá trị tỉnh:", province);
                 console.log("Giá trị quận:", district);
@@ -473,6 +449,14 @@ $total_pages = ceil($total_orders / $limit);
 
                 if (status && status !== 'all') {
                     params.push('status=' + status); 
+                }
+
+                if (datein) {
+                    params.push('datein=' + datein);
+                }
+                
+                if (dateout) {
+                    params.push('dateout=' + dateout);
                 }
 
                 window.location.href = url + params.join('&');
