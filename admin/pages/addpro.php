@@ -62,13 +62,13 @@
                         <input type="text" id="product-name" name="product-name">
                     </div>
                     <div class="form-group">
-                        <label for="category">Danh mục</label>
-                            <select id="category" name="category">
+                        <label for="type">Danh mục</label>
+                            <select id="type" name="type">
                                 <option value="">-- Chọn danh mục --</option>
                                 <option value="Trái cây Ngon">Trái cây Ngon</option>
                                 <option value="Trái cây Việt">Trái cây Việt</option>
                                 <option value="Trái cây Nhập Khẩu">Trái cây Nhập Khẩu</option>
-                                <option value="Rau củ">Rau củ</option>
+                                <option value="Rau Củ">Rau Củ</option>
                                 <option value="Hạt">Hạt</option>
                             </select>
                     </div>
