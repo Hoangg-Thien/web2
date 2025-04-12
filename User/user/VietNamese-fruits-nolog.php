@@ -308,96 +308,36 @@
             <h1>TRÁI CÂY VIỆT</h1>  
         </div>  
         <div class="image-container VietNam row" id="imageContainer">
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg" src="../img/dau-tay.jpg" alt="dau-tay" width="300" >  
-                    <div class="caption ">Dâu tây Đà Lạt <br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/strawberrynolog.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div>  
-                </div>
-            </div>
-            <div class="col l-4 m-6 c-6"> 
-                <div class="fruit-background">  
-                    <img id="traicayvietImg1" src="../img/trai-man-do.jpg" alt="trai-man-do" width="300" >  
-                    <div class="caption ">Mận đỏ An Phước <br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/water-appnolog.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                       
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div> 
-                </div>
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg2" src="../img/man-Ha-Noi.jpg" alt="man-Ha-Noi" width="300">  
-                    <div class="caption ">Mận Hà Nội<br> 45.000đ/kg</div>
-                    <div class="icons">  
-                        <a href="../itemInfo/plumnolog.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div>  
-                </div>
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg3" src="../img/trai-bon-bon.jpg" alt="trai-bon-bon" width="300" >  
-                    <div class="caption ">Bòn Bon <br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/langsat.htht" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i>
-                        </button>
-                    </div>  
-                </div> 
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg4" src="../img/trai-quyt.jpg" alt="trai-quyt" width="300">  
-                    <div class="caption ">Quýt đường<br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/tangerinenolog.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                       
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div> 
-                </div>   
-            </div>
-            <div class="col l-4 m-6 c-6">
-                <div class="fruit-background">  
-                    <img id="traicayvietImg5" src="../img/hinh-trai-buoi.jpg" alt="hinh-trai-buoi" width="300" >  
-                    <div class="caption ">Bưởi da xanh<br> 45.000đ/kg</div> 
-                    <div class="icons">  
-                        <a href="../itemInfo/pomelonolog.html" class="info-icon" title="Xem thông tin chi tiết">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
-                        
-                        <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> 
-                        </button>
-                    </div> 
-                </div> 
-            </div>
+            <?php
+$conn = new mysqli("localhost", "root", "", "c07db");
+if ($conn->connect_error) {
+    die("Kết nối thất bại: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM sanpham WHERE product_type = 'Trái Cây Việt'";
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo '<div class="col l-4 m-6 c-6">';
+        echo '  <div class="fruit-background">';
+        echo '      <img src="../img/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" width="300">';
+        echo '      <div class="caption">' . $row['product_name'] . ' <br> ' . number_format($row['product_price']) . 'đ/kg</div>';
+        echo '      <div class="icons">';
+        echo '          <a href="#" class="info-icon" title="Xem thông tin chi tiết"><i class="fa-solid fa-circle-info"></i></a>';
+        echo '          <button class="add-to-cart-btn" title="Thêm vào giỏ hàng"><i class="fas fa-cart-plus"></i></button>';
+        echo '      </div>';
+        echo '  </div>';
+        echo '</div>';
+    }
+} else {
+    echo "<p>Không có sản phẩm nào thuộc loại 'ngon'.</p>";
+}
+
+
+
+$conn->close();
+?>
         </div >
     </div> 
     <div class="policy-container" >

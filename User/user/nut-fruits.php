@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../styles/index.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trái cây ngon </title>  
+    <title>Trái cây hạt </title>  
     <style>  
         .search-container {
             display: flex;
@@ -242,12 +242,12 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits.html">Trái cây ngon </a></li>
-                    <li><a href="./Vietnamese-fruits.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.html">Rau củ  </a></li>
-                    <li><a href="./dried-fruits.html">Trái cây Khô</a></li>
-                    <li><a href="./nut-fruits.html">Các loại hạt  </a></li>
+                    <li><a href="../user/declious-fruits.html">Trái cây ngon </a></li>
+                    <li><a href="../user/Vietnamese-fruits.html">Trái cây Việt  </a></li>
+                    <li><a href="../user/Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="../user/vegetables.html">Rau củ  </a></li>
+                    <li><a href="../user/dried-fruits.html">Trái cây Khô</a></li>
+                    <li><a href="../user/nut-fruits.html">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
@@ -311,103 +311,40 @@
 
     <div class="grid wide">
         <div class="list-product">  
-            <h1>TRÁI CÂY NGON</h1>  
+            <h1>CÁC LOẠI HẠT</h1>  
         </div>  
         
     <div class="image-container Delicous row" id="imageContainer">  
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">  
-                <img id="traicayngonImg" src="../img/trai-mang-cau.jpg" alt="trai-mang-cau" width="300" >  
-                <div class="caption" >Mãng cầu xiêm <br>45.000đ/kg</div> 
-                <div class="icons">  
-                    <a href="../itemInfo/custard-apple.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                 
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i>
-                    </button>
-                </div> 
-            </div> 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg1" src="../img/trai-thanh-long-do.jpg" alt="trai-thanh-long-do" width="300" >
-                <div class="caption">Thanh long ruột đỏ <br> 45.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/dragon-fruit.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg2" src="../img/trai-xoai.jpg" alt="trai-xoai" width="300" >
-                <div class="caption">Xoài cát <br> 45.000đ/kg</div>
-                <div class="icons">  
-                    <a href="../itemInfo/mango.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                   
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-        </div>  
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg3" src="../img/trai-dua-hau.jpg" alt="trai-dua-hau" width="300" >
-                <div class="caption">Dưa hấu Long An <br>  45.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/watermelon.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
+        <?php
+$conn = new mysqli("localhost", "root", "", "c07db");
+if ($conn->connect_error) {
+    die("Kết nối thất bại: " . $conn->connect_error);
+}
 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg4" src="../img/trai-chom-chom.jpg" alt="trai-chom-chom" width="300" >
-                <div class="caption">Chôm chôm <br> 45.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/rambutant.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
+$sql = "SELECT * FROM sanpham WHERE product_type = 'Hạt'";
+$result = $conn->query($sql);
 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg5" src="../img/trai-oi.jpg" alt="trai-oi" width="300" >
-                <div class="caption">Ổi xá lị <br>  45.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/guava.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo '<div class="col l-4 m-6 c-6">';
+        echo '  <div class="fruit-background">';
+        echo '      <img src="../img/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" width="300">';
+        echo '      <div class="caption">' . $row['product_name'] . ' <br> ' . number_format($row['product_price']) . 'đ/kg</div>';
+        echo '      <div class="icons">';
+        echo '          <a href="#" class="info-icon" title="Xem thông tin chi tiết"><i class="fa-solid fa-circle-info"></i></a>';
+        echo '          <button class="add-to-cart-btn" title="Thêm vào giỏ hàng"><i class="fas fa-cart-plus"></i></button>';
+        echo '      </div>';
+        echo '  </div>';
+        echo '</div>';
+    }
+} else {
+    echo "<p>Không có sản phẩm nào thuộc loại 'ngon'.</p>";
+}
 
-        </div>
+
+
+$conn->close();
+?>
     </div>
     </div>
 

@@ -1,8 +1,13 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 $host = 'localhost';
 $username = 'root';
 $password = '';
-$dbname = 'website';
+$dbname = 'c07db';
 
 // Tạo kết nối
 $conn = new mysqli($host, $username, $password, $dbname);
