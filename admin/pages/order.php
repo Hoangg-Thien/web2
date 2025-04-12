@@ -39,7 +39,7 @@ if (isset($_GET['district']) && !empty($_GET['district'])){
 // Lọc theo trạng thái
 if (isset($_GET['status']) && !empty($_GET['status']) && $_GET['status'] !== 'all') {
     $status = mysqli_real_escape_string($conn, $_GET['status']);
-    $where_clause .= " AND (hd.order_status) = '$status'";
+    $where_clause .= " AND hd.order_status = '$status'";
 }
 
 // Lọc theo ngày
@@ -159,14 +159,14 @@ $total_pages = ceil($total_orders / $limit);
 
         <div class="row element-filter mx-0 mb-3">
             <div class="col-6 p-0" style="margin-bottom: 10px;">
-                <label for="statusFilter">Lọc theo tình trạng:</label>
-                    <select id="statusFilter" class="form-select px-3">
-                        <option value="all" selected>Tất cả</option>
-                        <option value="cancelled">Đã hủy</option>
-                        <option value="pending">Chưa xác nhận</option>
-                        <option value="confirmed">Đã xác nhận</option>
-                        <option value="completed">Giao thành công</option>
-                    </select>
+                <label for="statusFilter">Lọc theo trạng thái:</label>
+                <select id="statusFilter" class="form-select px-3">
+                <option value="all">Tất cả</option>
+                <option value="Chưa xác nhận" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Chưa xác nhận') ? 'selected' : ''; ?>>Chưa xác nhận</option>
+                <option value="Đã xác nhận" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Đã xác nhận') ? 'selected' : ''; ?>>Đã xác nhận</option>
+                <option value="Giao thành công" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Giao thành công') ? 'selected' : ''; ?>>Giao thành công</option>
+                <option value="Đã hủy" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Đã hủy') ? 'selected' : ''; ?>>Đã hủy</option>
+                </select>
             </div>
 
             <div class="col-6 p-0" style="margin-bottom: 10px;">
@@ -471,7 +471,7 @@ $total_pages = ceil($total_orders / $limit);
                     params.push('district=' + district);
                 }
 
-                if (status) {
+                if (status && status !== 'all') {
                     params.push('status=' + status); 
                 }
 
