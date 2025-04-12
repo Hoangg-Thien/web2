@@ -48,8 +48,8 @@ $order_time = date('H:i', strtotime($order['order_date']));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết hóa đơn #<?php echo $order_id; ?></title>
-    <link rel="stylesheet" href="../pages/stylescss/satistics.css">
-    <link rel="stylesheet" href="../pages/stylescss.css/responsivestatistics.css">
+    <link rel="stylesheet" href="./stylescss/satistics.css">
+    <link rel="stylesheet" href="./stylescss/responsivestatistics.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -110,10 +110,6 @@ $order_time = date('H:i', strtotime($order['order_date']));
             padding: 12px;
             border-bottom: 2px solid #ddd;
             color: #333;
-        }
-        .invoice-items td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
         }
         .item-image {
             width: 60px;
@@ -318,7 +314,8 @@ $order_time = date('H:i', strtotime($order['order_date']));
                                 $image_sql = "SELECT product_image FROM sanpham WHERE product_id = '$product_id'";
                                 $image_result = mysqli_query($conn, $image_sql);
                                 $image_row = mysqli_fetch_assoc($image_result);
-                                $image_path = isset($image_row['product_image']) ? $image_row['product_image'] : "../img/";
+                                $image_file = isset($image_row['product_image']) ? $image_row['product_image'] : 'default.jpg';
+                                $image_path = "../img/" . $image_file;
                                 
                                 $quantity = isset($item['quantity']) ? $item['quantity'] : 1;
                                 $price = $item['product_price'];
@@ -354,7 +351,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
                     <div class="total-label">Phí vận chuyển:</div>
                     <div class="total-value">30.000đ</div>
                 </div>
-                <?php if ($total_amount > 500000): ?>
+                <?php if ($total_amount > 0): ?>
                 <div class="total-row">
                     <div class="total-label">Giảm giá: </div>
                     <div class="total-value">-30.000đ</div>
@@ -365,7 +362,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
                     <div class="total-value">
                         <?php 
                         $shipping_fee = 30000;
-                        $discount = ($total_amount > 500000) ? 30000 : 0;
+                        $discount = ($total_amount > 0) ? 30000 : 0;
                         $final_total = $total_amount + $shipping_fee - $discount;
                         echo number_format($final_total, 0, ',', '.'); 
                         ?>đ

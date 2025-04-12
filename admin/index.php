@@ -19,7 +19,7 @@
             $_SESSION['username'] = $row['tendangnhap'];
             $_SESSION['role'] = $row['role'];
             
-            header("Location: dashboard.php");
+            header("Location: index.php");
             exit();
         } else {
             $error_message = "Tên đăng nhập hoặc mật khẩu không đúng, hoặc bạn không có quyền quản lý!";
