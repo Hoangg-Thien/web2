@@ -275,27 +275,6 @@ table th {
     color: #ffffff !important;
 }
 
-.btn.orange:focus,
-.btn.orange:active,
-.btn.yellow:focus,
-.btn.yellow:active {
-    color: black !important;
-}
-
-.btn.orange:hover,
-.btn.yellow:hover {
-    color: black !important;
-}
-
-.btn.green:focus,
-.btn.green:active,
-.btn.bluesky:focus,
-.btn.bluesky:active,
-.btn.red:focus,
-.btn.red:active{
-    color: white !important;
-}
-
 .status {
     padding: 5px 10px;
     border-radius: 5px;

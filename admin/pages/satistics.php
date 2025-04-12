@@ -169,6 +169,11 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                             ?>
                         </td>
                         <td><?php echo $date; ?><br><?php echo $time; ?></td>
+                        <td>
+                        <a href="invoice_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-eye"></i> Xem chi tiết
+                        </a>
+                        </td>
                     </tr>
                     <?php
                         }

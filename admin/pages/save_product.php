@@ -27,10 +27,10 @@
         $stmt->bind_param("sssssss", $product_code, $product_name, $category, $price, $status, $image_path, $description);
 
         if($stmt->execute()){
-            header("Location: addpro.html?success");
+            header("Location: addpro.php?success");
             exit();
         }else{
-            header("Location: addpro.html?error");
+            header("Location: addpro.php?error");
             exit();
         }
         $stmt->close();
