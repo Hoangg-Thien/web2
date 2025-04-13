@@ -211,7 +211,7 @@ $total_pages = ceil($total_orders / $limit);
                         <th>Mã Đơn</th>
                         <th>Tên Khách Hàng</th>
                         <th>Địa Chỉ</th>
-                        <th>Sản Phẩm</th>
+                        <th>Người nhận</th>
                         <th>Tổng</th>
                         <th>Trạng Thái</th>
                         <th>Ngày</th>
@@ -270,20 +270,12 @@ $total_pages = ceil($total_orders / $limit);
                             ?>
                         </td>
                         <td>
-                            <?php
-                            $order_detail_sql = "SELECT cthd.*, sp.product_name, sp.product_price
-                                                FROM chitiethoadon cthd
-                                                LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
-                                                WHERE cthd.order_id = '$order_id'";
-                            $order_detail_result = mysqli_query($conn, $order_detail_sql);
-                            
-                            if ($order_detail_result && mysqli_num_rows($order_detail_result) > 0) {
-                                while ($detail = mysqli_fetch_assoc($order_detail_result)) {
-                                    $quantity = isset($detail['quantity']) ? $detail['quantity'] : 1;
-                                    echo $quantity . "kg x " . $detail['product_name'] . "<br>";
-                                }
+                        <?php
+                            if ($status_text === 'Giao thành công') {
+                                $recipient_name = $order['receipter']; 
+                                echo htmlspecialchars($recipient_name);
                             } else {
-                                echo "Không có sản phẩm";
+                                echo "Không có thông tin người nhận";
                             }
                             ?>
                         </td>
@@ -307,7 +299,10 @@ $total_pages = ceil($total_orders / $limit);
                         <td><span class="status <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
                         <td><?php echo $date; ?><br><?php echo $time; ?></td>
                         <td class="text-align-center">
-                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
+                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                            <button style="outline: none; margin-top: 5px;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
                                 title="Sửa">
                                 <i class="fa fa-edit"></i>
                             </button>

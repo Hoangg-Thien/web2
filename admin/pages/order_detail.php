@@ -2,7 +2,7 @@
 require 'connect.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header('Location: satistics.php');
+    header('Location: order.php');
     exit;
 }
 
@@ -18,7 +18,7 @@ $order_result = mysqli_query($conn, $order_sql);
 $order = mysqli_fetch_assoc($order_result);
 
 if (!$order) {
-    header('Location: satistics.php');
+    header('Location: order.php');
     exit;
 }
 
@@ -138,13 +138,6 @@ $order_time = date('H:i', strtotime($order['order_date']));
             font-weight: bold;
             color: #4CAF50;
         }
-        .invoice-footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #777;
-        }
         .btn-back {
             display: inline-block;
             padding: 10px 20px;
@@ -232,10 +225,10 @@ $order_time = date('H:i', strtotime($order['order_date']));
 
         <ul class="sidebar-menu">
             <a class="icon-denim" href="./usermanage.php" target="_self"><i class="fa-solid fa-user-shield"></i> Quản lí người dùng</a>
-            <a class="icon-denim" href="./order.php" target="_self"><i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
+            <a class="icon-denim icon-denim-active" href="./order.php" target="_self"><i class="fa-solid fa-cart-shopping"></i> Quản lý đơn hàng</a>
             <a class="icon-denim" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
             <a class="icon-denim" href="./addpro.php" target="_self"><i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
-            <a class="icon-denim icon-denim-active" href="./satistics.php" target="_self"><i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
+            <a class="icon-denim" href="./satistics.php" target="_self"><i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
             <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
         </ul>
     </div>
@@ -370,14 +363,8 @@ $order_time = date('H:i', strtotime($order['order_date']));
                 </div>
             </div>
 
-            <div class="invoice-footer">
-                <p>Cảm ơn quý khách đã mua hàng tại Fresh Fruit!</p>
-                <p>Mọi thắc mắc xin vui lòng liên hệ: hotline@freshfruit.vn | 0987 654 321</p>
-            </div>
-        </div>
-
         <div class="actions">
-            <a href="../pages/satistics.php" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <a href="../pages/order.php" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
         </div>
     </main>
 
