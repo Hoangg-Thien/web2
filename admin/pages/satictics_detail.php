@@ -55,6 +55,11 @@ $order_time = date('H:i', strtotime($order['order_date']));
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
+        body {
+            background-color: #f5f7fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
         .invoice-container {
             max-width: 850px;
             margin: 20px auto;
@@ -62,7 +67,20 @@ $order_time = date('H:i', strtotime($order['order_date']));
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             background-color: #fff;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .invoice-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #2E7D32);
+        }
+        
         .invoice-header {
             display: flex;
             justify-content: space-between;
@@ -70,40 +88,74 @@ $order_time = date('H:i', strtotime($order['order_date']));
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
         }
+        
         .invoice-logo img {
             max-width: 150px;
         }
+        
         .invoice-title {
             font-size: 24px;
             font-weight: bold;
-            color: #4CAF50;
+            color: #47b475;
             margin-bottom: 5px;
         }
+        
         .invoice-subtitle {
             color: #777;
             margin-bottom: 0;
         }
+        
         .invoice-details {
             display: flex;
             justify-content: space-between;
             margin-bottom: 30px;
         }
+        
         .invoice-details-col {
             flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin: 0 10px;
         }
+        
+        .invoice-details-col:first-child {
+            margin-left: 0;
+        }
+        
+        .invoice-details-col:last-child {
+            margin-right: 0;
+        }
+        
         .invoice-details-col h4 {
             font-weight: bold;
             font-size: 16px;
-            margin-bottom: 10px;
-            color: #4CAF50;
+            margin-bottom: 15px;
+            color: #47b475;
+            border-bottom: 2px solid #47b475;
+            padding-bottom: 8px;
+            display: inline-block;
         }
+        
         .invoice-items {
             margin-bottom: 30px;
         }
+        
+        .invoice-items h4 {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #47b475;
+            border-bottom: 2px solid #47b475;
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+        
         .invoice-items table {
             width: 100%;
             border-collapse: collapse;
         }
+        
         .invoice-items th {
             background-color: #f9f9f9;
             text-align: left;
@@ -111,87 +163,129 @@ $order_time = date('H:i', strtotime($order['order_date']));
             border-bottom: 2px solid #ddd;
             color: #333;
         }
+        
+        .invoice-items td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .invoice-items tr:hover {
+            background-color: #f9f9f9;
+        }
+        
         .item-image {
             width: 60px;
             height: 60px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        
         .invoice-total {
             text-align: right;
             margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
         }
+        
         .invoice-total .total-row {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
+        
         .invoice-total .total-label {
-            width: 150px;
+            width: 180px;
             text-align: right;
             padding-right: 20px;
+            color: #666;
         }
+        
         .invoice-total .grand-total {
             font-size: 18px;
             font-weight: bold;
-            color: #4CAF50;
+            color: #47b475;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
         }
+        
         .btn-back {
             display: inline-block;
             padding: 10px 20px;
-            background-color:rgb(6, 162, 79);
+            background-color: #47b475;
             color: white;
             text-decoration: none;
             border-radius: 4px;
             margin-top: 20px;
-            transition: background-color 0.3s;
+            border: none;
+            font-weight: 600;
         }
+        
         .btn-back:hover {
-            background-color: rgb(6, 162, 79);
+            background-color: #47b475;
             color: white;
             text-decoration: none;
         }
+        
         .actions {
             text-align: center;
             margin-top: 20px;
         }
+        
         .pending {
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             color: white;
             font-size: 0.9em;
             white-space: nowrap;
             background-color: #efb11e;
+            font-weight: 600;
         }
 
         .completed {
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             color: white;
             font-size: 0.9em;
             white-space: nowrap;
             background-color: #4CAF50;
+            font-weight: 600;
         }
 
         .confirmed {
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             color: white;
             font-size: 0.9em;
             white-space: nowrap;
             background-color: #3c97e6;
+            font-weight: 600;
         }
 
         .cancelled {
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             color: white;
             font-size: 0.9em;
             white-space: nowrap;
             background-color: #e54432;
+            font-weight: 600;
         }
+        
+        @media (max-width: 768px) {
+            .invoice-details {
+                flex-direction: column;
+            }
+            .invoice-details-col {
+                margin: 10px 0;
+            }
+            .invoice-container {
+                padding: 15px;
+            }
+        }
+        
         @media print {
             .btn-back, .btn-print, .sidebar, .web-header, button.toggle-sidebar {
                 display: none !important;
@@ -203,6 +297,9 @@ $order_time = date('H:i', strtotime($order['order_date']));
             }
             body {
                 background-color: #fff;
+            }
+            .watermark {
+                display: none;
             }
         }
     </style>
@@ -235,6 +332,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
 
     <main class="main" id="main">
         <div class="invoice-container">
+            
             <div class="invoice-header">
                 <div class="invoice-logo">
                     <img src="../img/mau-thiet-ke-logo-trai-cay-SPencil-Agency-7.png" alt="Logo">
@@ -249,18 +347,18 @@ $order_time = date('H:i', strtotime($order['order_date']));
                 <div class="invoice-details-col">
                     <h4>THÔNG TIN KHÁCH HÀNG</h4>
                     <p>
-                        <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
-                        <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
-                        <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
+                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
+                        <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
+                        <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
                     </p>
                 </div>
                 <div class="invoice-details-col">
                     <h4>THÔNG TIN ĐƠN HÀNG</h4>
                     <p>
-                        <strong>Phương thức thanh toán:</strong> <?php echo $order['PaymentMethod']; ?><br>
-                        <strong>Ngày đặt:</strong> <?php echo $order_date; ?><br>
-                        <strong>Giờ đặt:</strong> <?php echo $order_time; ?><br>
-                        <strong>Trạng thái:</strong> 
+                        <i class="fas fa-credit-card" style="width: 20px; color: #47b475;"></i> <strong>Phương thức thanh toán:</strong> <?php echo $order['PaymentMethod']; ?><br>
+                        <i class="fas fa-calendar-alt" style="width: 20px; color: #47b475;"></i> <strong>Ngày đặt:</strong> <?php echo $order_date; ?><br>
+                        <i class="fas fa-clock" style="width: 20px; color: #47b475;"></i> <strong>Giờ đặt:</strong> <?php echo $order_time; ?><br>
+                        <i class="fas fa-info-circle" style="width: 20px; color: #47b475;"></i> <strong>Trạng thái:</strong> 
                         <?php 
                             $status = $order['order_status'];
                             $status_class = '';
@@ -287,6 +385,15 @@ $order_time = date('H:i', strtotime($order['order_date']));
                 </div>
             </div>
 
+            <div class="invoice-details-col">
+                    <h4>THÔNG TIN NGƯỜI NHẬN</h4>
+                    <p>
+                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
+                        <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
+                        <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
+                    </p>
+            </div>
+
             <div class="invoice-items">
                 <h4>CHI TIẾT SẢN PHẨM</h4>
                 <table>
@@ -296,7 +403,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
                             <th>Sản phẩm</th>
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
-                            <th>Thành tiền</th>
+                            <th style="text-align: right;">Thành tiền</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -316,10 +423,10 @@ $order_time = date('H:i', strtotime($order['order_date']));
                         ?>
                         <tr>
                             <td><img src="<?php echo $image_path; ?>" alt="<?php echo $item['product_name']; ?>" class="item-image"></td>
-                            <td><?php echo $item['product_name']; ?></td>
+                            <td><strong><?php echo $item['product_name']; ?></strong></td>
                             <td><?php echo number_format($price, 0, ',', '.'); ?>đ</td>
                             <td><?php echo $quantity; ?>kg</td>
-                            <td><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</td>
+                            <td style="text-align: right;"><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</td>
                         </tr>
                         <?php
                             }
@@ -337,21 +444,21 @@ $order_time = date('H:i', strtotime($order['order_date']));
 
             <div class="invoice-total">
                 <div class="total-row">
-                    <div class="total-label">Tổng tiền hàng:</div>
+                    <div class="total-label"><i class="fas fa-shopping-basket" style="margin-right: 8px;"></i>Tổng tiền hàng:</div>
                     <div class="total-value"><?php echo number_format($total_amount, 0, ',', '.'); ?>đ</div>
                 </div>
                 <div class="total-row">
-                    <div class="total-label">Phí vận chuyển:</div>
+                    <div class="total-label"><i class="fas fa-truck" style="margin-right: 8px;"></i>Phí vận chuyển:</div>
                     <div class="total-value">30.000đ</div>
                 </div>
                 <?php if ($total_amount > 0): ?>
                 <div class="total-row">
-                    <div class="total-label">Giảm giá: </div>
+                    <div class="total-label"><i class="fas fa-tags" style="margin-right: 8px;"></i>Giảm giá: </div>
                     <div class="total-value">-30.000đ</div>
                 </div>
                 <?php endif; ?>
                 <div class="total-row grand-total">
-                    <div class="total-label">TỔNG THANH TOÁN:</div>
+                    <div class="total-label"><i class="fas fa-money-bill-wave" style="margin-right: 8px;"></i>TỔNG THANH TOÁN:</div>
                     <div class="total-value">
                         <?php 
                         $shipping_fee = 30000;
@@ -364,7 +471,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
             </div>
 
         <div class="actions">
-            <a href="../pages/satistics.php" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <a href="./satistics.php" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
         </div>
     </main>
 

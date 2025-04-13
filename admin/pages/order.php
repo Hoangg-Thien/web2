@@ -299,7 +299,7 @@ $total_pages = ceil($total_orders / $limit);
                         <td><span class="status <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
                         <td><?php echo $date; ?><br><?php echo $time; ?></td>
                         <td class="text-align-center">
-                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
                             <i class="fa fa-eye"></i>
                         </a>
                             <button style="outline: none; margin-top: 5px;" class="btn btn-outline-warning btn-sm edit m-1" type="button"

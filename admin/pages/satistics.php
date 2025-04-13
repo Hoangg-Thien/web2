@@ -80,7 +80,6 @@ $top_customers = array_slice($merged_customers, 0, 5);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
-        /* Style cho dropdown */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -112,7 +111,7 @@ $top_customers = array_slice($merged_customers, 0, 5);
         }
         
         .btn-info.dropdown-toggle {
-            background-color: #4CAF50; 
+            background-color: #17ab1d; 
             color: white; 
             border: none; 
             padding: 6px 12px; 
@@ -206,25 +205,24 @@ $top_customers = array_slice($merged_customers, 0, 5);
                                             count($customer['orders']) . " đơn hàng" : 
                                             "1 đơn hàng";
                             
-                            // Hiển thị ngày
-                            $date_display = count($customer['date_range']) > 1 ? 
-                                           min($customer['date_range']) . " - " . max($customer['date_range']) : 
-                                           reset($customer['date_range']);
-                            
                             // Tạo button xem chi tiết
                             if (count($customer['orders']) == 1) {
                                 // Nếu chỉ có 1 đơn hàng thì tạo button đơn giản
                                 $order = reset($customer['orders']);
-                                $button = '<a href="satictics_detail.php?id=' . $order['order_id'] . '" class="btn btn-info btn-sm" style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
-                                            <i class="fa fa-eye"></i> Xem chi tiết
+                                $button = '<a href="satictics_detail.php?id=' . $order['order_id'] . '" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                                            <i class="fa fa-eye"></i> Xem đơn hàng
                                            </a>';
                             } else {
                                 // Nếu có nhiều đơn hàng thì tạo dropdown
                                 $button = '<div class="dropdown">
                                             <button class="btn btn-info dropdown-toggle" type="button">
-                                                <i></i>▼ Chọn đơn hàng
+                                                <i></i>▼ Xem đơn hàng
                                             </button>
                                             <div class="dropdown-content">';
+
+                                            usort($customer['orders'], function($a, $b) {
+                                                return strtotime($a['order_date']) - strtotime($b['order_date']);
+                                            });
                                 
                                 // Thêm link cho từng đơn hàng
                                 foreach ($customer['orders'] as $index => $order) {
