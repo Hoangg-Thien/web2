@@ -18,6 +18,12 @@ $totalResult = $conn->query($totalSql);
 $totalRow = $totalResult->fetch_assoc();
 $totalUsers = $totalRow['total'];
 $totalPages = ceil($totalUsers / $limit);
+
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +56,9 @@ $totalPages = ceil($totalUsers / $limit);
                         <div class="img-edit">
                             <img class="img-head" src="../img/admin.jpg" alt="User Image">
                         </div>
-                        <div class="role">Chào mừng trở lại, Huy!</div>
+                        <?php if (isset($_SESSION['fullname'])): ?>
+            <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+        <?php endif; ?>
                     </li>
                 </ul>
             </nav>

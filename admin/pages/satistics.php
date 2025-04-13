@@ -38,6 +38,12 @@ $top_customers_sql = "SELECT nd.fullname, SUM(cthd.quantity * sp.product_price) 
                     LIMIT 5";
 
 $top_customers_result = mysqli_query($conn, $top_customers_sql);
+
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +70,9 @@ $top_customers_result = mysqli_query($conn, $top_customers_sql);
                     <div class="img-edit">
                         <img class="img-head" src="../img/admin.jpg" alt="User Image">
                     </div>
-                    <div class="role">Chào mừng trở lại, Huy!</div>
+                    <?php if (isset($_SESSION['fullname'])): ?>
+            <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+        <?php endif; ?>
                 </li>
             </ul>
         </nav>

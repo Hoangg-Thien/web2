@@ -94,6 +94,13 @@ $total_result = mysqli_query($conn, $total_sql);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_orders = $total_row['total'];
 $total_pages = ceil($total_orders / $limit);
+
+
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +128,9 @@ $total_pages = ceil($total_orders / $limit);
                         <img class="img-head" src="../img/admin.jpg" alt="User Image">
                     </div>
 
-                    <div class="role">Chào mừng trở lại, Huy!</div>
+                    <?php if (isset($_SESSION['fullname'])): ?>
+            <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+        <?php endif; ?>
                 </li>
             </ul>
         </nav>

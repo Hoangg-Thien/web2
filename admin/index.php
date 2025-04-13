@@ -4,26 +4,36 @@
     require './pages/connect.php';
 
     if (isset($_POST['login'])) {
-        $username = $_POST['user'];
-        $password = $_POST['pass'];
-        
-        $username = mysqli_real_escape_string($conn, $username);
-        $password = mysqli_real_escape_string($conn, $password);
-        
-        $sql = "SELECT * FROM nguoidung WHERE tendangnhap = '$username' AND matkhau = '$password' AND role = 'quanli'";
+        $username = mysqli_real_escape_string($conn, $_POST['user']);
+        $password = mysqli_real_escape_string($conn, $_POST['pass']);
+    
+        // Truy vấn thông tin người dùng
+        $sql = "SELECT * FROM nguoidung WHERE user_name = '$username' LIMIT 1";
         $result = $conn->query($sql);
+    
+        if ($result && $result->num_rows > 0) {
+            $user = $result->fetch_assoc();
         
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['username'] = $row['tendangnhap'];
-            $_SESSION['role'] = $row['role'];
-            
-            header("Location: dashboard.php");
-            exit();
+            if (password_verify($password, $user['hashPass'])) {
+                if ($user['user_role'] === 'Quản lý') {
+                    // Đăng nhập thành công và có quyền
+                    $_SESSION['fullname'] = $user['user_name'];
+                    $_SESSION['user_name'] = $user['user_name'];
+                    $_SESSION['user_role'] = $user['user_role'];
+                    header("Location: /web2/admin/pages/usermanage.php");
+                    exit();
+                } else {
+                    // Đúng mật khẩu nhưng không phải quản lý
+                    $error_message = "Bạn không có quyền truy cập trang này.";
+                }
+            } else {
+                // Sai mật khẩu
+                $error_message = "Mật khẩu không đúng.";
+            }
         } else {
-            $error_message = "Tên đăng nhập hoặc mật khẩu không đúng, hoặc bạn không có quyền quản lý!";
-        }
+            // Tài khoản không tồn tại
+            $error_message = "Tài khoản không tồn tại.";
+        }        
     }
 ?>
 
@@ -162,29 +172,35 @@
 
 </style>
 <body>
-        <div class="login-container">
-            <div class="left-panel">
-                <h2>Hello, Welcome!</h2>
-            </div>
-            <div class="right-panel">
-                <h2>Đăng nhập</h2>
+<div class="login-container">
+        <div class="left-panel">
+            <h2>Welcome, Admin!</h2>
+        </div>
+        <div class="right-panel">
+            <h2>Đăng nhập</h2>
+
+            <!-- Thông báo lỗi -->
+            <?php if (isset($error_message)) : ?>
+                <div style="color: red; text-align: center; margin-bottom: 10px;">
+                    <?= $error_message ?>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" action="">
                 <div class="input-group">
-                    <input id="user" name="user" type="text" placeholder="Username">
+                    <input id="user" name="user" type="text" placeholder="Tên đăng nhập" required>
                     <i>👤</i>
                 </div>
-                <form method="POST" action="">
-                    <div class="input-group">
-                        <input id="pass" name="pass" type="password" placeholder="Password">
-                        <i>🔒</i>
-                    </div>
-                    <div class="forgot-password">
-                        <a href="./index.php">Forgot password?</a>
-                    </div>
-                    <button type="submit" id="login" name="login" class="login-btn" onclick="return validate()">Đăng nhập</button>
-                </form>
-            </div>
+                <div class="input-group">
+                    <input id="pass" name="pass" type="password" placeholder="Mật khẩu" required>
+                    <i>🔒</i>
+                </div>
+                <div class="forgot-password">
+                    <a href="./index.php">Quên mật khẩu?</a>
+                </div>
+                <button type="submit" name="login" class="login-btn">Đăng nhập</button>
+            </form>
         </div>
-
-    <script src="./js/loginad.js"></script>
+    </div>
 </body>
 </html>

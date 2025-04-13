@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +28,9 @@
                         <img class="img-head" src="../img/admin.jpg" alt="User Image"> 
                     </div>
 
-                    <div class="role">Chào mừng trở lại, Huy!</div>
+                    <?php if (isset($_SESSION['fullname'])): ?>
+            <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+        <?php endif; ?>
                 </li>
             </ul>
         </nav>
@@ -69,6 +78,7 @@
                                 <option value="Trái cây Việt">Trái cây Việt</option>
                                 <option value="Trái cây Nhập Khẩu">Trái cây Nhập Khẩu</option>
                                 <option value="Rau Củ">Rau Củ</option>
+                                <option value="Trái cây khô">Trái cây khô</option>
                                 <option value="Hạt">Hạt</option>
                             </select>
                     </div>
