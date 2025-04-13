@@ -14,7 +14,8 @@ if (isset($_GET['dateout']) && !empty($_GET['dateout'])) {
     $where_clause .= " AND DATE(hd.order_date) <= '$date_out'";
 }
 
-$order_sql = "SELECT hd.*, nd.fullname, nd.district, nd.city, nd.user_address,
+// Truy vấn để lấy tất cả đơn hàng
+$orders_sql = "SELECT hd.order_id, hd.order_date, nd.fullname, 
               (SELECT SUM(cthd.quantity * sp.product_price) 
                FROM chitiethoadon cthd 
                JOIN sanpham sp ON cthd.product_id = sp.product_id 
@@ -22,20 +23,12 @@ $order_sql = "SELECT hd.*, nd.fullname, nd.district, nd.city, nd.user_address,
               FROM hoadon hd 
               LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
               WHERE 1=1 $where_clause
-              ORDER BY total_amount DESC
-              LIMIT 5";
+              ORDER BY hd.order_date DESC";
 
-$order_result = mysqli_query($conn, $order_sql);
+$orders_result = mysqli_query($conn, $orders_sql);
 
-$top_customers_sql = "SELECT nd.fullname, SUM(cthd.quantity * sp.product_price) as total_spent
-                    FROM hoadon hd
-                    JOIN nguoidung nd ON hd.user_name = nd.user_name
-                    JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
-                    JOIN sanpham sp ON cthd.product_id = sp.product_id
-                    WHERE 1=1 $where_clause
-                    GROUP BY nd.user_name, nd.fullname
-                    ORDER BY total_spent DESC
-                    LIMIT 5";
+// Mảng để lưu trữ khách hàng đã gộp
+$merged_customers = [];
 
 $top_customers_result = mysqli_query($conn, $top_customers_sql);
 
@@ -44,6 +37,40 @@ if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
     exit();
 }
+// Gộp khách hàng
+if ($orders_result && mysqli_num_rows($orders_result) > 0) {
+    while ($order = mysqli_fetch_assoc($orders_result)) {
+        $fullname = $order['fullname'];
+        
+        // Nếu chưa có khách hàng này trong mảng gộp
+        if (!isset($merged_customers[$fullname])) {
+            $merged_customers[$fullname] = [
+                'fullname' => $fullname,
+                'orders' => [],
+                'total_amount' => 0,
+                'date_range' => []
+            ];
+        }
+        
+        // Thêm đơn hàng vào khách hàng
+        $merged_customers[$fullname]['orders'][] = [
+            'order_id' => $order['order_id'],
+            'order_date' => $order['order_date'],
+            'total_amount' => $order['total_amount']
+        ];
+        
+        // Cộng dồn tổng tiền
+        $merged_customers[$fullname]['total_amount'] += $order['total_amount'];
+    }
+}
+
+// Sắp xếp khách hàng theo tổng tiền giảm dần
+uasort($merged_customers, function($a, $b) {
+    return $b['total_amount'] <=> $a['total_amount'];
+});
+
+// Lấy 5 khách hàng có mức mua cao nhất
+$top_customers = array_slice($merged_customers, 0, 5);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,12 +80,58 @@ if (!isset($_SESSION['user_name'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thống kê tình hình kinh doanh </title>
     <link rel="stylesheet" href="./stylescss/satistics.css">
-    <link rel="stylesheet" href="./stylescss/responsive.css">
+    <link rel="stylesheet" href="./stylescss/responsivestatistics.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 250px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            right: 0;
+        }
+        
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+        }
+        
+        .dropdown-content a:hover {background-color: #f1f1f1}
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .btn-info.dropdown-toggle {
+            background-color: #17ab1d; 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            text-decoration: none;
+        }
+        
+        .multi-orders {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 3px;
+        }
+    </style>
 </head>
 
 <body>
@@ -108,11 +181,11 @@ if (!isset($_SESSION['user_name'])) {
         </div>
 
         <form action="" id="dateFilterForm">
-                    <label for="datein">Từ ngày: </label>
-                    <input type="date" name="datein" id="datein" value="<?php echo isset($_GET['datein']) ? htmlspecialchars($_GET['datein']) : ''; ?>">
-                    <label for="dateout">đến ngày: </label>
-                    <input type="date" name="dateout" id="dateout" value="<?php echo isset($_GET['dateout']) ? htmlspecialchars($_GET['dateout']) : ''; ?>">
-                </form>
+            <label for="datein">Từ ngày: </label>
+            <input type="date" name="datein" id="datein" value="<?php echo isset($_GET['datein']) ? htmlspecialchars($_GET['datein']) : ''; ?>">
+            <label for="dateout">đến ngày: </label>
+            <input type="date" name="dateout" id="dateout" value="<?php echo isset($_GET['dateout']) ? htmlspecialchars($_GET['dateout']) : ''; ?>">
+        </form>
         <button style="outline: none; margin-top: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
         <button style="outline: none; margin-top: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
 
@@ -127,56 +200,57 @@ if (!isset($_SESSION['user_name'])) {
                         <th>Tên Khách hàng</th>
                         <th>Đơn hàng</th>
                         <th>Tổng tiền</th>
-                        <th>Ngày</th>
                         <th>Hóa đơn</th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php
-                    if ($top_customers_result) {
-                        mysqli_data_seek($top_customers_result, 0);
-                    }
-
                     $rank = 1;
                     
-                    if ($order_result && mysqli_num_rows($order_result) > 0) {
-                        while ($order = mysqli_fetch_assoc($order_result)) {
-                            $order_id = $order['order_id'];
+                    if (!empty($top_customers)) {
+                        foreach ($top_customers as $customer) {
+                            // Hiển thị thông tin đơn hàng
+                            $order_display = count($customer['orders']) > 1 ? 
+                                            count($customer['orders']) . " đơn hàng" : 
+                                            "1 đơn hàng";
                             
-                            $date = date('d/m/Y', strtotime($order['order_date']));
-                            $time = date('H:i', strtotime($order['order_date']));
+                            // Tạo button xem chi tiết
+                            if (count($customer['orders']) == 1) {
+                                // Nếu chỉ có 1 đơn hàng thì tạo button đơn giản
+                                $order = reset($customer['orders']);
+                                $button = '<a href="satictics_detail.php?id=' . $order['order_id'] . '" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                                            <i class="fa fa-eye"></i> Xem đơn hàng
+                                           </a>';
+                            } else {
+                                // Nếu có nhiều đơn hàng thì tạo dropdown
+                                $button = '<div class="dropdown">
+                                            <button class="btn btn-info dropdown-toggle" type="button">
+                                                <i></i>▼ Xem đơn hàng
+                                            </button>
+                                            <div class="dropdown-content">';
+
+                                            usort($customer['orders'], function($a, $b) {
+                                                return strtotime($a['order_date']) - strtotime($b['order_date']);
+                                            });
+                                
+                                // Thêm link cho từng đơn hàng
+                                foreach ($customer['orders'] as $index => $order) {
+                                    $order_date = date('d/m/Y', strtotime($order['order_date']));
+                                    $order_time = date('H:i', strtotime($order['order_date']));
+                                    $button .= '<a href="satictics_detail.php?id=' . $order['order_id'] . '">
+                                                Đơn ' . ($index + 1) . ': ' . number_format($order['total_amount'], 0, ',', '.') . 'đ (' . $order_date . ')
+                                               </a>';
+                                }
+                                
+                                $button .= '</div></div>';
+                            }
                     ?>
                     <tr>
                         <td><?php echo $rank++; ?></td>
-                        <td><?php echo $order['fullname']; ?></td>
-                        <td>
-                            <?php
-                            $order_detail_sql = "SELECT cthd.*, sp.product_name, sp.product_price
-                                                FROM chitiethoadon cthd
-                                                LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
-                                                WHERE cthd.order_id = '$order_id'";
-                            $order_detail_result = mysqli_query($conn, $order_detail_sql);
-                            
-                            if ($order_detail_result && mysqli_num_rows($order_detail_result) > 0) {
-                                while ($detail = mysqli_fetch_assoc($order_detail_result)) {
-                                    $quantity = isset($detail['quantity']) ? $detail['quantity'] : 1;
-                                    echo $quantity . "kg x " . $detail['product_name'] . "<br>";
-                                }
-                            } else {
-                                echo "Không có đơn";
-                            }
-                            ?>
-                        </td>
-                        <td>
-                            <?php 
-                            if (isset($order['total_amount']) && $order['total_amount'] > 0) {
-                                echo number_format($order['total_amount'], 0, ',', '.') . 'đ';
-                            } else {
-                                echo "N/A";
-                            }
-                            ?>
-                        </td>
-                        <td><?php echo $date; ?><br><?php echo $time; ?></td>
+                        <td><?php echo $customer['fullname']; ?></td>
+                        <td><?php echo $order_display; ?></td>
+                        <td><?php echo number_format($customer['total_amount'], 0, ',', '.') . 'đ'; ?></td>
+                        <td><?php echo $button; ?></td>
                     </tr>
                     <?php
                         }
@@ -372,7 +446,7 @@ if (!isset($_SESSION['user_name'])) {
             });
 
             $(document).click(function (event) {
-                if (!$(event.target).closest('#sidebar, #toggleSidebar').length && $('#sidebar').hasClass('active')) {
+                if (!$(event.target).closest('#sidebar, #toggleSidebar, .dropdown').length && $('#sidebar').hasClass('active')) {
                     $("#sidebar").removeClass("active");
                 }
             });
@@ -409,6 +483,5 @@ if (!isset($_SESSION['user_name'])) {
             });
         });
     </script>
-
 </body>
 </html>

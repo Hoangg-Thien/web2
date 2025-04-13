@@ -39,7 +39,7 @@ if (isset($_GET['district']) && !empty($_GET['district'])){
 // Lọc theo trạng thái
 if (isset($_GET['status']) && !empty($_GET['status']) && $_GET['status'] !== 'all') {
     $status = mysqli_real_escape_string($conn, $_GET['status']);
-    $where_clause .= " AND (hd.order_status) = '$status'";
+    $where_clause .= " AND hd.order_status = '$status'";
 }
 
 // Lọc theo ngày
@@ -168,14 +168,14 @@ if (!isset($_SESSION['user_name'])) {
 
         <div class="row element-filter mx-0 mb-3">
             <div class="col-6 p-0" style="margin-bottom: 10px;">
-                <label for="statusFilter">Lọc theo tình trạng:</label>
-                    <select id="statusFilter" class="form-select px-3">
-                        <option value="all" selected>Tất cả</option>
-                        <option value="cancelled">Đã hủy</option>
-                        <option value="pending">Chưa xác nhận</option>
-                        <option value="confirmed">Đã xác nhận</option>
-                        <option value="completed">Giao thành công</option>
-                    </select>
+                <label for="statusFilter">Lọc theo trạng thái:</label>
+                <select id="statusFilter" class="form-select px-3">
+                <option value="all">Tất cả</option>
+                <option value="Chưa xác nhận" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Chưa xác nhận') ? 'selected' : ''; ?>>Chưa xác nhận</option>
+                <option value="Đã xác nhận" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Đã xác nhận') ? 'selected' : ''; ?>>Đã xác nhận</option>
+                <option value="Giao thành công" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Giao thành công') ? 'selected' : ''; ?>>Giao thành công</option>
+                <option value="Đã hủy" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Đã hủy') ? 'selected' : ''; ?>>Đã hủy</option>
+                </select>
             </div>
 
             <div class="col-6 p-0" style="margin-bottom: 10px;">
@@ -197,23 +197,18 @@ if (!isset($_SESSION['user_name'])) {
                               <option value="">Chọn một quận/huyện</option>
                           </select>
                   </div>
-            <div class="col-12 p-0" style="margin-top: 10px;">
-                <button style="outline: none; margin-bottom: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
-                <button style="outline: none; margin-bottom: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
-            </div>
-        </div>
 
-        <div class="row element-filter mx-0 mb-3">
-            <div class="filter__date col-6 p-0">
-                <form action="" id="dateFilterForm">
+                  <form action="" id="dateFilterForm">
                     <label for="datein">Từ ngày: </label>
                     <input type="date" name="datein" id="datein" value="<?php echo isset($_GET['datein']) ? htmlspecialchars($_GET['datein']) : ''; ?>">
                     <label for="dateout">đến ngày: </label>
                     <input type="date" name="dateout" id="dateout" value="<?php echo isset($_GET['dateout']) ? htmlspecialchars($_GET['dateout']) : ''; ?>">
-                    <button type="submit" class="btn-secondary">Áp dụng</button>
                 </form>
-            </div>
 
+            <div class="col-12 p-0" style="margin-top: 20px;">
+                <button style="outline: none; margin-bottom: 10px;" id="applyLocationFilter" class="btn btn-filter">Lọc</button>
+                <button style="outline: none; margin-bottom: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
+            </div>
         </div>
 
         <br>
@@ -225,7 +220,7 @@ if (!isset($_SESSION['user_name'])) {
                         <th>Mã Đơn</th>
                         <th>Tên Khách Hàng</th>
                         <th>Địa Chỉ</th>
-                        <th>Sản Phẩm</th>
+                        <th>Người nhận</th>
                         <th>Tổng</th>
                         <th>Trạng Thái</th>
                         <th>Ngày</th>
@@ -284,20 +279,12 @@ if (!isset($_SESSION['user_name'])) {
                             ?>
                         </td>
                         <td>
-                            <?php
-                            $order_detail_sql = "SELECT cthd.*, sp.product_name, sp.product_price
-                                                FROM chitiethoadon cthd
-                                                LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
-                                                WHERE cthd.order_id = '$order_id'";
-                            $order_detail_result = mysqli_query($conn, $order_detail_sql);
-                            
-                            if ($order_detail_result && mysqli_num_rows($order_detail_result) > 0) {
-                                while ($detail = mysqli_fetch_assoc($order_detail_result)) {
-                                    $quantity = isset($detail['quantity']) ? $detail['quantity'] : 1;
-                                    echo $quantity . "kg x " . $detail['product_name'] . "<br>";
-                                }
+                        <?php
+                            if ($status_text === 'Giao thành công') {
+                                $recipient_name = $order['receipter']; 
+                                echo htmlspecialchars($recipient_name);
                             } else {
-                                echo "Không có sản phẩm";
+                                echo "Không có thông tin người nhận";
                             }
                             ?>
                         </td>
@@ -321,7 +308,10 @@ if (!isset($_SESSION['user_name'])) {
                         <td><span class="status <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
                         <td><?php echo $date; ?><br><?php echo $time; ?></td>
                         <td class="text-align-center">
-                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
+                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                            <button style="outline: none; margin-top: 5px;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
                                 title="Sửa">
                                 <i class="fa fa-edit"></i>
                             </button>
@@ -437,32 +427,13 @@ if (!isset($_SESSION['user_name'])) {
                 }
             });
 
-            //  lọc theo ngày
-            $('#dateFilterForm').on('submit', function(e) {
-                e.preventDefault();
-                
-                var datein = $('#datein').val();
-                var dateout = $('#dateout').val();
-                
-                var url = 'order.php?';
-                var params = [];
-                
-                if (datein) {
-                    params.push('datein=' + datein);
-                }
-                
-                if (dateout) {
-                    params.push('dateout=' + dateout);
-                }
-                
-                window.location.href = url + params.join('&');
-            });
-
-            // lọc theo trạng thái, tỉnh, huyện ...
+            // lọc theo ngày, trạng thái, tỉnh, huyện ...
             $('#applyLocationFilter').click(function() {
                 var province = $('#province').val();
                 var district = $('#district').val();
                 var status = $('#statusFilter').val(); 
+                var datein = $('#datein').val();
+                var dateout = $('#dateout').val();
 
                 console.log("Giá trị tỉnh:", province);
                 console.log("Giá trị quận:", district);
@@ -480,8 +451,16 @@ if (!isset($_SESSION['user_name'])) {
                     params.push('district=' + district);
                 }
 
-                if (status) {
+                if (status && status !== 'all') {
                     params.push('status=' + status); 
+                }
+
+                if (datein) {
+                    params.push('datein=' + datein);
+                }
+                
+                if (dateout) {
+                    params.push('dateout=' + dateout);
                 }
 
                 window.location.href = url + params.join('&');

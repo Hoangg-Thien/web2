@@ -40,8 +40,10 @@
 
         if($stmt->execute()){
             header("Location: addpro.php?success");
-        } else {
-            die("Lỗi SQL: " . $stmt->error);
+            exit();
+        }else{
+            header("Location: addpro.php?error");
+            exit();
         }
 
         $stmt->close();

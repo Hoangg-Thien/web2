@@ -24,10 +24,10 @@ if (isset($_GET['order_id'])) {
             $order = mysqli_fetch_assoc($result);
             
             // Lấy thông tin sản phẩm từ bảng chitiethoadon
-            $detail_sql = "SELECT ct.*, sp.product_name, sp.product_price 
-                        FROM chitiethoadon ct
-                        LEFT JOIN sanpham sp ON ct.product_id = sp.product_id
-                        WHERE ct.order_id = ?";
+            $detail_sql = "SELECT cthd.*, sp.product_name, sp.product_price 
+                        FROM chitiethoadon cthd
+                        LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
+                        WHERE cthd.order_id = ?";
                         
             $detail_stmt = mysqli_prepare($conn, $detail_sql);
             
