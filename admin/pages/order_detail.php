@@ -345,7 +345,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
 
             <div class="invoice-details">
                 <div class="invoice-details-col">
-                    <h4>THÔNG TIN KHÁCH HÀNG</h4>
+                    <h4>THÔNG TIN NGƯỜI MUA HÀNG</h4>
                     <p>
                         <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
                         <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
@@ -385,14 +385,17 @@ $order_time = date('H:i', strtotime($order['order_date']));
                 </div>
             </div>
 
+            <?php if($order['order_status'] === 'Giao thành công'): ?>
             <div class="invoice-details-col">
                     <h4>THÔNG TIN NGƯỜI NHẬN</h4>
                     <p>
-                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['receipter']; ?><br>
+                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
                         <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
                         <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
                     </p>
             </div>
+            <?php else: ?>
+                <?php endif; ?>
 
             <div class="invoice-items">
                 <h4>CHI TIẾT SẢN PHẨM</h4>
