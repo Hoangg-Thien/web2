@@ -385,6 +385,7 @@ $order_time = date('H:i', strtotime($order['order_date']));
                 </div>
             </div>
 
+            <?php if($order['order_status'] === 'Giao thành công'): ?>
             <div class="invoice-details-col">
                     <h4>THÔNG TIN NGƯỜI NHẬN</h4>
                     <p>
@@ -393,6 +394,8 @@ $order_time = date('H:i', strtotime($order['order_date']));
                         <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
                     </p>
             </div>
+            <?php else: ?>
+                <?php endif; ?>
 
             <div class="invoice-items">
                 <h4>CHI TIẾT SẢN PHẨM</h4>
