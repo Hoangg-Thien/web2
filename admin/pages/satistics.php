@@ -54,9 +54,6 @@ if ($orders_result && mysqli_num_rows($orders_result) > 0) {
         
         // Cộng dồn tổng tiền
         $merged_customers[$fullname]['total_amount'] += $order['total_amount'];
-        
-        // Thêm ngày vào mảng ngày để hiển thị khoảng ngày
-        $merged_customers[$fullname]['date_range'][] = date('d/m/Y', strtotime($order['order_date']));
     }
 }
 
@@ -195,7 +192,6 @@ $top_customers = array_slice($merged_customers, 0, 5);
                         <th>Tên Khách hàng</th>
                         <th>Đơn hàng</th>
                         <th>Tổng tiền</th>
-                        <th>Ngày</th>
                         <th>Hóa đơn</th>
                     </tr>
                 </thead>
@@ -247,7 +243,6 @@ $top_customers = array_slice($merged_customers, 0, 5);
                         <td><?php echo $customer['fullname']; ?></td>
                         <td><?php echo $order_display; ?></td>
                         <td><?php echo number_format($customer['total_amount'], 0, ',', '.') . 'đ'; ?></td>
-                        <td><?php echo $date_display; ?></td>
                         <td><?php echo $button; ?></td>
                     </tr>
                     <?php
