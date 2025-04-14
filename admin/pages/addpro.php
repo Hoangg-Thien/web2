@@ -100,7 +100,7 @@ if (!isset($_SESSION['user_name'])) {
                     <div class="form-group">
                         <label for="product-image">Ảnh sản phẩm</label>
                         <div class="image-upload-container">
-                            <input type="file" id="product-image" name="product-image" accept="image/*" onchange="previewImage(this)">
+                            <input  type="file" id="product-image" name="product-image" accept="image/*" onchange="previewImage(this)"> 
                             <div id="image-preview" class="image-preview">
                                 <p>Hình ảnh</p>
                             </div>
@@ -114,7 +114,7 @@ if (!isset($_SESSION['user_name'])) {
                 </div>
                 
                 <div class="form-actions">
-                    <button type="reset" class="btn-cancel" onclick=""><i class="fas fa-trash-alt"></i> Hủy bỏ</button>
+                    <button type="reset" class="btn-cancel" onclick=""><i class="fa-solid fa-rotate-right"></i> Hủy bỏ</button>
                     <button type="submit" class="btn-save" onclick=""><i class="fa-solid fa-download"></i> Lưu lại</button>
                 </div>
             </form>

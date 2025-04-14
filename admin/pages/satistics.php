@@ -78,6 +78,49 @@ if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
     exit();
 }
+
+// Top 3 sản phẩm bán chạy
+$best_sellers_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
+                    SUM(cthd.quantity) as total_sold
+                    FROM sanpham sp
+                    JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
+                    JOIN hoadon hd ON cthd.order_id = hd.order_id
+                    WHERE 1=1 $where_clause
+                    GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
+                    ORDER BY total_sold DESC
+                    LIMIT 3";
+
+$best_sellers_result = mysqli_query($conn, $best_sellers_sql);
+$best_sellers = [];
+$total_best_sellers = 0;
+
+if ($best_sellers_result && mysqli_num_rows($best_sellers_result) > 0) {
+    while ($product = mysqli_fetch_assoc($best_sellers_result)) {
+        $best_sellers[] = $product;
+        $total_best_sellers += ($product['total_sold'] * $product['product_price']);
+    }
+}
+
+// Top 3 sản phẩm bán ế
+$worst_sellers_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
+                      COALESCE(SUM(cthd.quantity), 0) as total_sold
+                      FROM sanpham sp
+                      LEFT JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
+                      LEFT JOIN hoadon hd ON cthd.order_id = hd.order_id AND (1=1 $where_clause)
+                      GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
+                      ORDER BY total_sold ASC
+                      LIMIT 3";
+
+$worst_sellers_result = mysqli_query($conn, $worst_sellers_sql);
+$worst_sellers = [];
+$total_worst_sellers = 0;
+
+if ($worst_sellers_result && mysqli_num_rows($worst_sellers_result) > 0) {
+    while ($product = mysqli_fetch_assoc($worst_sellers_result)) {
+        $worst_sellers[] = $product;
+        $total_worst_sellers += ($product['total_sold'] * $product['product_price']);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,6 +131,7 @@ if (!isset($_SESSION['user_name'])) {
     <title>Thống kê tình hình kinh doanh </title>
     <link rel="stylesheet" href="./stylescss/satistics.css">
     <link rel="stylesheet" href="./stylescss/responsivestatistics.css">
+    <link rel="stylesheet" href="./stylescss/turnover.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -120,9 +164,6 @@ if (!isset($_SESSION['user_name'])) {
         
         .dropdown-content a:hover {background-color: #f1f1f1}
         
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
         .btn-info1.dropdown-toggle {
             background-color: #17ab1d; 
             color: white; 
@@ -232,7 +273,7 @@ if (!isset($_SESSION['user_name'])) {
                             } else {
                                 // Nếu có nhiều đơn hàng thì tạo dropdown
                                 $button = '<div class="dropdown">
-                                            <button class="btn btn-info1 dropdown-toggle" type="button">
+                                            <button class="btn btn-info1 dropdown-toggle" type="button" id="dropdownContentButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i></i>▼ Xem đơn hàng
                                             </button>
                                             <div class="dropdown-content">';
@@ -246,7 +287,7 @@ if (!isset($_SESSION['user_name'])) {
                                     $order_date = date('d/m/Y', strtotime($order['order_date']));
                                     $order_time = date('H:i', strtotime($order['order_date']));
                                     $button .= '<a href="satictics_detail.php?id=' . $order['order_id'] . '">
-                                                Đơn ' . ($index + 1) . ': ' . number_format($order['total_amount'], 0, ',', '.') . 'đ (' . $order_date . ')
+                                                Đơn ' . ($index + 1) . ': '  . '  ' . $order_date . '
                                                </a>';
                                 }
                                 
@@ -274,164 +315,66 @@ if (!isset($_SESSION['user_name'])) {
             </table>
         </div>
 
-        <h3 class="tile-title">MẶT HÀNG</h3>
-        <div class="tile-body">
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th>Mã sản phẩm</th>
-                        <th>Ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Số lượng bán ra</th>
-                        <th>Giá tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>F010</td>
-                        <td class="img-pro"><img src="../img/man-Ha-Noi.jpg" alt="man-Ha-Noi"></td>
-                        <td>Mận Hà Nội</td>
-                        <td>30kg</td>
-                        <td>45.000đ/kg</td>
-                    </tr>
-
-                    <tr>
-                        <td>F005</td>
-                        <td class="img-pro"><img src="../img/trai-chom-chom.jpg" alt="trai-chom-chom">
-                        </td>
-                        <td>Chôm chôm</td>
-                        <td>25kg</td>
-                        <td>45.000đ/kg</td>
-                    </tr>
-
-                    <tr>
-                        <td>F007</td>
-                        <td class="img-pro"> <img src="../img/trai-oi.jpg" alt="trai-oi"></td>
-                        <td>Ổi xá lị</td>
-                        <td>19kg</td>
-                        <td>45.000đ/kg</td>
-                    </tr>
-
-                    <tr>
-                        <td>F012</td>
-                        <td class="img-pro"> <img src="../img/dau-tay.jpg" alt="dau-tay"></td>
-                        <td>Dâu tây Đà Lạt</td>
-                        <td>15kg</td>
-                        <td>160.000đ/kg</td>
-                    </tr>
-
-                    <tr>
-                        <td>F002</td>
-                        <td class="img-pro"> <img src="../img/trai-kiwi.jpg" alt="trai-kiwi"></td>
-                        <td>Kiwi</td>
-                        <td>10kg</td>
-                        <td>160.000đ/kg</td>
-                    </tr>
-
-                    <tr>
-                        <th colspan="4">Tổng cộng:</th>
-                        <td>7.330.000đ</td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-            <h3 class="tile-title">SẢN PHẨM BÁN CHẠY</h3>
-            <div class="tile-body">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Mã sản phẩm</th>
-                            <th>Ảnh</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Số lượng bán ra</th>
-                            <th>Giá tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>F010</td>
-                            <td class="img-pro"> <img src="../img/man-Ha-Noi.jpg" alt="man-Ha-Noi"></td>
-                            <td>Mận Hà Nội</td>
-                            <td>30kg</td>
-                            <td>45.000đ/kg</td>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>F005</td>
-                            <td class="img-pro"> <img src="../img/trai-chom-chom.jpg" alt="trai-chom-chom">
-                            </td>
-                            <td>Chôm chôm</td>
-                            <td>25kg</td>
-                            <td>45.000đ/kg</td>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>F007</td>
-                            <td class="img-pro"> <img src="../img/trai-oi.jpg" alt="trai-oi"></td>
-                            <td>Ổi xá lị</td>
-                            <td>19kg</td>
-                            <td>45.000đ/kg</td>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th colspan="4">Tổng cộng:</th>
-                            <td>3.330.000đ</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <!-- SẢN PHẨM BÁN CHẠY -->
+            <div class="product-section best-sellers">
+                <h3 class="tile-title">SẢN PHẨM BÁN CHẠY</h3>
+                <div class="tile-body">
+                    <div class="row">
+                        <?php if (!empty($best_sellers)): ?>
+                            <?php foreach ($best_sellers as $product): ?>
+                                <div class="col-md-4">
+                                    <div class="product-card">
+                                        <div class="product-image">
+                                            <img src="../img/<?php echo htmlspecialchars($product['product_image']); ?>" 
+                                                alt="<?php echo htmlspecialchars($product['product_name']); ?>">
+                                        </div>
+                                        <div class="product-info">
+                                            <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
+                                            <a href="satictics_detail.php?id=' . $order['order_id'] . '" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 20px; text-decoration: none;">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-md-12">
+                                <div class="no-data">Không có dữ liệu sản phẩm bán chạy</div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
 
-            <h3 class="tile-title">SẢN PHẨM BÁN Ế</h3>
-            <div class="tile-body">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Mã sản phẩm</th>
-                            <th>Ảnh</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Số lượng bán ra</th>
-                            <th>Giá tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>F001</td>
-                            <td class="img-pro"> <img src="../img/trai-chuoi.jpg" alt="trai-chuoi"></td>
-                            <td>Chuối chín Nam Mỹ</td>
-                            <td>0kg</td>
-                            <td>45.000đ/kg</td>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>F004</td>
-                            <td class="img-pro"> <img src="../img/trai-man-do.jpg" alt="trai-man-do"></td>
-                            <td>Mận đỏ An Phước</td>
-                            <td>1kg</td>
-                            <td>45.000đ/kg</td>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>F003</td>
-                            <td class="img-pro"> <img src="../img/hinh-trai-buoi.jpg" alt="hinh-trai-buoi">
-                            </td>
-                            <td>Bưởi da xanh</td>
-                            <td>0kg</td>
-                            <td>45.000đ/kg</td>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th colspan="4">Tổng cộng:</th>
-                            <td>45.000đ</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- SẢN PHẨM BÁN Ế -->
+            <div class="product-section worst-sellers">
+                <h3 class="tile-title">SẢN PHẨM BÁN Ế</h3>
+                <div class="tile-body">
+                    <div class="row">
+                        <?php if (!empty($worst_sellers)): ?>
+                            <?php foreach ($worst_sellers as $product): ?>
+                                <div class="col-md-4">
+                                    <div class="product-card slow-seller">
+                                        <div class="product-image">
+                                            <img src="../img/<?php echo htmlspecialchars($product['product_image']); ?>" 
+                                                alt="<?php echo htmlspecialchars($product['product_name']); ?>">
+                                        </div>
+                                        <div class="product-info">
+                                            <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
+                                            <a href="satictics_detail.php" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 20px; text-decoration: none;">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-md-12">
+                                <div class="no-data">Không có dữ liệu sản phẩm bán ế trong khoảng thời gian này</div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-6">
@@ -490,6 +433,16 @@ if (!isset($_SESSION['user_name'])) {
                 $('#applyLocationFilter').click();
             });
         });
+            $(document).on('click', '.dropdown-toggle', function() {
+                var $dropdownMenu = $(this).next('.dropdown-content');
+                $dropdownMenu.toggle(); 
+            });
+
+            $(document).on('click', function(event) {
+                if (!$(event.target).closest('.dropdown').length) {
+                    $('.dropdown-content').hide(); 
+                }
+            });
     </script>
 </body>
 </html>

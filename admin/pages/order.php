@@ -221,7 +221,6 @@ if (!isset($_SESSION['user_name'])) {
                         <th>Tên Khách Hàng</th>
                         <th>Địa Chỉ</th>
                         <th>Người nhận</th>
-                        <th>Tổng</th>
                         <th>Trạng Thái</th>
                         <th>Ngày</th>
                         <th>Hành Động</th>
@@ -290,30 +289,13 @@ if (!isset($_SESSION['user_name'])) {
                             }
                             ?>
                         </td>
-                        <td>
-                            <?php 
-                            $total_sql = "SELECT SUM(cthd.quantity * sp.product_price) as total_amount
-                                        FROM chitiethoadon cthd
-                                        LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
-                                        WHERE cthd.order_id = '$order_id'";
-                            $total_result = mysqli_query($conn, $total_sql);
-                            
-                            if ($total_result && mysqli_num_rows($total_result) > 0){
-                                $total_row = mysqli_fetch_assoc($total_result);
-                                $total = $total_row['total_amount'];
-                                echo number_format($total, 0, ',', '.') . 'đ';
-                            } else {
-                                echo "N/A";
-                            }
-                            ?>
-                        </td>
                         <td><span class="status <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
                         <td><?php echo $date; ?><br><?php echo $time; ?></td>
                         <td class="text-align-center">
-                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
-                            <i class="fa fa-eye"></i>
+                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 20px; text-decoration: none;">
+                            <i class="fa-solid fa-circle-info"></i>
                         </a>
-                            <button style="outline: none; margin-top: 5px;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
                                 title="Sửa">
                                 <i class="fa fa-edit"></i>
                             </button>
