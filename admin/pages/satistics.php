@@ -123,8 +123,7 @@ if (!isset($_SESSION['user_name'])) {
         .dropdown:hover .dropdown-content {
             display: block;
         }
-        
-        .btn-info.dropdown-toggle {
+        .btn-info1.dropdown-toggle {
             background-color: #17ab1d; 
             color: white; 
             border: none; 
@@ -132,7 +131,9 @@ if (!isset($_SESSION['user_name'])) {
             border-radius: 4px; 
             text-decoration: none;
         }
-        
+        .btn-info1.dropdown-toggle:active {
+           outline: none;
+        }
         .multi-orders {
             font-size: 0.8em;
             color: #666;
@@ -231,7 +232,7 @@ if (!isset($_SESSION['user_name'])) {
                             } else {
                                 // Nếu có nhiều đơn hàng thì tạo dropdown
                                 $button = '<div class="dropdown">
-                                            <button class="btn btn-info dropdown-toggle" type="button">
+                                            <button class="btn btn-info1 dropdown-toggle" type="button">
                                                 <i></i>▼ Xem đơn hàng
                                             </button>
                                             <div class="dropdown-content">';
