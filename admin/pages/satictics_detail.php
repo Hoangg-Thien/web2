@@ -40,6 +40,12 @@ $total_amount = $total_row['total_amount'];
 
 $order_date = date('d/m/Y', strtotime($order['order_date']));
 $order_time = date('H:i', strtotime($order['order_date']));
+
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -313,7 +319,9 @@ $order_time = date('H:i', strtotime($order['order_date']));
                     <div class="img-edit">
                         <img class="img-head" src="../img/admin.jpg" alt="User Image">
                     </div>
-                    <div class="role">Chào mừng trở lại, Huy!</div>
+                    <?php if (isset($_SESSION['fullname'])): ?>
+                        <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+                    <?php endif; ?>
                 </li>
             </ul>
         </nav>
@@ -389,12 +397,21 @@ $order_time = date('H:i', strtotime($order['order_date']));
             <div class="invoice-details-col">
                     <h4>THÔNG TIN NGƯỜI NHẬN</h4>
                     <p>
-                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
+                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['receipter']; ?><br>
                         <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
                         <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
                     </p>
             </div>
-            <?php else: ?>
+            <?php elseif ($order['order_status'] === 'Đã hủy'): ?>
+                <?php else: ?>
+                    <div class="invoice-details-col">
+                    <h4>THÔNG TIN NGƯỜI NHẬN</h4>
+                    <p>
+                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
+                        <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
+                        <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
+                    </p>
+                    </div>
                 <?php endif; ?>
 
             <div class="invoice-items">
