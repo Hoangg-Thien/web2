@@ -224,7 +224,7 @@ if (!isset($_SESSION['user_name'])) {
             color: white;
             text-decoration: none;
             border-radius: 4px;
-            margin-top: 20px;
+            cursor: pointer;
             border: none;
             font-weight: 600;
         }

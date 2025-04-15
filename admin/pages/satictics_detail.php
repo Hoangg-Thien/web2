@@ -224,9 +224,9 @@ if (!isset($_SESSION['user_name'])) {
             color: white;
             text-decoration: none;
             border-radius: 4px;
-            margin-top: 20px;
             border: none;
             font-weight: 600;
+            cursor: pointer;
         }
         
         .btn-back:hover {
@@ -453,7 +453,7 @@ if (!isset($_SESSION['user_name'])) {
             </div>
 
         <div class="actions">
-            <a href="./satistics.php" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <a class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> Quay lại</a>
         </div>
     </main>
 
@@ -469,6 +469,9 @@ if (!isset($_SESSION['user_name'])) {
                 }
             });
         });
+        function goBack() {
+            window.history.back();
+            }
     </script>
 </body>
 </html>
