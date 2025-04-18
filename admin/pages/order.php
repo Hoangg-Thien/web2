@@ -321,19 +321,42 @@ if (!isset($_SESSION['user_name'])) {
     ?>
         <nav aria-label="Page navigation " class="page-center">
             <ul class="pagination justify-content-center" id="pagination">
+            <?php
+                $filter_params = [];
+                if (isset($_GET['province']) && !empty($_GET['province'])) {
+                    $filter_params[] = "province=" . urlencode($_GET['province']);
+                }
+                if (isset($_GET['district']) && !empty($_GET['district'])) {
+                    $filter_params[] = "district=" . urlencode($_GET['district']);
+                }
+                if (isset($_GET['status']) && !empty($_GET['status']) && $_GET['status'] !== 'all') {
+                    $filter_params[] = "status=" . urlencode($_GET['status']);
+                }
+                if (isset($_GET['datein']) && !empty($_GET['datein'])) {
+                    $filter_params[] = "datein=" . urlencode($_GET['datein']);
+                }
+                if (isset($_GET['dateout']) && !empty($_GET['dateout'])) {
+                    $filter_params[] = "dateout=" . urlencode($_GET['dateout']);
+                }
+                
+                $query_string = implode('&', $filter_params);
+                if (!empty($query_string)) {
+                    $query_string = '&' . $query_string;
+                }
+                ?>
                 <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
-                    <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Lùi">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="page-item <?= $page == $i ? 'active' : '' ?>">
-                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                    <a class="page-link" href="?page=<?= $page - 1 ?><?= $query_string ?>" aria-label="Lùi">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-            <?php endfor; ?>
-            <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
-                <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Tiếp">
-                    <span aria-hidden="true">&raquo;</span>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                        <a class="page-link" href="?page=<?= $i ?><?= $query_string ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+                <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?page=<?= $page + 1 ?><?= $query_string ?>" aria-label="Tiếp">
+                        <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
             </ul>
