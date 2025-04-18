@@ -395,6 +395,8 @@ foreach ($worst_sellers as &$product) {
                                             </div>
                                             <div class="product-info">
                                                 <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
+                                                <p><strong>Số lượng đã bán:</strong> <?php echo $product['total_sold']; ?>kg</p>
+                                                <p><strong>Tổng doanh thu:</strong> <?php echo number_format($product['total_sold'] * $product['product_price'], 0, ',', '.'); ?>đ</p>
                                                 <div class="dropdown">
                                                     <button class="btn btn-info1 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa-solid fa-circle-info"></i>
@@ -442,6 +444,8 @@ foreach ($worst_sellers as &$product) {
                                                 </div>
                                                 <div class="product-info">
                                                     <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
+                                                    <p><strong>Số lượng đã bán:</strong> <?php echo $product['total_sold']; ?>kg</p>
+                                                    <p><strong>Tổng doanh thu:</strong> <?php echo number_format($product['total_sold'] * $product['product_price'], 0, ',', '.'); ?>đ</p>
                                                     <div class="dropdown">
                                                         <button class="btn btn-info1 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="fa-solid fa-circle-info"></i>
