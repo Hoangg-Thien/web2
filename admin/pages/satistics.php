@@ -477,20 +477,10 @@ foreach ($worst_sellers as &$product) {
                             </div>
                         </div>
                     </div>
-
-            <div class="col-md-6">
-                <div class="tile">
-                    <h3 class="tile-title">THỐNG KÊ DOANH SỐ</h3>
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <canvas class="embed-responsive-item" id="barChartDemo"></canvas>
-                    </div>
-                </div>
             </div>
-        </div>
         </div>
     </main>
 
-    <script src="../js/statistic.js"></script>
     <script>
         $(document).ready(function () {
             $("#toggleSidebar").click(function () { 
