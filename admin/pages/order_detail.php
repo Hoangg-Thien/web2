@@ -1,6 +1,10 @@
 <?php
 require 'connect.php';
-
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header('Location: order.php');
     exit;
@@ -313,7 +317,9 @@ $order_time = date('H:i', strtotime($order['order_date']));
                     <div class="img-edit">
                         <img class="img-head" src="../img/admin.jpg" alt="User Image">
                     </div>
-                    <div class="role">Chào mừng trở lại, Huy!</div>
+                    <?php if (isset($_SESSION['fullname'])): ?>
+            <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+        <?php endif; ?>
                 </li>
             </ul>
         </nav>

@@ -65,15 +65,35 @@ function deleteProduct(productId) {
     $('#ModalRM').modal('show');
 
     $('#confirmDelete').off('click').on('click', function() {
-        const index = products.findIndex(p => p.product_id === productId);
-        if (index !== -1) {
-            products.splice(index, 1); // Xóa khỏi danh sách tạm
-        }
+        fetch('delete_product.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_id=${productId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Xóa khỏi mảng và cập nhật giao diện
+                const index = products.findIndex(p => p.product_id === productId);
+                if (index !== -1) {
+                    products.splice(index, 1);
+                }
 
-        $('#ModalRM').modal('hide');
-        displayProducts(currentPage);
+                $('#ModalRM').modal('hide');
+                displayProducts(currentPage);
+            } else {
+                alert('Xóa thất bại: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi gửi yêu cầu xóa:', error);
+            alert('Đã có lỗi xảy ra.');
+        });
     });
 }
+
 
 // Sửa sản phẩm
 function editProduct(productId) {

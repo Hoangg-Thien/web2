@@ -1,6 +1,6 @@
 <?php
 require 'connect.php';
-
+ 
 $where_clause = "";
 
 // Lọc theo ngày
@@ -30,18 +30,11 @@ $orders_result = mysqli_query($conn, $orders_sql);
 // Mảng để lưu trữ khách hàng đã gộp
 $merged_customers = [];
 
-$top_customers_result = mysqli_query($conn, $top_customers_sql);
-
-session_start();
-if (!isset($_SESSION['user_name'])) {
-    header("Location: /web2/login.php");
-    exit();
-}
 // Gộp khách hàng
 if ($orders_result && mysqli_num_rows($orders_result) > 0) {
     while ($order = mysqli_fetch_assoc($orders_result)) {
         $fullname = $order['fullname'];
-        
+
         // Nếu chưa có khách hàng này trong mảng gộp
         if (!isset($merged_customers[$fullname])) {
             $merged_customers[$fullname] = [
@@ -51,14 +44,14 @@ if ($orders_result && mysqli_num_rows($orders_result) > 0) {
                 'date_range' => []
             ];
         }
-        
+
         // Thêm đơn hàng vào khách hàng
         $merged_customers[$fullname]['orders'][] = [
             'order_id' => $order['order_id'],
             'order_date' => $order['order_date'],
             'total_amount' => $order['total_amount']
         ];
-        
+
         // Cộng dồn tổng tiền
         $merged_customers[$fullname]['total_amount'] += $order['total_amount'];
     }
@@ -71,6 +64,11 @@ uasort($merged_customers, function($a, $b) {
 
 // Lấy 5 khách hàng có mức mua cao nhất
 $top_customers = array_slice($merged_customers, 0, 5);
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
