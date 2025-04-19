@@ -255,7 +255,7 @@
                 <a href="../user/introducelogin.html">Giới thiệu</a>  
                 <a href="../user/newslogin.html">Tin tức</a>  
                 <a href="../user/contactlogin.html">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
@@ -311,106 +311,42 @@
 
     <div class="grid wide">
         <div class="list-product">  
-            <h1>TRÁI CÂY KHÔ</h1>  
+            <h1>CÁC LOẠI KHÔ</h1>  
         </div>  
         
     <div class="image-container Delicous row" id="imageContainer">  
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">  
-                <img id="traicayngonImg" src="../img/xoay-say.jpg" alt="xoai-say" width="300" >  
-                <div class="caption" >Xoài sấy  <br>130.000/kg</div> 
-                <div class="icons">  
-                    <a href="../itemInfo/xoay-say.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                 
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i>
-                    </button>
-                </div> 
-            </div> 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg1" src="../img/tao-say.jpg" alt="tao-say" width="300" >
-                <div class="caption">Táo sấy <br> 150.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/tao-say.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg2" src="../img/dau-say.jpg" alt="dau-say" width="300" >
-                <div class="caption">Dâu sấy <br> 450.000đ/kg</div>
-                <div class="icons">  
-                    <a href="../itemInfo/dau-say.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                   
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-        </div>  
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg3" src="../img/nho-say.jpg" alt="nho-say" width="300" >
-                <div class="caption">Nho vàng sấy <br>  300.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/nho-say.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
+        <?php
+$conn = new mysqli("localhost", "root", "", "c07db");
+if ($conn->connect_error) {
+    die("Kết nối thất bại: " . $conn->connect_error);
+}
 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg4" src="../img/mit-say.jpg" alt="mit-say" width="300" >
-                <div class="caption">Mít sấy <br> 400.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/mit-say.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
+$sql = "SELECT * FROM sanpham WHERE product_type = 'Trái cây khô'";
+$result = $conn->query($sql);
 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="traicayngonImg5" src="../img/kiwi-say.jpg" alt="kiwi-say" width="300" >
-                <div class="caption">Kiwi sấy <br>  600.000/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/kiwi-say.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo '<div class="col l-4 m-6 c-6">';
+        echo '  <div class="fruit-background">';
+        echo '      <img src="../img/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" width="300">';
+        echo '      <div class="caption">' . $row['product_name'] . ' <br> ' . number_format($row['product_price']) . 'đ/kg</div>';
+        echo '      <div class="icons">';
+        echo '          <a href="#" class="info-icon" title="Xem thông tin chi tiết"><i class="fa-solid fa-circle-info"></i></a>';
+        echo '          <button class="add-to-cart-btn" title="Thêm vào giỏ hàng"><i class="fas fa-cart-plus"></i></button>';
+        echo '      </div>';
+        echo '  </div>';
+        echo '</div>';
+    }
+} else {
+    echo "<p>Không có sản phẩm nào thuộc loại 'ngon'.</p>";
+}
 
-        </div>
+
+
+$conn->close();
+?>
     </div>
     </div>
-
     <div class="policy-container" >
         <div >
             <img src="../img/policy1.png" alt="policy1">
@@ -628,6 +564,9 @@ button.addEventListener('click', function() {
         }
     };
     </script>
+
+<script src="../js/cart.js"></script>
+
 
 <footer>  
     <div>
