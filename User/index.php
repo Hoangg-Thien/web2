@@ -503,14 +503,36 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         }).then(res => res.json())
           .then(data => {
               if (data.success) {
-                  // Update cart icon badge
                   document.querySelector('#cart-count').innerText = data.cart_count;
+
+                  // Hiển thị thông báo popup giữa màn hình
+                  const notification = document.createElement('div');
+                  notification.textContent = 'Đã thêm vào giỏ hàng';
+                  notification.style.position = 'fixed';
+                  notification.style.top = '50%';
+                  notification.style.left = '50%';
+                  notification.style.transform = 'translate(-50%, -50%)';
+                  notification.style.backgroundColor = '#4CAF50';
+                  notification.style.color = '#fff';
+                  notification.style.padding = '16px 28px';
+                  notification.style.borderRadius = '10px';
+                  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                  notification.style.zIndex = 9999;
+                  notification.style.fontSize = '16px';
+                  notification.style.fontWeight = '500';
+                  document.body.appendChild(notification);
+
+                  setTimeout(() => {
+                      document.body.removeChild(notification);
+                  }, 2000);
               } else {
                   alert(data.message);
               }
           });
     });
 });
+
+
 
 
         
