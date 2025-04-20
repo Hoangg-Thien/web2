@@ -13,7 +13,7 @@ $total = 0;
     <link rel="stylesheet" href="../styles/index.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trái cây khô </title>  
+    <title>Trái cây ngon </title>  
     <style>  
         .search-container {
             display: flex;
@@ -209,7 +209,7 @@ $total = 0;
         button:hover {
             background: #0056b3;
         }
-
+       
     </style>  
 </head>  
 <body>  
@@ -247,26 +247,24 @@ $total = 0;
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
-                    <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.php">Rau củ  </a></li>
-                    <li><a href="./dried-fruits.php">Trái cây Khô</a></li>
-                    <li><a href="./nut-fruits.php">Các loại hạt  </a></li>
+                    <li><a href="./declious-fruits-nologin.php">Trái cây ngon </a></li>
+                    <li><a href="./VietNamese-fruits-nolog.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits-nologin.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables-nologin.php">Rau củ  </a></li>
+                    <li><a href="./dried-fruits-nologin.php">Trái cây Khô</a></li>
+                    <li><a href="./nut-fruits-nologin.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
-                <a href="../user/introducelogin.php">Giới thiệu</a>  
-                <a href="../user/newslogin.php">Tin tức</a>  
-                <a href="../user/contactlogin.php">Liên hệ</a>   
-                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="./usernologin.php" >Trang chủ</a>  
+                <a href="./introduce.php">Giới thiệu</a>  
+                <a href="./news.php">Tin tức</a>  
+                <a href="./contact.php">Liên hệ</a>   
+                <a href="./cart-user-nologin.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
-    <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
-</span>
-
-            </div>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                </a>  
+            </div>    
             <div class="search-container">   
                 
                 <div >
@@ -299,25 +297,18 @@ $total = 0;
                 
                         <button onclick="smartSearchProducts()">Lọc</button>
                     </div>
-            </div>  
+                </div>  
                 </div>
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
-                </div>
-            </div>
+            <div class="auth-buttons">  
+                <a href="../user/regis.php" title="Đăng ký" target="_blank">Đăng ký</a>  
+                <span>|</span>  
+                <a href="../user/login-user.php" title="Đăng nhập" target="_blank">Đăng nhập</a>  
+            </div> 
         </div>  
     </div> 
 
     <div class="grid wide">
-        <div class="image-container Delicous row" id="imageContainer"> 
+        <div class="image-container Delicous row" id="imageContainer">  
         <div class="cart-container" style="padding: 30px;min-height: 500; width: 900px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
     <h2 style="text-align: center; margin-bottom: 30px; font-size: 26px; color: #333;">Giỏ hàng của bạn</h2>
 
@@ -369,17 +360,16 @@ $total = 0;
     </table>
 
     <?php if (!empty($cart)): ?>
-        <div style="text-align: center; margin-top: 30px;">
-            <button onclick="location.href='checkout.php'" style="padding: 12px 24px; background-color: #4CAF50; color: white; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">
-                Tiến hành thanh toán
-            </button>
-        </div>
-    <?php endif; ?>
+    <div style="text-align: center; margin-top: 30px;">
+        <button onclick="alert('Bạn cần đăng nhập để thanh toán!'); window.location.href='../user/login-user.php';" style="padding: 12px 24px; background-color: #f44336; color: white; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">
+            Đăng nhập để thanh toán
+        </button>
+    </div>
+<?php endif; ?>
+
 </div>
-
-
     </div>
-    </div>
+
     <div class="policy-container" >
         <div >
             <img src="../img/policy1.png" alt="policy1">
@@ -420,13 +410,13 @@ $total = 0;
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introduce.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./contact.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./news.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -439,13 +429,13 @@ $total = 0;
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introduce.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./contact.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./news.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -459,13 +449,13 @@ $total = 0;
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introduce.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./contact.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./news.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -504,16 +494,6 @@ $total = 0;
     </div>
 
     <script>
-
-         const fruits = [
-    { name: "Mãng cầu xiêm", link: "../itemInfo/custard-apple.html", priority: 1  },
-    { name: "Thanh long ruột đỏ", link: "../itemInfo/dragon-fruit.html", priority: 2  },
-    { name: "Xoài cát", link: "../itemInfo/mango.html", priority: 3 },
-    { name: "Dưa hấu Long An", link: "../itemInfo/watermelon.html", priority: 4 },
-    { name: "Chôm chôm", link: "../itemInfo/rambutant.html", priority: 55 },
-    { name: "Ổi xá lị", link: "./itemInfo/guava.html", priority: 6 }
-    ];
-
     let debounceTimeout;
     function searchProducts() 
     {
@@ -555,33 +535,18 @@ $total = 0;
 }, 500); 
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+        let addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
 
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-button.addEventListener('click', function() {
-    const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
-    if (isConfirmed) 
-    {
-        cartCount++;
-        document.getElementById('cart-count').textContent = cartCount;
-        localStorage.setItem('cartCount', cartCount);
-    }
-});
-});
-
-
-         document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
+        addToCartButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                alert("Bạn cần phải đăng nhập để thêm vào giỏ hàng!");
+            });
+        });
     });
 
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
 
-    document.getElementById("toggleSearch").addEventListener("click", function () {
+document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
 
@@ -598,9 +563,6 @@ button.addEventListener('click', function() {
     };
     </script>
 
-<script src="../js/cart.js"></script>
-
-
 <footer>  
     <div>
         Copyright by us<b>&#8482</b>
@@ -608,17 +570,4 @@ button.addEventListener('click', function() {
 </footer>  
     </body>
 </html>
-
-
-
-
-
-<script>
-function updateCart(action, productId) {
-    fetch('/web2/User/user/cart-handle.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({action, product_id: productId})
-    }).then(() => location.reload());
-}
-</script>
+<script src="../User/js/cart.js"> </script>

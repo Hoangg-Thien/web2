@@ -484,53 +484,55 @@
 
     <script> 
         
-//Thêm giỏ hàng        
+//Thêm giỏ hàng
 document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', function() {
-        const productId = this.dataset.id;
-        const productName = this.dataset.name;
-        const productPrice = this.dataset.price;
+     button.addEventListener('click', function() {
+         const productId = this.dataset.id;
+         const productName = this.dataset.name;
+         const productPrice = this.dataset.price;
+ 
+         fetch('/web2/User/user/cart-handle.php', {
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({
+                 action: 'add',
+                 product_id: productId,
+                 product_name: productName,
+                 product_price: productPrice
+             })
+         }).then(res => res.json())
+           .then(data => {
+               if (data.success) {
+                   // Update cart icon badge
+                   document.querySelector('#cart-count').innerText = data.cart_count;
+ 
+                   // Hiển thị thông báo popup giữa màn hình
+                   const notification = document.createElement('div');
+                   notification.textContent = 'Đã thêm vào giỏ hàng';
+                   notification.style.position = 'fixed';
+                   notification.style.top = '50%';
+                   notification.style.left = '50%';
+                   notification.style.transform = 'translate(-50%, -50%)';
+                   notification.style.backgroundColor = '#4CAF50';
+                   notification.style.color = '#fff';
+                   notification.style.padding = '16px 28px';
+                   notification.style.borderRadius = '10px';
+                   notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                   notification.style.zIndex = 9999;
+                   notification.style.fontSize = '16px';
+                   notification.style.fontWeight = '500';
+                   document.body.appendChild(notification);
+ 
+                   setTimeout(() => {
+                       document.body.removeChild(notification);
+                   }, 2000);
+               } else {
+                   alert(data.message);
+               }
+           });
+     });
+ });        
 
-        fetch('/web2/User/user/cart-handle.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                action: 'add',
-                product_id: productId,
-                product_name: productName,
-                product_price: productPrice
-            })
-        }).then(res => res.json())
-          .then(data => {
-              if (data.success) {
-                  document.querySelector('#cart-count').innerText = data.cart_count;
-
-                  // Hiển thị thông báo popup giữa màn hình
-                  const notification = document.createElement('div');
-                  notification.textContent = 'Đã thêm vào giỏ hàng';
-                  notification.style.position = 'fixed';
-                  notification.style.top = '50%';
-                  notification.style.left = '50%';
-                  notification.style.transform = 'translate(-50%, -50%)';
-                  notification.style.backgroundColor = '#4CAF50';
-                  notification.style.color = '#fff';
-                  notification.style.padding = '16px 28px';
-                  notification.style.borderRadius = '10px';
-                  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-                  notification.style.zIndex = 9999;
-                  notification.style.fontSize = '16px';
-                  notification.style.fontWeight = '500';
-                  document.body.appendChild(notification);
-
-                  setTimeout(() => {
-                      document.body.removeChild(notification);
-                  }, 2000);
-              } else {
-                  alert(data.message);
-              }
-          });
-    });
-});
 
 
 
@@ -600,3 +602,5 @@ document.querySelector('.dropdown-button').addEventListener('click', function() 
      
 </body>  
 </html>
+
+<script src="../User/js/cart.js"> </script>
