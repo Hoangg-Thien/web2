@@ -109,3 +109,4 @@
     </footer>  
 </body>  
 </html>  
+<script src="../User/js/cart.js"> </script>

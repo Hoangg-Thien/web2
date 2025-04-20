@@ -243,20 +243,20 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits.html">Trái cây ngon </a></li>
-                    <li><a href="./Vietnamese-fruits.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.html">Rau củ  </a></li>
-                    <li><a href="./dried-fruits.html">Trái cây Khô</a></li>
-                    <li><a href="./nut-fruits.html">Các loại hạt  </a></li>
+                    <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
+                    <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables.php">Rau củ  </a></li>
+                    <li><a href="./dried-fruits.php">Trái cây Khô</a></li>
+                    <li><a href="./nut-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../index.html" >Trang chủ</a>  
-                <a href="../user/introducelogin.html">Giới thiệu</a>  
-                <a href="../user/newslogin.html">Tin tức</a>  
-                <a href="../user/contactlogin.html">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/introducelogin.php">Giới thiệu</a>  
+                <a href="../user/newslogin.php">Tin tức</a>  
+                <a href="../user/contactlogin.php">Liên hệ</a>   
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
@@ -301,10 +301,10 @@
                     <span>Hi,User!</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
+                  <a href="../user/userinfo.php">Tài khoản</a>
+                  <a href="../user/history-user.php">Lịch sử</a>
+                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.php">Đăng xuất</a>
                 </div>
             </div>
         </div>  
@@ -332,7 +332,12 @@ if ($result && $result->num_rows > 0) {
         echo '      <div class="caption">' . $row['product_name'] . ' <br> ' . number_format($row['product_price']) . 'đ/kg</div>';
         echo '      <div class="icons">';
         echo '          <a href="#" class="info-icon" title="Xem thông tin chi tiết"><i class="fa-solid fa-circle-info"></i></a>';
-        echo '          <button class="add-to-cart-btn" title="Thêm vào giỏ hàng"><i class="fas fa-cart-plus"></i></button>';
+        echo '         <button class="add-to-cart"
+                data-id="' . $row['product_id'] . '"
+                data-name="' . htmlspecialchars($row['product_name']) . '"
+                data-price="' . $row['product_price'] . '">
+                <i class="fas fa-cart-plus fa-lg"></i>
+            </button>';
         echo '      </div>';
         echo '  </div>';
         echo '</div>';
@@ -388,13 +393,13 @@ $conn->close();
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -407,13 +412,13 @@ $conn->close();
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -427,13 +432,13 @@ $conn->close();
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -473,14 +478,55 @@ $conn->close();
 
     <script>
 
-        const fruits = [
-        { name: "Nho Mỹ", link: "../itemInfo/grapes.html", priority: 1 },
-        { name: "Cherry Úc", link: "../itemInfo/cherry.html", priority: 2 },
-        { name: "Chuối chín Nam Mỹ", link: "../itemInfo/banana.html", priority: 3 },
-        { name: "Kiwi", link: "../itemInfo/kiwi.html", priority: 4 },
-        { name: "Lựu Ai Cập", link: "../itemInfo/pomegranite.html", priority: 5 },
-        { name: "Táo Envy", link: "../itemInfo/apple.html", priority: 6 }
-   ];
+        //Thêm vào giỏ hàng
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+     button.addEventListener('click', function() {
+         const productId = this.dataset.id;
+         const productName = this.dataset.name;
+         const productPrice = this.dataset.price;
+ 
+         fetch('/web2/User/user/cart-handle.php', {
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({
+                 action: 'add',
+                 product_id: productId,
+                 product_name: productName,
+                 product_price: productPrice
+             })
+         }).then(res => res.json())
+           .then(data => {
+               if (data.success) {
+                   // Update cart icon badge
+                   document.querySelector('#cart-count').innerText = data.cart_count;
+ 
+                   // Hiển thị thông báo popup giữa màn hình
+                   const notification = document.createElement('div');
+                   notification.textContent = 'Đã thêm vào giỏ hàng';
+                   notification.style.position = 'fixed';
+                   notification.style.top = '50%';
+                   notification.style.left = '50%';
+                   notification.style.transform = 'translate(-50%, -50%)';
+                   notification.style.backgroundColor = '#4CAF50';
+                   notification.style.color = '#fff';
+                   notification.style.padding = '16px 28px';
+                   notification.style.borderRadius = '10px';
+                   notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                   notification.style.zIndex = 9999;
+                   notification.style.fontSize = '16px';
+                   notification.style.fontWeight = '500';
+                   document.body.appendChild(notification);
+ 
+                   setTimeout(() => {
+                       document.body.removeChild(notification);
+                   }, 2000);
+               } else {
+                   alert(data.message);
+               }
+           });
+     });
+ });
+
 
    let debounceTimeout;
    function searchProducts() 
@@ -573,3 +619,4 @@ button.addEventListener('click', function() {
 </footer>  
    </body>
 </html>
+<script src="../User/js/cart.js"> </script>
