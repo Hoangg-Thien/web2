@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Hạt dẻ</title>  
+    <title>Xoài sấy</title>  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/fruit-info.css">  
     <link rel="stylesheet" href="../styles/grid.css">
@@ -39,28 +39,103 @@
     </header>
 
     <div class="item-container">
-        <img class="fruit-img" src="../img/hat-dieu.jpg" alt="hat-dieu">
+    <?php
+// Kết nối cơ sở dữ liệu
+$host = 'localhost';
+$user = 'root';
+$pass = ''; // cập nhật nếu có mật khẩu
+$db = 'c07db';
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Lỗi kết nối: " . $conn->connect_error);
+}
+
+// Lấy sản phẩm xoài sấy
+$sql = "SELECT * FROM sanpham WHERE product_name = 'Xoài sấy' LIMIT 1";
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $ten = htmlspecialchars($row['product_name']);
+    $gia = number_format($row['product_price'], 0, ',', '.') . 'đ/kg';
+    $hinhanh = htmlspecialchars($row['product_image']);
+    $product_id = $row['product_id'];
+    ?>
+
+    <div class="item-container">
+        <img class="fruit-img" src="../img/<?php echo $hinhanh; ?>" alt="<?php echo $ten; ?>">
         <div class="item-info">
             <p>
-                Tên: Hạt điều<br>
-                Xuất xứ: Singapore <br>
-                Ngày nhập kho: 14/11/2025<br>
-                HSD: 4 tuần sau ngày nhập kho<br>
-                Giá: 250.000đ/kg<br>
+                Tên: <?php echo $ten; ?><br>
+                Xuất xứ: VIỆT NAM <br>
+                Ngày nhập kho: 12/12/2025 <br>
+                HSD: 3 TUẦN <br>
+                Giá: <?php echo $gia; ?><br>
             </p>
             <div class="quantity-container">
                 <button class="quantity-btn" id="decrease">-</button>
                 <input type="text" id="quantity" value="1">
                 <button class="quantity-btn" id="increase">+</button>
             </div>
-            <button class="add-to-cart">
-                <i class="fas fa-shopping-basket"></i> <a href="../user/cartusernologin.html" style="text-decoration: none; color: white;">Thêm vào giỏ hàng </a>
-            </button>
+            <form action="../user/cart-handle.php" method="POST">
+                <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                <input type="hidden" name="quantity" id="quantity-hidden" value="1">
+                <button class="add-to-cart"
+    data-id="<?php echo $product_id; ?>"
+    data-name="<?php echo htmlspecialchars($ten); ?>"
+    data-price="<?php echo $row['product_price']; ?>">
+    <i class="fas fa-cart-plus fa-lg"></i> Thêm vào giỏ
+</button>
+
+            </form>
         </div>
+        <div id="success-overlay"></div>
+        <div id="success-message">
+            <p>Đã thêm vào giỏ hàng thành công!</p>
+            <a href="../user/cart-user.php">Xem giỏ hàng</a>
+            <a href="../user/payment-user.php">Tiến tới thanh toán</a>
+        </div>
+    </div>
+
+    <script>
+        // Đồng bộ số lượng giữa input và form
+        const quantityInput = document.getElementById('quantity');
+        const quantityHidden = document.getElementById('quantity-hidden');
+        const btnIncrease = document.getElementById('increase');
+        const btnDecrease = document.getElementById('decrease');
+
+        btnIncrease.addEventListener('click', () => {
+            let val = parseInt(quantityInput.value) || 1;
+            quantityInput.value = val + 1;
+            quantityHidden.value = val + 1;
+        });
+
+        btnDecrease.addEventListener('click', () => {
+            let val = parseInt(quantityInput.value) || 1;
+            if (val > 1) {
+                quantityInput.value = val - 1;
+                quantityHidden.value = val - 1;
+            }
+        });
+
+        quantityInput.addEventListener('input', () => {
+            quantityHidden.value = quantityInput.value;
+        });
+    </script>
+
+    <?php
+} else {
+    echo "<p>Không tìm thấy sản phẩm xoài sấy.</p>";
+}
+
+$conn->close();
+?>
+
     </div>
     
     <div style="max-width: 1500px; overflow: hidden; margin: auto;  margin-top: 100px;">  
-        <img src="../img/banner-quang-cao.webp" alt="banner-quang-cao" style="width: 100%; height: 400px; display: block;">  
+        <img src="../img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; height: 400px; display: block;">  
     </div>
     
     <div class="policy-container" >
@@ -193,6 +268,50 @@
     </div>
     </div>
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const addBtn = document.querySelector('.add-to-cart');
+    const quantityInput = document.getElementById('quantity');
+
+    if (addBtn) {
+        addBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const productId = this.dataset.id;
+            const productName = this.dataset.name;
+            const productPrice = this.dataset.price;
+            const quantity = parseInt(quantityInput?.value) || 1;
+
+            fetch('../user/cart-handle.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'add',
+                    product_id: productId,
+                    product_name: productName,
+                    product_price: productPrice,
+                    quantity: quantity
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // ✅ Tự động chuyển đến trang giỏ hàng
+                    window.location.href = '../user/cart-user-nologin.php';
+                } else {
+                    alert(data.message || 'Đã có lỗi xảy ra');
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi khi thêm vào giỏ hàng:', err);
+                alert('Không thể thêm vào giỏ hàng. Vui lòng thử lại!');
+            });
+        });
+    }
+});
+</script>
+
+
 <footer style="width: 100% ;">
     <div>
         Copyright by us<b>&#8482</b>

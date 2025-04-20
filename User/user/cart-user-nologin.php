@@ -570,4 +570,14 @@ document.getElementById("toggleSearch").addEventListener("click", function () {
 </footer>  
     </body>
 </html>
-<script src="../User/js/cart.js"> </script>
+<script src="../js/cart.js"></script>
+<script>
+function updateCart(action, productId) {
+    fetch('/web2/User/user/cart-handle.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action, product_id: productId})
+    }).then(() => location.reload());
+}
+</script>
+
