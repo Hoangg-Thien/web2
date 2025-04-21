@@ -223,9 +223,9 @@ if (!isset($_SESSION['user_name'])) {
             color: white;
             text-decoration: none;
             border-radius: 4px;
-            margin-top: 20px;
             border: none;
             font-weight: 600;
+            cursor: pointer;
         }
         
         .btn-back:hover {
@@ -392,18 +392,6 @@ if (!isset($_SESSION['user_name'])) {
                 </div>
             </div>
 
-            <?php if($order['order_status'] === 'Giao thành công'): ?>
-            <div class="invoice-details-col">
-                    <h4>THÔNG TIN NGƯỜI NHẬN</h4>
-                    <p>
-                        <i class="fas fa-user" style="width: 20px; color: #47b475;"></i> <strong>Họ tên:</strong> <?php echo $order['fullname']; ?><br>
-                        <i class="fas fa-phone" style="width: 20px; color: #47b475;"></i> <strong>SĐT:</strong> <?php echo isset($order['phone']) ? $order['phone'] : 'N/A'; ?><br>
-                        <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
-                    </p>
-            </div>
-            <?php else: ?>
-                <?php endif; ?>
-
             <div class="invoice-items">
                 <h4>CHI TIẾT SẢN PHẨM</h4>
                 <table>
@@ -453,35 +441,18 @@ if (!isset($_SESSION['user_name'])) {
             </div>
 
             <div class="invoice-total">
-                <div class="total-row">
-                    <div class="total-label"><i class="fas fa-shopping-basket" style="margin-right: 8px;"></i>Tổng tiền hàng:</div>
-                    <div class="total-value"><?php echo number_format($total_amount, 0, ',', '.'); ?>đ</div>
-                </div>
-                <div class="total-row">
-                    <div class="total-label"><i class="fas fa-truck" style="margin-right: 8px;"></i>Phí vận chuyển:</div>
-                    <div class="total-value">30.000đ</div>
-                </div>
-                <?php if ($total_amount > 0): ?>
-                <div class="total-row">
-                    <div class="total-label"><i class="fas fa-tags" style="margin-right: 8px;"></i>Giảm giá: </div>
-                    <div class="total-value">-30.000đ</div>
-                </div>
-                <?php endif; ?>
                 <div class="total-row grand-total">
                     <div class="total-label"><i class="fas fa-money-bill-wave" style="margin-right: 8px;"></i>TỔNG THANH TOÁN:</div>
                     <div class="total-value">
                         <?php 
-                        $shipping_fee = 30000;
-                        $discount = ($total_amount > 0) ? 30000 : 0;
-                        $final_total = $total_amount + $shipping_fee - $discount;
-                        echo number_format($final_total, 0, ',', '.'); 
+                        echo number_format($total_amount, 0, ',', '.'); 
                         ?>đ
                     </div>
                 </div>
             </div>
 
         <div class="actions">
-            <a href="./satistics.php" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <a class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> Quay lại</a>
         </div>
     </main>
 
@@ -497,6 +468,9 @@ if (!isset($_SESSION['user_name'])) {
                 }
             });
         });
+        function goBack() {
+            window.history.back();
+            }
     </script>
 </body>
 </html>

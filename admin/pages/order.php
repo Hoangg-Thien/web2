@@ -221,7 +221,6 @@ if (!isset($_SESSION['user_name'])) {
                         <th>Tên Khách Hàng</th>
                         <th>Địa Chỉ</th>
                         <th>Người nhận</th>
-                        <th>Tổng</th>
                         <th>Trạng Thái</th>
                         <th>Ngày</th>
                         <th>Hành Động</th>
@@ -283,35 +282,20 @@ if (!isset($_SESSION['user_name'])) {
                             if ($status_text === 'Giao thành công') {
                                 $recipient_name = $order['receipter']; 
                                 echo htmlspecialchars($recipient_name);
-                            } else {
+                            } elseif($status_text === 'Đã hủy') {
                                 echo "Không có thông tin người nhận";
-                            }
-                            ?>
-                        </td>
-                        <td>
-                            <?php 
-                            $total_sql = "SELECT SUM(cthd.quantity * sp.product_price) as total_amount
-                                        FROM chitiethoadon cthd
-                                        LEFT JOIN sanpham sp ON cthd.product_id = sp.product_id
-                                        WHERE cthd.order_id = '$order_id'";
-                            $total_result = mysqli_query($conn, $total_sql);
-                            
-                            if ($total_result && mysqli_num_rows($total_result) > 0){
-                                $total_row = mysqli_fetch_assoc($total_result);
-                                $total = $total_row['total_amount'];
-                                echo number_format($total, 0, ',', '.') . 'đ';
-                            } else {
-                                echo "N/A";
+                            } else{
+                                echo $order['fullname'];
                             }
                             ?>
                         </td>
                         <td><span class="status <?php echo $status_class; ?>"><?php echo $status_text; ?></span></td>
                         <td><?php echo $date; ?><br><?php echo $time; ?></td>
                         <td class="text-align-center">
-                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
-                            <i class="fa fa-eye"></i>
+                        <a href="order_detail.php?id=<?php echo $order_id; ?>" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 20px; text-decoration: none;">
+                            <i class="fa-solid fa-circle-info"></i>
                         </a>
-                            <button style="outline: none; margin-top: 5px;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
+                            <button style="outline: none;" class="btn btn-outline-warning btn-sm edit m-1" type="button"
                                 title="Sửa">
                                 <i class="fa fa-edit"></i>
                             </button>
@@ -337,19 +321,42 @@ if (!isset($_SESSION['user_name'])) {
     ?>
         <nav aria-label="Page navigation " class="page-center">
             <ul class="pagination justify-content-center" id="pagination">
+            <?php
+                $filter_params = [];
+                if (isset($_GET['province']) && !empty($_GET['province'])) {
+                    $filter_params[] = "province=" . urlencode($_GET['province']);
+                }
+                if (isset($_GET['district']) && !empty($_GET['district'])) {
+                    $filter_params[] = "district=" . urlencode($_GET['district']);
+                }
+                if (isset($_GET['status']) && !empty($_GET['status']) && $_GET['status'] !== 'all') {
+                    $filter_params[] = "status=" . urlencode($_GET['status']);
+                }
+                if (isset($_GET['datein']) && !empty($_GET['datein'])) {
+                    $filter_params[] = "datein=" . urlencode($_GET['datein']);
+                }
+                if (isset($_GET['dateout']) && !empty($_GET['dateout'])) {
+                    $filter_params[] = "dateout=" . urlencode($_GET['dateout']);
+                }
+                
+                $query_string = implode('&', $filter_params);
+                if (!empty($query_string)) {
+                    $query_string = '&' . $query_string;
+                }
+                ?>
                 <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
-                    <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Lùi">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="page-item <?= $page == $i ? 'active' : '' ?>">
-                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                    <a class="page-link" href="?page=<?= $page - 1 ?><?= $query_string ?>" aria-label="Lùi">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-            <?php endfor; ?>
-            <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
-                <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Tiếp">
-                    <span aria-hidden="true">&raquo;</span>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                        <a class="page-link" href="?page=<?= $i ?><?= $query_string ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+                <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?page=<?= $page + 1 ?><?= $query_string ?>" aria-label="Tiếp">
+                        <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
             </ul>

@@ -171,7 +171,7 @@ if (isset($_SESSION['error_message'])) {
 <body>
     <div class="login-container">
         <div class="left-panel">
-            <h2>Welcome, Admin!</h2>
+            <h2>Welcome!</h2>
         </div>
         <div class="right-panel">
             <h2>Đăng nhập</h2>
