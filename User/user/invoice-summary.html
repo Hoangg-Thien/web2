@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../styles/news.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/footer.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
     <title>Tóm Tắt Hóa Đơn - SEA FRUITS</title>  
 <style>
@@ -672,67 +673,48 @@
             </div>
         </div>
     </div>
-    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
-        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
-        <div style="padding:10px;">
-            <div>Hotline: 0123456789</div>
-            <div>Email: AboutUs@gmail.com</div>
-        </div>
-    </div>
-    <div class="grid wide" style="justify-content: space-evenly;">
-        <div class="row">
-            <div class="col l-3 m-6 c-12">
-                <div class="footer-section">
-                    <h3>Về chúng tôi</h3>
-                    <ul class="footer-links">
-                        <li><a href="../index.html">Trang chủ</a></li>
-                        <li><a href="./introducelogin.html">Giới thiệu</a></li>
-                        <li><a href="#">Sản phẩm</a></li>
-                        <li><a href="./newslogin.html">Tin tức</a></li>
-                        <li><a href="./contactlogin.html">Liên hệ</a></li>
-                    </ul>
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với gi
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
-            <div class="col l-3 m-6 c-12">
-                <div class="footer-section">
-                    <h3>Tin khuyến mãi</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Ưu đãi mới nhất</a></li>
-                        <li><a href="#">Combo tiết kiệm</a></li>
-                        <li><a href="#">Sản phẩm bán chạy</a></li>
-                        <li><a href="#">Chương trình đặc biệt</a></li>
-                    </ul>
-                </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="../index.html">Trang chủ</a></li>
+                    <li><a href="./introducelogin.html">Giới thiệu</a></li>
+                    <li><a href="./newslogin.html">Tin tức</a></li>
+                    <li><a href="./contactlogin.html">Liên hệ</a></li>
+                </ul>
             </div>
-
-            <div class="col l-3 m-6 c-12">
-                <div class="footer-section">
-                    <h3>Dịch vụ</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Giao hàng nhanh</a></li>
-                        <li><a href="#">Đổi trả dễ dàng</a></li>
-                        <li><a href="#">Thanh toán an toàn</a></li>
-                        <li><a href="#">Bảo hành chất lượng</a></li>
-                    </ul>
-                </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
             </div>
-
-            <div class="col l-3 m-6 c-12">
-                <div class="footer-section">
-                    <h3>Kết nối với chúng tôi</h3>
-                    <div class="social-links">
-                        <a href="#" class="social-link facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link google" title="Google"><i class="fab fa-google"></i></a>
-                        <a href="#" class="social-link instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link youtube" title="Youtube"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, T
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
             </div>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
     </div>
     <script>
         document.querySelector('.dropdown-button').addEventListener('click', function() {
@@ -746,157 +728,6 @@
       }
     });
     </script>
-    <style>
-    .footer-section {
-        margin-bottom: 30px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
-        transition: transform 0.3s ease;
-    }
-
-    .footer-section:hover {
-        transform: translateY(-5px);
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .footer-section h3 {
-        color: #4CAF50;
-        font-size: 20px;
-        margin-bottom: 20px;
-        font-weight: 600;
-        position: relative;
-        padding-bottom: 10px;
-    }
-
-    .footer-section h3::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 50px;
-        height: 2px;
-        background: #4CAF50;
-    }
-
-    .footer-links {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .footer-links li {
-        margin-bottom: 12px;
-    }
-
-    .footer-links a {
-        color: #666;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .footer-links a:before {
-        content: '→';
-        color: #4CAF50;
-        opacity: 0;
-        transition: all 0.3s ease;
-    }
-
-    .footer-links a:hover {
-        color: #4CAF50;
-        padding-left: 5px;
-    }
-
-    .footer-links a:hover:before {
-        opacity: 1;
-    }
-
-    .social-links {
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    .social-link {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .social-link:before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
-    }
-
-    .social-link:hover {
-        transform: translateY(-5px);
-    }
-
-    .social-link:hover:before {
-        transform: translateY(0);
-    }
-
-    .social-link.facebook {
-        background: linear-gradient(45deg, #3b5998, #4c70ba);
-    }
-
-    .social-link.google {
-        background: linear-gradient(45deg, #db4437, #ff6b6b);
-    }
-
-    .social-link.instagram {
-        background: linear-gradient(45deg, #e4405f, #ff6b6b);
-    }
-
-    .social-link.youtube {
-        background: linear-gradient(45deg, #ff0000, #ff6b6b);
-    }
-
-    .footer-bottom {
-        text-align: center;
-        margin-top: 40px;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.05);
-        border-radius: 10px;
-    }
-
-    .footer-bottom p {
-        color: #666;
-        margin: 0;
-        font-size: 14px;
-    }
-
-    @media (max-width: 768px) {
-        .footer-section {
-            margin-bottom: 25px;
-            padding: 15px;
-        }
-        
-        .social-links {
-            justify-content: center;
-        }
-
-        .footer-section h3 {
-            font-size: 18px;
-        }
-    }
-    </style>
     <script> 
         function showCategory(type) {  
             const images = document.querySelectorAll('.image-container img');  
@@ -1054,3 +885,233 @@
     </script>  
 </body>  
 </html>
+
+<style>
+@media screen and (max-width: 1200px) {
+    .dashboard-container {
+        max-width: 95%;
+        padding: 0 15px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .dashboard-header {
+        padding: 20px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 24px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .stat-info h3 {
+        font-size: 20px;
+    }
+
+    .invoice-filters {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filter-btn {
+        flex: 1;
+        min-width: calc(50% - 10px);
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .recent-invoices {
+        padding: 15px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .invoice-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .action-btn {
+        padding: 5px 10px;
+        font-size: 13px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .dashboard-header h1 {
+        font-size: 20px;
+    }
+
+    .stat-info h3 {
+        font-size: 18px;
+    }
+
+    .stat-info p {
+        font-size: 13px;
+    }
+
+    .filter-btn {
+        min-width: 100%;
+    }
+
+    /* Chuyển đổi bảng thành dạng card trên mobile */
+    .invoice-table thead {
+        display: none;
+    }
+
+    .invoice-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .invoice-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border: none;
+        font-size: 14px;
+    }
+
+    .invoice-table td:before {
+        content: attr(data-label);
+        font-weight: 500;
+        margin-right: 10px;
+    }
+
+    .status-badge {
+        width: fit-content;
+    }
+
+    .action-btn {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+    }
+
+    .pagination {
+        gap: 5px;
+    }
+
+    .page-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+}
+
+/* Tối ưu cho màn hình lớn */
+@media screen and (min-width: 1400px) {
+    .dashboard-container {
+        max-width: 1300px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #fff;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, #2c5e2e, #1e401f);
+    }
+
+    .stat-card,
+    .recent-invoices {
+        background: #2d2d2d;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .filter-btn {
+        background: #2d2d2d;
+        color: #fff;
+        border-color: #444;
+    }
+
+    .filter-btn.active {
+        background: var(--primary-color);
+    }
+
+    .invoice-table th {
+        border-bottom-color: #444;
+    }
+
+    .invoice-table td {
+        border-bottom-color: #333;
+    }
+
+    .page-btn {
+        background: #2d2d2d;
+        color: #fff;
+        border-color: #444;
+    }
+}
+
+/* Cải thiện khả năng tiếp cận */
+@media (prefers-reduced-motion: reduce) {
+    .action-btn,
+    .filter-btn,
+    .page-btn {
+        transition: none;
+    }
+}
+
+/* Tối ưu cho thiết bị in */
+@media print {
+    .dashboard-header,
+    .dashboard-stats,
+    .invoice-filters,
+    .pagination {
+        display: none;
+    }
+
+    .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        border: 1px solid #ddd;
+    }
+}
+</style>

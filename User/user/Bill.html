@@ -2,12 +2,12 @@
 <html lang="en">  
 <head>  
     <meta charset="UTF-8">  
- <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
- <link rel="stylesheet" href="../styles/contact.css">  
- <link rel="stylesheet" href="../styles/grid.css">
- <link rel="stylesheet" href="../styles/footer.css">
- <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
+    <link rel="stylesheet" href="../styles/contact.css">  
+    <link rel="stylesheet" href="../styles/grid.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
     <title>Hóa Đơn - SEA FRUITS</title>  
     <style>  
         /* Reset CSS */
@@ -382,124 +382,6 @@
             background-color: #45a049 !important;
         }
     </style>  
-    <style>
-        .payment-custom.container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .payment-custom__content {
-            display: flex;
-            gap: 30px;
-        }
-
-        .payment-custom__content__left,
-        .payment-custom__content__right {
-            flex: 1;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .payment-method {  
-            cursor: pointer;  
-            margin-bottom: 20px;  
-            display: flex;  
-            align-items: center;  
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }  
-        
-        .payment-method:hover {
-            background-color: #f8f9fa;
-        }  
-        
-        .payment-method img {  
-            width: 40px; 
-            margin-right: 15px;  
-        }  
-        
-        .payment-info {  
-            display: none;  
-            margin-top: 10px;  
-            padding: 15px;  
-            border: 1px solid #ddd;  
-            border-radius: 5px;  
-            background-color: #f8f9fa;
-        }  
-
-        .payment-method.selected {
-            background-color: #d4edda; 
-            border: 2px solid #28a745; 
-        }
-
-        .payment-method.selected::after {
-            content: "✔"; 
-            margin-left: auto;
-            color: #28a745; 
-            font-weight: bold;
-        }
-
-        #payment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        #payment-form label {
-            display: flex;  
-            align-items: center; 
-            gap: 10px;
-            font-weight: 500;
-        }
-
-        #payment-form input,
-        #payment-form textarea {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-        }
-
-        #payment-form button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #payment-form button:hover {
-            background-color: #218838;
-        }
-
-        .more-info {
-            display: none;
-            position: absolute;
-            background: white;
-            padding: 10px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            width: 200px;
-            z-index: 1000;
-        }
-
-        .fa-question-circle:hover .more-info {
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .payment-custom__content {
-                flex-direction: column;
-            }
-        }  
-    </style>  
 </head>  
 <body>  
     <header>  
@@ -569,97 +451,103 @@
         </div>  
     </div>
 
-    <section class="payment-custom container">  
-        <div class="payment-custom__content row">  
-            <div class="payment-custom__content__left col-6">  
-                <h3>Thông tin người nhận</h3>  
-                <form id="payment-form">  
-                    <label for="payment--receiver">
-                        <i class="fas fa-user"></i>
-                        <span>Họ tên</span>
-                    </label>  
-                    <input type="text" id="payment--receiver" required placeholder="Tên người nhận hàng">  
-                    
-                    <label for="payment--phone">
-                        <i class="fas fa-phone-volume"></i>
-                        <span>Điện thoại</span>
-                    </label>  
-                    <input type="tel" id="payment--phone" required pattern="(84|0[3|5|7|8|9])+([0-9]{8})\b" placeholder="Số điện thoại người nhận hàng">  
-                    
-                    <label for="payment--adr">
-                        <i class="far fa-address-card"></i>
-                        <span>Địa chỉ</span>
-                    </label>  
-                    <input type="text" id="payment--adr" required placeholder="Địa chỉ nhận hàng">  
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <div class="invoice-title">HÓA ĐƠN THANH TOÁN</div>
+            <div class="invoice-number">Mã đơn hàng: #INV001</div>
+            <div class="invoice-status">Đã thanh toán</div>
+        </div>
 
-                    <div>
-                    <input type="checkbox" id="payment--defaul">  
-                        <label for="payment--defaul">
-                            Sử dụng thông tin mặc định
-                            <i class="far fa-question-circle">  
-                        <div class="more-info">Thông tin về họ tên, số điện thoại, địa chỉ mà bạn lưu trong tài khoản (nếu có)</div>  
-                            </i>
-                        </label>  
-                    </div>
-                    
-                    <label for="payment--note">
-                        <i class="far fa-comment"></i>
-                        <span>Ghi chú</span>
-                    </label>  
-                    <textarea id="payment--note" rows="3" placeholder="Ghi yêu cầu của bạn tại đây."></textarea>  
+        <div class="invoice-info">
+            <div class="info-group">
+                <h3>Thông tin khách hàng</h3>
+                <p><span class="info-label">Họ và tên:</span> Nguyễn Văn A</p>
+                <p><span class="info-label">Số điện thoại:</span> 0987654321</p>
+                <p><span class="info-label">Email:</span> nguyenvana@email.com</p>
+                <p><span class="info-label">Địa chỉ:</span> 123 Đường ABC, Quận 1, TP.HCM</p>
+            </div>
+            <div class="info-group">
+                <h3>Thông tin đơn hàng</h3>
+                <p><span class="info-label">Ngày đặt hàng:</span> 25/03/2024</p>
+                <p><span class="info-label">Phương thức thanh toán:</span> Thanh toán khi nhận hàng</p>
+                <p><span class="info-label">Trạng thái:</span> Đã giao hàng</p>
+            </div>
+        </div>
 
-                    <button type="button" onclick="validateForm()">Xác nhận</button>
-                </form>  
-            </div>  
+        <div class="invoice-items">
+            <h3>Chi tiết sản phẩm</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="item-name">
+                                <img src="../img/hinh-trai-buoi.jpg" alt="Bưởi Da Xanh" class="item-image">
+                                <span>Bưởi Da Xanh</span>
+                            </div>
+                        </td>
+                        <td>200.000đ</td>
+                        <td>1</td>
+                        <td>200.000đ</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="item-name">
+                                <img src="../img/trai-quyt.jpg" alt="Quýt Đường" class="item-image">
+                                <span>Quýt Đường</span>
+                            </div>
+                        </td>
+                        <td>150.000đ</td>
+                        <td>1</td>
+                        <td>150.000đ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <div class="payment-custom__content__right col-6">  
-                <h3>Phương thức thanh toán</h3>  
-                <label>Chọn phương thức:</label>  
+        <div class="invoice-summary">
+            <div class="summary-details">
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span>350.000đ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span>Miễn phí</span>
+                </div>
+                <div class="summary-row">
+                    <span>Giảm giá</span>
+                    <span>0đ</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Tổng cộng</span>
+                    <span>350.000đ</span>
+                </div>
+            </div>
+        </div>
 
-                <div class="payment-method" onclick="toggleInfo('card-info')">  
-                    <img src="https://bizweb.dktcdn.net/100/421/124/themes/811860/assets/cart_payment_2.svg?1617678628801" alt="Thẻ tín dụng"> 
-                    <img src="https://bizweb.dktcdn.net/100/421/124/themes/811860/assets/cart_payment_1.svg?1617678628801" alt="ghi no">   
-                    <span>Thẻ tín dụng / Ghi nợ</span>
-                </div>  
-                <div class="payment-info" id="card-info">  
-                    <h4>Thông tin thẻ tín dụng:</h4>  
-                    <p>Phương thức này hiện không được hỗ trợ.</p>  
-                </div>  
-
-                <div class="payment-method" onclick="toggleInfo('bank-info')">  
-                    <img src="https://bizweb.dktcdn.net/100/421/124/themes/811860/assets/cart_payment_3.svg?1617678628801" alt="Chuyển khoản ngân hàng">  
-                    <span>Chuyển khoản ngân hàng</span>  
-                </div>  
-                <div class="payment-info" id="bank-info">  
-                    <h4>Thông tin tài khoản ngân hàng:</h4>  
-                    <p>STK: 04172537401</p>  
-                    <p>Tên tài khoản: CHÂU UY VỦ</p>  
-                    <p>Ngân hàng: TP Bank</p>
-                    <p>Chi phí vận chuyển và thời gian vận chuyển sẽ được nhân viên gọi điện xác nhận!
-                        Thông tin chi tiết đơn hàng sẽ được chúng tôi gửi về email của bạn!</p>
-                    <p class="note">Lưu ý: SAU KHI CHUYỂN KHOẢN XONG, NHÂN VIÊN CỦA CHÚNG TÔI SẼ GỌI CHO BẠN ĐỂ XÁC NHẬN. 
-                        NẾU KHÔNG NHẬN ĐƯỢC CUỘC GỌI QUÁ 15 PHÚT, XIN HÃY GỌI HOTLINE: 0123456789</p>  
-                </div>  
-
-                <div class="payment-method" onclick="toggleInfo('online-info')">  
-                    <img src="https://bizweb.dktcdn.net/100/421/124/themes/811860/assets/cart_payment_4.svg?1617678628801" alt="Thanh toán trực tuyến">  
-                    <span>Thanh toán khi nhận hàng</span>  
-                </div>  
-                <div class="payment-info" id="online-info">  
-                    <h4>Thông tin thanh toán khi nhận hàng:</h4>  
-                    <p>Quý khách chỉ phải thanh toán khi nhận được hàng</p>
-                    <p>Chi phí vận chuyển và thời gian vận chuyển sẽ được nhân viên gọi điện xác nhận!</p>
-                    <p>Thông tin chi tiết đơn hàng sẽ được chúng tôi gửi về email của bạn!</p>
-                    <p class="note">Lưu ý:</p>
-                    <ul>
-                        <li>Để đảm bảo giải quyết các vấn đề phát sinh về đơn hàng một cách minh bạch, quý khách vui lòng quay lại video khi mở hàng.</li>
-                        <li>Trong trường hợp shop gửi thiếu hàng, hỏng hàng, sai hàng quý khách vui lòng phản hồi và gửi lại video cho shop để kiểm chứng, cửa hàng sẽ tiến hành bù hoàn sau khi đã xác nhận.</li>
-                        <li>Trường hợp không có video bóc hàng shop xin TỪ CHỐI giải quyết.</li>
-                    </ul>
-                </div>  
-            </div>  
-        </div>  
-    </section> 
+        <div class="invoice-footer">
+            <p>Cảm ơn quý khách đã mua hàng tại SEA FRUITS!</p>
+            <p>Mọi thắc mắc xin vui lòng liên hệ: 1900 1234</p>
+            <div class="invoice-actions">
+                <button class="action-button print-button" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    In hóa đơn
+                </button>
+                <button class="action-button download-button">
+                    <i class="fas fa-download"></i>
+                    Tải PDF
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="footer">
         <div class="footer-content">
@@ -704,11 +592,11 @@
             <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
     </div>
-
+    
     <footer>  
         <div>
             Copyright by us<b>&#8482</b>
-        </div>  
+        </div>
     </footer>  
      <script>
          document.querySelector('.dropdown-button').addEventListener('click', function() {
@@ -722,41 +610,5 @@
        }
      });
      </script>
-    <script>  
-        function toggleInfo(infoId) {  
-    const infoSections = document.querySelectorAll('.payment-info');  
-    const paymentMethods = document.querySelectorAll('.payment-method');
-
-    infoSections.forEach(section => {  
-                section.style.display = section.id === infoId ? 
-                    (section.style.display === 'block' ? 'none' : 'block') : 'none';  
-    });
-  
-    paymentMethods.forEach(method => method.classList.remove('selected'));
-  
-    const selectedMethod = document.querySelector(`[onclick="toggleInfo('${infoId}')"]`);  
-    if (selectedMethod) {  
-        selectedMethod.classList.toggle('selected');  
-    }
-}
-
-function validateForm() {  
-    const name = document.getElementById('payment--receiver').value;  
-    const phone = document.getElementById('payment--phone').value;  
-    const address = document.getElementById('payment--adr').value;  
-    
-    if (!name || !phone || !address) {  
-        alert('Vui lòng nhập đầy đủ thông tin trước khi xác nhận.');  
-                return;
-            }
-
-            if (!phone.match(/^(84|0[3|5|7|8|9])+([0-9]{8})\b/)) {
-                alert('Số điện thoại không hợp lệ. Vui lòng kiểm tra lại.');
-                return;
-            }
-
-        window.location.href = 'thanks.html';  
-}
-    </script>
 </body>  
 </html>
