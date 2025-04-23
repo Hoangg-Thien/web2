@@ -1,5 +1,5 @@
 <!DOCTYPE html>  
-<html lang="vi">  
+<html lang="en">  
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
@@ -7,8 +7,23 @@
     <link rel="stylesheet" href="../styles/cart.css">  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>  
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
-    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">   
+    <style>
+      .cart-message 
+    {
+        font-size: 16px;
+        color: #333;
+        border: 1px solid #4caf50;
+        padding: 15px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+      .cart-message a
+    {
+        color: #4caf50;
+    }
+    </style>
 </head>  
 <body>  
     <header style="display: flex;">  
@@ -42,15 +57,16 @@
         <div>  
             <div class="sea-fruit">SEA FRUITS</div>  
         </div>   
+         
         <section class="breadcrumb_section container">  
             <nav aria-label="breadcrumb">  
                 <div class="breadcrumb">  
                     <div style="padding:10px">  
-                        <a href="../index.html" target="_blank" style="text-decoration: none; color:#ccc">Trang chủ</a>  
+                        <a href="../user/usernologin.php" target="_blank" style="text-decoration: none; color:#ccc">Trang chủ</a>  
                     </div>  
                     <div style="padding: 7px;"> | </div>  
                     <div style="padding: 10px;">  
-                        <a href="../user/cart-user.html" style="text-decoration: none; color: #ccc;"> Giỏ hàng</a>  
+                        <a href="../user/cartusernologin.php" style="text-decoration: none; color: #ccc;"> Giỏ hàng</a>  
                     </div>  
                 </div>  
                 <div style="margin:0;padding: 0; background-color: #777777;text-align: center;">  
@@ -59,35 +75,12 @@
             </nav>  
         </section>  
     </div>  
+
     <section class="fruit_cart container">  
         <h2 class="text-center">Giỏ hàng của bạn</h2>  
-        <div class="fruit_cart">  
-            <div class="fruit_order_items">  
-                <img src="../img/trai-chuoi.jpg" alt="Chuối">  
-                <div>  
-                    <h5>Chuối Chín</h5>  
-                    <p>Giá: <span>160.000 VNĐ</span></p>  
-                    <p>Số lượng: <span>x1</span> </p>
-                </div>  
-            </div>  
-            
-
-            <div class="fruit_order_items">  
-                <img src="../img/trai-man-do.jpg" alt="Mận">  
-                <div>  
-                    <h5>Mận</h5>  
-                    <p>Giá: <span>45.000 VNĐ</span></p> 
-                    <p>Số lượng: <span>x1</span> </p> 
-                </div>  
-            </div>  
-                
-
-            <div class="fruit_cart_total">  
-                <div>Tổng tiền: <span>205.000 VNĐ</span></div>  
-                
-                <button class="btn btn-success" data-toggle="modal" data-target="#paymentModal">Thanh toán</button>  
-            </div>  
-        </div>  
+        <div class="cart-message">
+            Không có sản phẩm nào trong giỏ hàng. <a href="../user/login-user.php" target="_blank">Đăng nhập ngay</a> để thêm vào giỏ hàng.
+          </div>
     </section>   
 
     
@@ -109,26 +102,7 @@
     </section>  
 
 
-    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">  
-        <div class="modal-dialog" role="document">  
-            <div class="modal-content">  
-                <div class="modal-header">  
-                    <h5 class="modal-title" id="paymentModalLabel">Xác nhận thanh toán</h5>  
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">  
-                        <span aria-hidden="true">&times;</span>  
-                    </button>  
-                </div>  
-                <div class="modal-body">  
-                    <p>Bạn có chắc chắn muốn thanh toán không?</p>  
-                    <p>Tổng tiền: <strong>205.000 VNĐ</strong></p>  
-                </div>  
-                <div class="modal-footer">  
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>  
-                    <button type="button" class="btn btn-primary" onclick="location.href='payment-user.html'">Thanh toán</button>  
-                </div>  
-            </div>  
-        </div>    
-    </div>  
+    
 
     <footer>  
         <div >  

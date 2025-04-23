@@ -267,26 +267,26 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits-nologin.html">Trái cây ngon </a></li>
-                    <li><a href="./VietNamese-fruits-nolog.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits-nologin.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables-nologin.html">Rau củ  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Khô</a></li>
-                    <li><a href="./Imported-fruits.html">Các loại hạt  </a></li>
+                    <li><a href="./declious-fruits-nologin.php">Trái cây ngon </a></li>
+                    <li><a href="./VietNamese-fruits-nolog.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits-nologin.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables-nologin.php">Rau củ  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
+                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="./usernologin.html" >Trang chủ</a>  
-                <a href="./introduce.html">Giới thiệu</a>  
-                <a href="./news.html">Tin tức</a>  
-                <a href="./contact.html">Liên hệ</a>   
-                <a href="./cartusernologin.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="./usernologin.php" >Trang chủ</a>  
+                <a href="./introduce.php">Giới thiệu</a>  
+                <a href="./news.php">Tin tức</a>  
+                <a href="./contact.php">Liên hệ</a>   
+                <a href="./cartusernologin.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
             </div>    
             <div class="search-container">
-                <form action="searchProducts.php" method="GET">
+                <form action="./searchProducts-nologin.php" method="GET">
                 <!-- Tìm kiếm đơn giản -->
                 <div>
                     <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
@@ -326,9 +326,9 @@
                 </form>
             </div>
             <div class="auth-buttons">  
-                <a href="../user/regis.html" title="Đăng ký" target="_blank">Đăng ký</a>  
+                <a href="../user/regis.php" title="Đăng ký" target="_blank">Đăng ký</a>  
                 <span>|</span>  
-                <a href="../user/login-user.html" title="Đăng nhập" target="_blank">Đăng nhập</a>  
+                <a href="../user/login-user.php" title="Đăng nhập" target="_blank">Đăng nhập</a>  
             </div> 
         </div>  
     </div> 
@@ -357,7 +357,7 @@ function slugify($text) {
     $text = removeAccents($text);
     $text = preg_replace('/[^a-z0-9]+/u', '-', $text);
     $text = trim($text, '-');
-    return $text . ".html";
+    return $text . ".php";
 }
 
 if (isset($_GET['search'])) {
@@ -387,7 +387,7 @@ if (isset($_GET['search'])) {
             $productPrice = number_format($row['product_price']);
             $productImage = htmlspecialchars($row['product_image']);
             $productId = $row['product_id'];
-            $productLink = slugify($row['product_name']);
+            $productLink = $row['productnolog_link'];
 
             echo "<div class='fruit-background' style='border: 1px solid #ccc; border-radius: 10px; padding: 10px; width: 220px; text-align: center;'>";
             echo "<img src='../img/{$productImage}' alt='{$productName}' width='180' height='180' style='border-radius: 10px;'>";
@@ -455,13 +455,13 @@ $conn->close();
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -474,13 +474,13 @@ $conn->close();
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -494,13 +494,13 @@ $conn->close();
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>

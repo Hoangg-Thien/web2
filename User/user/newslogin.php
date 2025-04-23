@@ -4,10 +4,10 @@
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/contact.css">  
+    <link rel="stylesheet" href="../styles/news.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trang Liên Hệ</title>  
+    <title>Trang Tin Tức</title>  
     <style>  
         .search-container {  
             display: flex;  
@@ -30,7 +30,51 @@
             color: white;  
             border-radius: 5px;  
             cursor: pointer;  
-        }  
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-button {
+            background: none;
+            border: none;      
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        .dropdown-button i{
+            color: #333;
+        }
+        .dropdown-button span{
+            color: #333;
+        }
+        button:hover {
+            background-color: #45a049 !important;
+        }
+         
     </style>  
 </head>  
 <body>  
@@ -66,22 +110,13 @@
         </div>  
 
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM
-                <ul>
-                    <li><a href="./declious-fruits-nologin.html">Trái cây ngon </a></li>
-                    <li><a href="./VietNamese-fruits-nolog.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits-nologin.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables-nologin.html">Rau củ  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Khô</a></li>
-                    <li><a href="./Imported-fruits.html">Các loại hạt  </a></li>
-                </ul>
-            </div>  
+            <div class="product-category">DANH MỤC SẢN PHẨM</div>  
             <div class="menu">  
-                <a href="../user/usernologin.html" >Trang chủ</a>  
-                <a href="../user/introduce.html">Giới thiệu</a>  
-                <a href="../user/news.html">Tin tức</a>  
-                <a href="../user/contact.html" class="active">Liên hệ</a>   
-                <a href="../user/cartusernologin.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/introducelogin.php">Giới thiệu</a>  
+                <a href="../user/newslogin.php" class="active">Tin tức</a>  
+                <a href="../user/contactlogin.php">Liên hệ</a>   
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
@@ -92,11 +127,18 @@
                     <button onclick="searchProducts()">Tìm kiếm</button>  
                 </div>  
             </div>  
-            <div class="auth-buttons">  
-                <a href="../user/regis.html" title="Đăng ký" target="_blank">Đăng ký</a>  
-                <span>|</span>  
-                <a href="../user/login-user.html" title="Đăng nhập" target="_blank">Đăng nhập</a>  
-            </div> 
+            <div class="dropdown">
+                <button class="dropdown-button">
+                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
+                    <span>Hi,User!</span>
+                </button>
+                <div class="dropdown-menu">
+                  <a href="../user/userinfo.php">Tài khoản</a>
+                  <a href="../user/history-user.php">Lịch sử</a>
+                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.php">Đăng xuất</a>
+                </div>
+              </div>
         </div>  
     </div> 
     <div class="update-system-container">
@@ -104,7 +146,7 @@
             <i class="fas fa-tools"></i>
             <h2>Hệ thống đang cập nhật</h2>
             <p>Vui lòng quay lại sau!</p>
-            <a href="../user/usernologin.html" class="back-button">Quay về trang chủ</a>
+            <a href="../index.php" class="back-button">Quay về trang chủ</a>
         </div>
     </div>
     <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
@@ -123,15 +165,13 @@
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -144,15 +184,14 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -165,15 +204,14 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -181,10 +219,9 @@
 
             <div class="col l-3 m-6 c-12">
                 <div >
-    
                     <div class="social_footer row">
                         <div>Kết nối với chúng tôi</div>
-                        <ul class="follow_option col l-12 " style="margin-left: -50px;">	
+                        <ul class="follow_option col l-12 " style="margin-left: -30px;">	
                             
                             <li>
                                 <a href="#" title="Theo dõi Facebook Sea Fruits"><i class="fab fa-facebook-f"></i></a>
@@ -205,14 +242,24 @@
                             </li>
                             
                         </ul>
+                        </div>
                     </div>
-    
-
-        </div>
             </div>
     </div>
     </div>
-    
+    <script>
+        document.querySelector('.dropdown-button').addEventListener('click', function() {
+      const dropdown = this.parentElement;
+      dropdown.classList.toggle('active');
+    });
+
+    window.addEventListener('click', function(e) {
+      const dropdown = document.querySelector('.dropdown');
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+    </script>
     <footer>  
         <div>
             Copyright by us<b>&#8482</b>

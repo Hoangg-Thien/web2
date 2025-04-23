@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/index.css">  
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Tiệm trái cây</title>  
+    <title>Rau củ </title>  
     <style>  
         .search-container {
             display: flex;
@@ -229,111 +229,7 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-        .search-results-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
 
-        .search-results-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .fruit-background {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 350px;
-            text-align: center;
-            transition: transform 0.3s;
-            background-color: white;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            padding: 15px;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .fruit-background img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .fruit-background .caption {
-            width: 100%;
-            padding: 10px 0;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin: 10px 0;
-        }
-
-        .fruit-background .icons {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 10px 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-
-        .fruit-background:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .fruit-background:hover .icons {
-            opacity: 1;
-        }
-
-        .icons a,
-        .icons button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: green;
-            color: white;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .icons a:hover,
-        .icons button:hover {
-            background-color: darkgreen;
-            transform: scale(1.1);
-        }
-
-        @media screen and (max-width: 768px) {
-            .search-results-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .search-results-grid {
-                grid-template-columns: repeat(1, 1fr);
-                gap: 15px;
-            }
-        }
     </style>  
 </head>  
 <body>  
@@ -371,26 +267,26 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
-                    <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.php">Rau củ  </a></li>
+                    <li><a href="./declious-fruits-nologin.php">Trái cây ngon </a></li>
+                    <li><a href="./VietNamese-fruits-nolog.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits-nologin.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables-nologin.php">Rau củ  </a></li>
                     <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
                     <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
-                <a href="../user/introducelogin.php">Giới thiệu</a>  
-                <a href="../user/newslogin.php">Tin tức</a>  
-                <a href="../user/contactlogin.php">Liên hệ</a>   
-                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="./usernologin.php" >Trang chủ</a>  
+                <a href="./introduce.php">Giới thiệu</a>  
+                <a href="./news.php">Tin tức</a>  
+                <a href="./contact.php">Liên hệ</a>   
+                <a href="./cartusernologin.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
-            </div>  
+            </div>    
             <div class="search-container">
-                <form action="searchProducts.php" method="GET">
+                <form action="./searchProducts-nologin.php" method="GET">
                 <!-- Tìm kiếm đơn giản -->
                 <div>
                     <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
@@ -429,104 +325,61 @@
                 </div>  
                 </form>
             </div>
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="../user/userinfo.php">Tài khoản</a>
-                  <a href="../user/history-user.php">Lịch sử</a>
-                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.php">Đăng xuất</a>
-                </div>
-            </div>
+            <div class="auth-buttons">  
+                <a href="../user/regis.php" title="Đăng ký" target="_blank">Đăng ký</a>  
+                <span>|</span>  
+                <a href="../user/login-user.php" title="Đăng nhập" target="_blank">Đăng nhập</a>  
+            </div> 
         </div>  
     </div> 
 
-    <div class="grid wide">
-    <?php
+    <div >
+        <div class="list-product">  
+            <h1>RAU CỦ</h1>  
+        </div>  
+        <?php
 include("connect.php");
 
-function removeAccents($str) {
-    $str = strtolower($str);
-    $str = preg_replace([
-        "/[àáạảãâầấậẩẫăằắặẳẵ]/u",
-        "/[èéẹẻẽêềếệểễ]/u",
-        "/[ìíịỉĩ]/u",
-        "/[òóọỏõôồốộổỗơờớợởỡ]/u",
-        "/[ùúụủũưừứựửữ]/u",
-        "/[ỳýỵỷỹ]/u",
-        "/[đ]/u"
-    ], [
-        "a", "e", "i", "o", "u", "y", "d"
-    ], $str);
-    return $str;
-}
+$sql = "SELECT * FROM sanpham WHERE product_type = 'Rau Củ'";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    echo '<div class="row image-container">';
+    while ($row = $result->fetch_assoc()) {
 
-function slugify($text) {
-    $text = removeAccents($text);
-    $text = preg_replace('/[^a-z0-9]+/u', '-', $text);
-    $text = trim($text, '-');
-    return $text . ".php";
-}
+        $productNameSlug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $row['product_name'])));
 
-if (isset($_GET['search'])) {
-    $keyword = trim($_GET['search']);
+        echo '
+        <div class="image-container">
+            <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
+                <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
 
-    // Chuẩn bị query
-    $sql = "SELECT * FROM sanpham WHERE product_name LIKE ?";
-    $stmt = $conn->prepare($sql);
-    $searchTerm = "%" . $keyword . "%";
-    $stmt->bind_param("s", $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
+                <div class="caption" style="margin-top: 10px; font-weight: bold;">
+                    ' . htmlspecialchars($row['product_name']) . '<br>
+                    ' . number_format($row['product_price'], 0, ',', '.') . ' VND
+                </div>
 
-    // Lấy dòng đầu tiên để hiển thị gợi ý
-    if ($result->num_rows > 0) {
-        $firstRow = $result->fetch_assoc();
-        $suggestedName = htmlspecialchars($firstRow['product_name']);
-        echo "<div class='search-results-container'>";
-        echo "<h3>Có thể bạn đang tìm kiếm: <em>{$suggestedName}</em></h3>";
-
-        // Quay lại con trỏ kết quả để duyệt từ đầu
-        $result->data_seek(0);
-
-        echo "<div class='search-results-grid'>";
-
-        while ($row = $result->fetch_assoc()) {
-            $productName = htmlspecialchars($row['product_name']);
-            $productPrice = number_format($row['product_price']);
-            $productImage = htmlspecialchars($row['product_image']);
-            $productId = $row['product_id'];
-            $productLink = $row['product_link'];
-
-            echo "<div class='fruit-background'>
-                <img src='../img/{$productImage}' alt='{$productName}'>
-                <div class='caption'>{$productName}<br>{$productPrice} VND</div>
-                <div class='icons'>
-                    <a href='../itemInfo/{$productLink}' class='info-icon' title='Xem thông tin chi tiết'>
-                        <i class='fa-solid fa-circle-info fa-lg'></i>
+                <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
+                    <a href="../itemInfo/' . $productNameSlug . '.php" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info fa-lg"></i>
                     </a>
-                    <button class='add-to-cart-btn' title='Thêm vào giỏ hàng' onclick='confirmAddToCart(\"{$productId}\")'>
-                        <i class='fas fa-cart-plus fa-lg'></i>
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng" onclick="confirmAddToCart(\'' . $row['product_id'] . '\')">
+                        <i class="fas fa-cart-plus fa-lg"></i>
                     </button>
                 </div>
-            </div>";
-        }
-
-        echo "</div></div>";
-    } else {
-        echo "<div class='search-results-container'><h3>Không tìm thấy sản phẩm nào phù hợp với từ khóa: <em>" . htmlspecialchars($keyword) . "</em></h3></div>";
+            </div>
+        </div>';
     }
-
-    $stmt->close();
+    echo '</div>';
 } else {
-    echo "<p>Vui lòng nhập từ khóa tìm kiếm.</p>";
+    echo "<p>Không có sản phẩm còn hàng.</p>";
 }
 
 $conn->close();
 ?>
+
+    
+    </div>
+
     <div class="policy-container" >
         <div >
             <img src="../img/policy1.png" alt="policy1">
@@ -576,7 +429,7 @@ $conn->close();
                     <li><a href="../index.php">Trang chủ</a></li>
                     <li><a href="./introducelogin.php">Giới thiệu</a></li>
                     <li><a href="./newslogin.php">Tin tức</a></li>
-                    <li><a href="./contactlogin.php">Liên hệ</a></li>
+                    <li><a href="./contactlogin.html">Liên hệ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -603,7 +456,8 @@ $conn->close();
     </div>
 
     <script>
-        const input = document.getElementById("searchInput");
+
+const input = document.getElementById("searchInput");
     const suggestBox = document.getElementById("suggestBox");
     
     input.addEventListener("keyup", function () {
@@ -633,31 +487,17 @@ $conn->close();
             suggestBox.innerHTML = "";
         }
     });
-    
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-button.addEventListener('click', function() {
-    const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
-    if (isConfirmed) 
-    {
-        cartCount++;
-        document.getElementById('cart-count').textContent = cartCount;
-        localStorage.setItem('cartCount', cartCount);
+
+
+
+    function confirmAddToCart(productId) {
+        if (confirm("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập không?" )) {
+            window.location.href = "../user/login-user.php";
+        } else {
+            alert("Bạn đã hủy thêm sản phẩm vào giỏ hàng.");
+            addToCart(productId);   
+        }
     }
-});
-});
-
-
-         document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
-    });
-
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
 
     document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
@@ -675,7 +515,6 @@ button.addEventListener('click', function() {
         }
     };
     </script>
- 
+
     </body>
 </html>
-

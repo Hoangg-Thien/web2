@@ -18,14 +18,14 @@ if(isset($_POST['submit'])) {
             $_SESSION['fullname'] = $row['fullname'];
             $_SESSION['user_name'] = $row['user_name'];
             
-            echo "<script>alert('Đăng nhập thành công!'); window.location.href='../index.html';</script>";
+            echo "<script>alert('Đăng nhập thành công!'); window.location.href='../index.php';</script>";
             exit();
         } else {
-            echo "<script>alert('Sai mật khẩu!'); window.location.href='login-user.html';</script>";
+            echo "<script>alert('Sai mật khẩu!'); window.location.href='login-user.php';</script>";
             exit();
         }
     } else {
-        echo "<script>alert('Tài khoản không tồn tại!'); window.location.href='login-user.html';</script>";
+        echo "<script>alert('Tài khoản không tồn tại!'); window.location.href='login-user.php';</script>";
         exit();
     }
 }

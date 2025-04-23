@@ -1,86 +1,19 @@
 <!DOCTYPE html>  
-<html lang="en">  
-<head>  
+<html lang="vi">  
+<head>
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/news.css">  
+    <title>Cà rốt</title>  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../styles/fruit-info.css">  
     <link rel="stylesheet" href="../styles/grid.css">
-    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trang Tin Tức</title>  
-    <style>  
-        .search-container {  
-            display: flex;  
-            align-items: center;  
-            margin-top: 20px;  
-        }  
+    <link rel="stylesheet" href="../styles/index.css">
 
-        #searchBox {  
-            padding: 10px;  
-            border-radius: 5px;  
-            border: 1px solid #ccc;  
-            width: 80%;  
-            margin-right: 10px;  
-        }  
-
-        button {  
-            padding: 10px 20px;  
-            border: none;  
-            background-color: #4CAF50;  
-            color: white;  
-            border-radius: 5px;  
-            cursor: pointer;  
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-button {
-            background: none;
-            border: none;      
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-        }
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: black;
-        }
-        .dropdown-menu a:hover {
-            background-color: #f1f1f1;
-        }
-        .dropdown.active .dropdown-menu {
-            display: block;
-        }
-        .dropdown-button i{
-            color: #333;
-        }
-        .dropdown-button span{
-            color: #333;
-        }
-        button:hover {
-            background-color: #45a049 !important;
-        }
-         
-    </style>  
-</head>  
-<body>  
-    <header>  
+</head>
+<body>
+    <header>
         <a href="#" class="fruit">  
-            <img src="../img/carrotheader.png" alt="Cà rốt" />  
+            <img src="../img/carrotheader.png" alt="Cà rốt" />
             Cà rốt  
         </a>  
         <a href="#" class="fruit">  
@@ -103,52 +36,62 @@
             <img src="../img/tomatoheader.png" alt="Cà chua" />  
             Cà chua  
         </a>  
-    </header>  
-    <div class="sea-fruit-container">  
-        <div>  
-            <div class="sea-fruit">SEA FRUITS</div>  
-        </div>  
+    </header>
 
-        <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM</div>  
-            <div class="menu">  
-                <a href="../index.html" >Trang chủ</a>  
-                <a href="../user/introducelogin.html">Giới thiệu</a>  
-                <a href="../user/newslogin.html" class="active">Tin tức</a>  
-                <a href="../user/contactlogin.html">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
-                    <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
-                </a>  
-            </div>  
-            <div class="search-container">  
-                <div>  
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">  
-                    <button onclick="searchProducts()">Tìm kiếm</button>  
-                </div>  
-            </div>  
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
-                </div>
-              </div>
-        </div>  
-    </div> 
-    <div class="update-system-container">
-        <div class="update-message">
-            <i class="fas fa-tools"></i>
-            <h2>Hệ thống đang cập nhật</h2>
-            <p>Vui lòng quay lại sau!</p>
-            <a href="../index.html" class="back-button">Quay về trang chủ</a>
+    <div class="item-container">
+    img class="fruit-img" src="../img/xalach.jpg" alt="xalach">
+        <div class="item-info">
+            <p>
+                Tên: Xà lách<br>
+                Xuất xứ: Hải Dương <br>
+                Ngày nhập kho: 14/11/2024<br>
+                HSD: 3-5 ngày sau ngày nhập kho<br>
+                Giá: 35.000đ/kg<br>
+            </p>
+            <div class="quantity-container">
+                <button class="quantity-btn" id="decrease">-</button>
+                <input type="text" id="quantity" value="1">
+                <button class="quantity-btn" id="increase">+</button>
+            </div>
+            <button class="add-to-cart">
+                <i class="fas fa-shopping-basket"></i> Thêm vào giỏ hàng
+            </button>
+        </div>
+        <div id="success-overlay"></div>
+        <div id="success-message">
+            <p>Đã thêm vào giỏ hàng thành công!</p>
+            <a href="../user/cart-user.html">Xem giỏ hàng</a>
+            <a href="../user/payment-user.html">Tiến tới thanh toán</a>
         </div>
     </div>
+    
+    <div style="max-width: 1500px; overflow: hidden; margin: auto;  margin-top: 100px;">  
+        <img src="../img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; height: 400px; display: block;">  
+    </div>
+    
+    <div class="policy-container" >
+        <div >
+            <img src="../img/policy1.png" alt="policy1">
+            <div style="margin-left: -30px;padding: 10px;font-weight: 700;font-size: 20px;">Giao hàng miễn phí</div>
+            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Với đơn hàng hơn 300.000đ</div>
+        </div>
+        <div>
+            <img src="../img/policy2.png" alt="policy2">
+            <div style="margin-left: -20px;padding: 10px;font-weight: 700;font-size: 20px;">Hỗ trợ 24/7</div>
+            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
+        </div>
+        <div>
+            <img src="../img/policy3.jpg" alt="policy3">
+            <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
+            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
+        </div>
+        <div >
+            <img src="../img/policy4.png" alt="policy2">
+            <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Giá tiêu chuẩn</div>
+            <div style="margin-left:-10px;color:#444444;font-size: 14px;">Tiết kiệm 10% giá thị trường</div>
+        </div>
+    </div>
+
     <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
         <img src="../img/seafruits-logo.png" alt="seafruits-logo">
         <div style="padding:10px;">
@@ -156,6 +99,7 @@
             <div>Email: AboutUs@gmail.com</div>
         </div>
     </div>
+
     <div class="grid wide" style="justify-content: space-evenly;">
         <div class="row">
             <div class="col l-3 m-6 c-12">
@@ -165,7 +109,7 @@
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
                         <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
@@ -186,7 +130,7 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
                         <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
@@ -207,7 +151,7 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
                         <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
@@ -254,23 +198,21 @@
             </div>
     </div>
     </div>
-    <script>
-        document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
-    });
 
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        let addToCartButtons = document.querySelectorAll(".add-to-cart");
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                alert("Bạn cần phải đăng nhập để thêm vào giỏ hàng!");
+            });
+        });
     });
     </script>
-    <footer>  
-        <div>
-            Copyright by us<b>&#8482</b>
-        </div>
-    </footer>  
-</body>  
-</html>
+</body>
+<footer style="width: 100% ;">
+    <div>
+        Copyright by us<b>&#8482</b>
+    </div>
+</footer>

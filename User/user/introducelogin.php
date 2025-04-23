@@ -4,11 +4,11 @@
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="../styles/index.css">  
+    <link rel="stylesheet" href="../styles/introduce.css">  
     <link rel="stylesheet" href="../styles/grid.css">
+    <link rel="stylesheet" href="../styles/index.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Rau củ </title>  
+    <title>Trang Giới Thiệu</title>  
     <style>  
         .search-container {
             display: flex;
@@ -204,7 +204,32 @@
         button:hover {
             background: #0056b3;
         }
-
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+    
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+    
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
     </style>  
 </head>  
 <body>  
@@ -242,32 +267,37 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./declious-fruits.html">Trái cây ngon </a></li>
-                    <li><a href="./Vietnamese-fruits.html">Trái cây Việt  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.html">Rau củ  </a></li>
-                    <li><a href="./Imported-fruits.html">Trái cây Khô</a></li>
-                    <li><a href="./Imported-fruits.html">Các loại hạt  </a></li>
+                    <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
+                    <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables.php">Rau củ  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
+                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../index.html" >Trang chủ</a>  
-                <a href="../user/introducelogin.html">Giới thiệu</a>  
-                <a href="../user/newslogin.html">Tin tức</a>  
-                <a href="../user/contactlogin.html">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/introducelogin.php">Giới thiệu</a>  
+                <a href="../user/newslogin.php">Tin tức</a>  
+                <a href="../user/contactlogin.php">Liên hệ</a>   
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
             </div>  
-            <div class="search-container">   
-                
-                <div >
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                    <button onclick="searchProducts()">Tìm kiếm</button>
-                    <button id="toggleSearch">Tìm kiếm nâng cao</button>
-                </div>  
+            <div class="search-container">
+                <form action="searchProducts.php" method="GET">
+                <!-- Tìm kiếm đơn giản -->
+                <div>
+                    <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+                    <div id="suggestBox" class="autocomplete-suggestions"></div>
+                    <button type="submit">Tìm kiếm</button>
+                    <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+                </div>
+            
+                <!-- Kết quả -->
                 <div id="searchResults"></div>
+            
                 <div id="priorityFruits" class="hidden">
                     <ul>
                     </ul>
@@ -292,148 +322,32 @@
                 
                         <button onclick="smartSearchProducts()">Lọc</button>
                     </div>
-            </div>  
-                </div>
+                </div>  
+                </form>
+            </div>
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
                     <span>Hi,User!</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
+                  <a href="../user/userinfo.php">Tài khoản</a>
+                  <a href="../user/history-user.php">Lịch sử</a>
+                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.php">Đăng xuất</a>
                 </div>
             </div>
         </div>  
     </div> 
-
-    <div class="grid wide">
-        <div class="list-product">  
-            <h1>RAU CỦ</h1>  
-        </div>  
-        
-        <div class="image-container Delicous row" id="imageContainer">  
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">  
-                <img id="raucuImg" src="../img/carot.jpg" alt="trai-ca-rot" width="300" >  
-                <div class="caption" >Cà rốt <br>30.000đ/kg</div> 
-                <div class="icons">  
-                    <a href="../itemInfo/carrot.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                 
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i>
-                    </button>
-                </div> 
+    <div class="update-system-container">
+        <div >
+            <h1 >Giới thiệu</h1>
+            <p>Sea Fruit là công ty thương mại điện tử chuyên cung cấp các thực phẩm hữu cơ và tự nhiên với chuỗi cửa hàng thực phẩm hữu cơ với mục tiêu giúp người tiêu dùng Việt Nam có một cuộc sống khỏe mạnh hơn thông qua những loại thực phẩm hữu cơ có chứng nhận, thực phẩm tự nhiên và không có nguồn gốc biến đổi gene (GMO). Chúng tôi lựa chọn các loại thực phẩm hữu cơ, thực phẩm tự nhiên từ các nhà sản xuất, các công ty trong và ngoài nước thông qua quá trình lựa chọn kỹ càng về khả năng cung ứng, các giấy chứng nhận tiêu chuẩn do các tổ chức uy tín thế giới cấp. Chúng tôi yêu thích những gì chúng tôi làm và chúng tôi đam mê những lợi ích của một lối sống lành mạnh, tìm nguồn cung cấp sản phẩm hữu cơ chất lượng cao nhất cho khách hàng và cung cấp dịch vụ giao hàng tận nhà tốt nhất. Chúng tôi hoàn toàn tin tưởng rằng những sản phẩm tạo ra từ quá trình canh tác và sản xuất theo phương thức hữu cơ và tự nhiên tốt cho cơ thể mọi người, tốt hơn cho cộng đồng và tốt hơn cho hành tinh mà chúng ta đang sống. Một lần nữa, Sea Fruit được sáng lập bởi các nhà sáng lập muốn tạo dựng một cộng đồng thực phẩm sạch, dựa trên nền tảng hữu cơ (organic) và thuần từ thiên nhiên, nhằm mang lại sức khoẻ tốt nhất cho cộng đồng.</p>  
+            <div>
+                <img src="../img/logofood-safety.png" style="width: 180px; height: auto;">
+            </div>
             </div> 
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="raucuImg1" src="../img/cachua.png" alt="trai-ca-chua" width="300" >
-                <div class="caption">Cà chua <br> 30.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/dragon-fruit.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="raucuImg2" src="../img/suploxanh.jpg" alt="sup-lo-xanh" width="300" >
-                <div class="caption">Súp lơ xanh  <br> 32.000đ/kg</div>
-                <div class="icons">  
-                    <a href="../itemInfo/mango.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                   
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-        </div>  
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="raucuImg3" src="../img/khoaitay.jpg" alt="khoai-tay" width="300" >
-                <div class="caption">Khoai tây<br>  31.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/khoaitay.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="raucuImg4" src="../img/cusuhao.jpg" alt="cu-su-hao" width="300" >
-                <div class="caption">Su hào <br> 30.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/cusuhao.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-
-        </div>
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background">
-                <img id="raucuImg5" src="../img/xalach.jpg" alt="bong-cai-xanh" width="300" >
-                <div class="caption">Xà lách xanh <br>  35.000đ/kg </div>
-                <div class="icons">  
-                    <a href="../itemInfo/xalach.html" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng">
-                        <i class="fas fa-cart-plus"></i> 
-                    </button>
-                </div> 
-            </div>
-
-        </div>
-        </div>
     </div>
-
-    <div class="policy-container" >
-        <div >
-            <img src="../img/policy1.png" alt="policy1">
-            <div style="margin-left: -30px;padding: 10px;font-weight: 700;font-size: 20px;">Giao hàng miễn phí</div>
-            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Với đơn hàng hơn 300.000đ</div>
-        </div>
-        <div>
-            <img src="../img/policy2.png" alt="policy2">
-            <div style="margin-left: -20px;padding: 10px;font-weight: 700;font-size: 20px;">Hỗ trợ 24/7</div>
-            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
-        </div>
-        <div>
-            <img src="../img/policy3.jpg" alt="policy3">
-            <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
-            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
-        </div>
-        <div >
-            <img src="../img/policy4.png" alt="policy2">
-            <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Giá tiêu chuẩn</div>
-            <div style="margin-left:-10px;color:#444444;font-size: 14px;">Tiết kiệm 10% giá thị trường</div>
-        </div>
-    </div>
-
     <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
         <img src="../img/seafruits-logo.png" alt="seafruits-logo">
         <div style="padding:10px;">
@@ -441,7 +355,6 @@
             <div>Email: AboutUs@gmail.com</div>
         </div>
     </div>
-
     <div class="grid wide" style="justify-content: space-evenly;">
         <div class="row">
             <div class="col l-3 m-6 c-12">
@@ -451,13 +364,13 @@
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -470,13 +383,13 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -490,13 +403,13 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="./introducelogin.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="./newslogin.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="./contactlogin.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                         
                     </ul>
@@ -533,74 +446,40 @@
             </div>
     </div>
     </div>
-
     <script>
-
-         const fruits = [
-    { name: "Cà rốt", link: "../itemInfo/carrot.html", priority: 1  },
-    { name: "Cà chua", link: "../itemInfo/dragon-fruit.html", priority: 2  },
-    { name: "Súp lơ xanh", link: "../itemInfo/mango.html", priority: 3 },
-    { name: "Khoai tây", link: "../itemInfo/watermelon.html", priority: 4 },
-    { name: "Củ su hào", link: "../itemInfo/rambutant.html", priority: 55 },
-    { name: "Xà lách xanh", link: "./itemInfo/guava.html", priority: 6 }
-    ];
-
-    let debounceTimeout;
-    function searchProducts() 
-    {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-    const searchBox = document.getElementById("searchBox");
-    const searchQuery = searchBox.value.toLowerCase();
-    const searchResults = document.getElementById("searchResults");
-    const priorityFruits = document.getElementById("priorityFruits");
-    priorityFruits.style.display = "none";
-    searchResults.innerHTML = "";
-    const filteredProducts = fruits.filter(product =>
-        product.name.toLowerCase().includes(searchQuery)
-    );
-    filteredProducts.sort((a, b) => b.priority - a.priority);
-
-    if (filteredProducts.length > 0) {
-        filteredProducts.forEach(product => {
-            const productLink = document.createElement("a");
-            productLink.href = product.link;
-            productLink.innerText = product.name;
-            productLink.classList.add("search-result"); 
-            searchResults.appendChild(productLink);
-        });
-
-        searchResults.style.display = "block";
-    } else {
-        searchResults.innerHTML = "<span class='empty'>Không tìm thấy sản phẩm nào</span>";
-        searchResults.style.display = "block";
-    }
-
- 
-    setTimeout(() => {
-        searchBox.value = ""; 
-        searchResults.style.display = "none"; 
-        searchResults.innerHTML = "";
-        priorityFruits.style.display = "block"; 
-    }, 5000); 
-}, 500); 
-}
-
-
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-button.addEventListener('click', function() {
-    const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
-    if (isConfirmed) 
-    {
-        cartCount++;
-        document.getElementById('cart-count').textContent = cartCount;
-        localStorage.setItem('cartCount', cartCount);
-    }
-});
-});
-
-
-         document.querySelector('.dropdown-button').addEventListener('click', function() {
+          const input = document.getElementById("searchInput");
+    const suggestBox = document.getElementById("suggestBox");
+    
+    input.addEventListener("keyup", function () {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestBox.innerHTML = "";
+                    data.forEach(item => {
+                        const div = document.createElement("div");
+                        div.textContent = item;
+                        div.onclick = () => {
+                            input.value = item;
+                            suggestBox.innerHTML = "";
+                        };
+                        suggestBox.appendChild(div);
+                    });
+                });
+        } else {
+            suggestBox.innerHTML = "";
+        }
+    });
+    
+    document.addEventListener("click", function (e) {
+        if (e.target !== input) {
+            suggestBox.innerHTML = "";
+        }
+    });
+        
+        
+        document.querySelector('.dropdown-button').addEventListener('click', function() {
       const dropdown = this.parentElement;
       dropdown.classList.toggle('active');
     });
@@ -611,7 +490,6 @@ button.addEventListener('click', function() {
         dropdown.classList.remove('active');
       }
     });
-
     document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
@@ -628,11 +506,10 @@ button.addEventListener('click', function() {
         }
     };
     </script>
-
-<footer>  
-    <div>
-        Copyright by us<b>&#8482</b>
-    </div>
-</footer>  
-    </body>
+    <footer>  
+        <div>
+            Copyright by us<b>&#8482</b>
+        </div>
+    </footer>  
+</body>  
 </html>

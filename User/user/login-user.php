@@ -36,7 +36,7 @@
                         <label for="remember">Nhớ Tài Khoản</label>
                     </div>
                     <div class="forgot">
-                        <a target="_blank" href="../user/forgotpass.html">Quên Mật Khẩu?</a>
+                        <a target="_blank" href="../user/forgotpass.php">Quên Mật Khẩu?</a>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
             </form>
 
             <div class="signup">
-                <span>Bạn chưa có tài khoản? <a target="_blank" href="../user/regis.html">Đăng Ký Ngay</a></span>
+                <span>Bạn chưa có tài khoản? <a target="_blank" href="../user/regis.php">Đăng Ký Ngay</a></span>
             </div>
         </div>
     </div>

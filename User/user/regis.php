@@ -45,7 +45,7 @@
             <i class="fa-solid fa-city icon"></i>
           </div>
           <button type="submit" name="submit">Đăng Ký</button>
-          <p>Bạn đã có tài khoản? <a target="_blank" href="../user/login-user.html">Đăng nhập ngay</a></p>
+          <p>Bạn đã có tài khoản? <a target="_blank" href="../user/login-user.php">Đăng nhập ngay</a></p>
         </form>
         <div id="notification" class="hidden"></div>
     </div>

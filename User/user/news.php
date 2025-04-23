@@ -68,11 +68,11 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM</div>  
             <div class="menu">  
-                <a href="../user/usernologin.html" >Trang chủ</a>  
-                <a href="../user/introduce.html">Giới thiệu</a>  
-                <a href="../user/news.html" class="active">Tin tức</a>  
-                <a href="../user/contact.html">Liên hệ</a>   
-                <a href="../user/cartusernologin.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../user/usernologin.php" >Trang chủ</a>  
+                <a href="../user/introduce.php">Giới thiệu</a>  
+                <a href="../user/news.php" class="active">Tin tức</a>  
+                <a href="../user/contact.php">Liên hệ</a>   
+                <a href="../user/cartusernologin.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
@@ -84,9 +84,9 @@
                 </div>  
             </div>  
             <div class="auth-buttons">  
-                <a href="../user/regis.html" title="Đăng ký" target="_blank">Đăng ký</a>  
+                <a href="../user/regis.php" title="Đăng ký" target="_blank">Đăng ký</a>  
                 <span>|</span>  
-                <a href="../user/login-user.html" title="Đăng nhập" target="_blank">Đăng nhập</a>  
+                <a href="../user/login-user.php" title="Đăng nhập" target="_blank">Đăng nhập</a>  
             </div> 
         </div>  
     </div> 
@@ -95,7 +95,7 @@
             <i class="fas fa-tools"></i>
             <h2>Hệ thống đang cập nhật</h2>
             <p>Vui lòng quay lại sau!</p>
-            <a href="../user/usernologin.html" class="back-button">Quay về trang chủ</a>
+            <a href="../user/usernologin.php" class="back-button">Quay về trang chủ</a>
         </div>
     </div>
     <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
@@ -114,15 +114,13 @@
                 <div>
                     <ul >
                         
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php "style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introduce.php "style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="./contact.php "style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        <li class="li_menu"><a href="./news.php "style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -135,15 +133,14 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php "style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introduce.php "style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="./contact.php "style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./news.php "style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -156,15 +153,14 @@
                 <div >
                     <ul >
                         
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        <li class="li_menu"><a href="../index.php "style="text-decoration: none; color: #333; ">Trang chủ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        <li class="li_menu"><a href="./introduce.php "style="text-decoration: none;color: #333;">Giới thiệu</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
+                        <li class="li_menu"><a href="./contact.php "style="text-decoration: none;color: #333;">Tin tức</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        <li class="li_menu"><a href="./news.php "style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
                         
                     </ul>
                 </div>
@@ -172,10 +168,9 @@
 
             <div class="col l-3 m-6 c-12">
                 <div >
-    
                     <div class="social_footer row">
                         <div>Kết nối với chúng tôi</div>
-                        <ul class="follow_option col l-12 " style="margin-left: -50px;">	
+                        <ul class="follow_option col l-12 " style="margin-left: -30px;">	
                             
                             <li>
                                 <a href="#" title="Theo dõi Facebook Sea Fruits"><i class="fab fa-facebook-f"></i></a>
@@ -196,10 +191,8 @@
                             </li>
                             
                         </ul>
+                        </div>
                     </div>
-    
-
-        </div>
             </div>
     </div>
     </div>

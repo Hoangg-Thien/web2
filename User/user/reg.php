@@ -18,7 +18,7 @@ if(isset($_POST['submit'])) {
 
 
     if (empty($fullname) || empty($username) || empty($email) || empty($password) || empty($phone) || empty($address) || empty($district) || empty($city)) {
-        echo "<script>alert('Vui lòng điền đầy đủ thông tin.'); window.location.href='regis.html';</script>";
+        echo "<script>alert('Vui lòng điền đầy đủ thông tin.'); window.location.href='regis.php';</script>";
         exit();
     }
 
@@ -32,7 +32,7 @@ if(isset($_POST['submit'])) {
     $stmt->store_result();
 
     if($stmt->num_rows > 0) {
-        echo "<script>alert('Tên đăng nhập hoặc email đã tồn tại.'); window.location.href='regis.html';</script>";
+        echo "<script>alert('Tên đăng nhập hoặc email đã tồn tại.'); window.location.href='regis.php';</script>";
         exit();
     }
     $stmt->close();
@@ -50,10 +50,10 @@ if(isset($_POST['submit'])) {
     if ($stmt->execute()) {
         echo "<script>
                 alert('Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...');
-                window.location.href='login-user.html';
+                window.location.href='login-user.php';
               </script>";
     } else {
-        echo "<script>alert('Lỗi khi đăng ký. Vui lòng thử lại!'); window.location.href='regis.html';</script>";
+        echo "<script>alert('Lỗi khi đăng ký. Vui lòng thử lại!'); window.location.href='regis.php';</script>";
     }
 
     $stmt->close();

@@ -30,7 +30,7 @@
                 <i class="fa-solid fa-lock icon"></i>
             </div>
             <button type="submit">Xác Nhận</button>
-            <p>Bạn đã có tài khoản? <a target="_blank" href="../user/login-user.html">Đăng nhập ngay</a></p>
+            <p>Bạn đã có tài khoản? <a target="_blank" href="../user/login-user.php">Đăng nhập ngay</a></p>
         </form>
     </div>
 </body>
