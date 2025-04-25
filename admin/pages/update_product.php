@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 
-$conn = new mysqli("localhost", "root", "", "website");
+$conn = new mysqli("localhost", "root", "", "c07db");
 if ($conn->connect_error) {
     echo json_encode(["success" => false, "message" => "Kết nối database thất bại"]);
     exit;

@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Kết nối CSDL
-$conn = new mysqli("localhost", "root", "", "website");
+$conn = new mysqli("localhost", "root", "", "c07db");
 if ($conn->connect_error) {
     echo json_encode(["success" => false, "message" => "Kết nối thất bại"]);
     exit;
