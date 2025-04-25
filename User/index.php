@@ -353,63 +353,9 @@
     <div >    
             <div class="list-product">  
                 <h1>DANH MỤC SẢN PHẨM </h1>  
-            </div>
-            <style>
-    .pagination {
-        margin-top: 20px;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    .page-link {
-        display: inline-block;
-        padding: 8px 14px;
-        background-color: #f1f1f1;
-        border-radius: 6px;
-        text-decoration: none;
-        color: #000;
-        transition: 0.2s;
-    }
-
-    .page-link:hover {
-        background-color: #aaa;
-        color: #fff;
-    }
-
-    .page-link.active {
-        background-color: #4CAF50;
-        color: white;
-        font-weight: bold;
-    }
-
-    .page-link.disabled {
-        background-color: #e0e0e0;
-        color: #999;
-        pointer-events: none;
-    }
-    </style>  
+            </div>  
             <?php
             include("./user/connect.php");
-            
-             // Số sản phẩm mỗi trang
-    $limit = 6;
-
-    // Lấy trang hiện tại từ URL, nếu không có thì mặc định là trang 1
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    if ($page < 1) $page = 1;
-
-    // Tính offset
-    $start = ($page - 1) * $limit;
-
-    // Lấy tổng số sản phẩm
-    $totalQuery = "SELECT COUNT(*) as total FROM sanpham";
-    $totalResult = $conn->query($totalQuery);
-    $totalRow = $totalResult->fetch_assoc();
-    $totalProducts = $totalRow['total'];
-    $totalPages = ceil($totalProducts / $limit);
 
             $sql = "SELECT * FROM sanpham ";
             $result = $conn->query($sql);
@@ -421,53 +367,32 @@
                     $productNameSlug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $row['product_name'])));
 
                     echo '
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
-                <img src="./img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
-
-                <div class="caption" style="margin-top: 10px; font-weight: bold;">
-                    ' . htmlspecialchars($row['product_name']) . '<br>
-                    ' . number_format($row['product_price'], 0, ',', '.') . ' VND
-                </div>
-
-                <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
-                    <a href="./itemInfo/' . $row['product_link'] . '" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </a>
-                    <button class="add-to-cart"
+<div class="image-container">
+    <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
+        <img src="./img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
+        <div class="caption" style="margin-top: 10px; font-weight: bold;">
+            ' . htmlspecialchars($row['product_name']) . '<br>
+            ' . number_format($row['product_price'], 0, ',', '.') . ' VND
+        </div>
+        <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
+            <a href="./itemInfo/' . $productNameSlug . '.php" class="info-icon" title="Xem thông tin chi tiết">
+                <i class="fa-solid fa-circle-info fa-lg"></i>
+            </a>
+            <button class="add-to-cart"
                 data-id="' . $row['product_id'] . '"
                 data-name="' . htmlspecialchars($row['product_name']) . '"
                 data-price="' . $row['product_price'] . '">
                 <i class="fas fa-cart-plus fa-lg"></i>
             </button>
-                </div>
-            </div>
-        </div>';
-    }
-    echo '</div>';
-} else {
-    echo "<p>Không có sản phẩm nào.</p>";
-}
+        </div>
+    </div>
+</div>';
 
-// Hiển thị phân trang
-echo '<div class="pagination">';
-
-// Nút "Trang trước"
-if ($page > 1) {
-    echo '<a href="?page=' . ($page - 1) . '" class="page-link">&laquo; Trước</a>';
-}
-
-// Hiển thị tất cả số trang (kể cả chỉ có 1 trang)
-for ($i = 1; $i <= $totalPages; $i++) {
-    echo '<a href="?page=' . $i . '" class="page-link ' . ($i == $page ? 'active' : '') . '">' . $i . '</a>';
-}
-
-// Nút "Trang sau"
-if ($page < $totalPages) {
-    echo '<a href="?page=' . ($page + 1) . '" class="page-link">Sau &raquo;</a>';
-}
-
-echo '</div>';
+                }
+                echo '</div>';
+            } else {
+                echo "<p>Không có sản phẩm còn hàng.</p>";
+            }
 
             $conn->close();
             ?>
