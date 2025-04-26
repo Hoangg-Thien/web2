@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/index.css">  
+    <link rel="stylesheet" href="../styles/grid.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trái cây Nhập Khẩu </title>  
+    <title>Tiệm trái cây</title>  
     <style>  
         .search-container {
             display: flex;
@@ -229,7 +230,6 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-       
     </style>  
 </head>  
 <body>  
@@ -333,55 +333,92 @@
         </div>  
     </div> 
 
-    <div >
-        <div class="list-product">  
-            <h1>TRÁI CÂY NHẬP KHẨU</h1>  
-        </div>  
-        <?php
-        include("connect.php");
+    <div class="grid wide">
+    <?php
+include("connect.php");
 
-        $sql = "SELECT * FROM sanpham WHERE product_type = 'Trái cây Nhập Khẩu'";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            echo '<div class="row image-container">';
-            while ($row = $result->fetch_assoc()) {
+function removeAccents($str) {
+    $str = strtolower($str);
+    $str = preg_replace([
+        "/[àáạảãâầấậẩẫăằắặẳẵ]/u",
+        "/[èéẹẻẽêềếệểễ]/u",
+        "/[ìíịỉĩ]/u",
+        "/[òóọỏõôồốộổỗơờớợởỡ]/u",
+        "/[ùúụủũưừứựửữ]/u",
+        "/[ỳýỵỷỹ]/u",
+        "/[đ]/u"
+    ], [
+        "a", "e", "i", "o", "u", "y", "d"
+    ], $str);
+    return $str;
+}
 
-                $productNameSlug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $row['product_name'])));
+function slugify($text) {
+    $text = removeAccents($text);
+    $text = preg_replace('/[^a-z0-9]+/u', '-', $text);
+    $text = trim($text, '-');
+    return $text . ".php";
+}
 
-                echo '
-                <div class="image-container">
-                    <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
-                        <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
+if (isset($_GET['search'])) {
+    $keyword = trim($_GET['search']);
 
-                        <div class="caption" style="margin-top: 10px; font-weight: bold;">
-                            ' . htmlspecialchars($row['product_name']) . '<br>
-                            ' . number_format($row['product_price'], 0, ',', '.') . ' VND
-                        </div>
+    // Chuẩn bị query
+    $sql = "SELECT * FROM sanpham WHERE product_name LIKE ?";
+    $stmt = $conn->prepare($sql);
+    $searchTerm = "%" . $keyword . "%";
+    $stmt->bind_param("s", $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-                        <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
-                            <a href="../itemInfo/' . $productNameSlug . '.php" class="info-icon" title="Xem thông tin chi tiết">
-                                <i class="fa-solid fa-circle-info fa-lg"></i>
-                            </a>
-                            <button class="add-to-cart"
-                data-id="' . $row['product_id'] . '"
-                data-name="' . htmlspecialchars($row['product_name']) . '"
-                data-price="' . $row['product_price'] . '">
-                <i class="fas fa-cart-plus fa-lg"></i>
-            </button>
-                        </div>
-                    </div>
-                </div>';
-            }
-            echo '</div>';
-        } else {
-            echo "<p>Không có sản phẩm còn hàng.</p>";
+    // Lấy dòng đầu tiên để hiển thị gợi ý
+    if ($result->num_rows > 0) {
+        $firstRow = $result->fetch_assoc();
+        $suggestedName = htmlspecialchars($firstRow['product_name']);
+        echo "<h3>Có thể bạn đang tìm kiếm: <em>{$suggestedName}</em></h3>";
+
+        // Quay lại con trỏ kết quả để duyệt từ đầu
+        $result->data_seek(0);
+
+        echo "<div style='display: flex; flex-wrap: wrap; gap: 20px;'>";
+
+        while ($row = $result->fetch_assoc()) {
+            $productName = htmlspecialchars($row['product_name']);
+            $productPrice = number_format($row['product_price']);
+            $productImage = htmlspecialchars($row['product_image']);
+            $productId = $row['product_id'];
+            $productLink = $row['productnolog_link'];
+        
+            echo "<div class='fruit-background' style='border: 1px solid #ccc; border-radius: 10px; padding: 10px; width: 220px; text-align: center;'>";
+            echo "<img src='../img/{$productImage}' alt='{$productName}' width='180' height='180' style='border-radius: 10px;'>";
+            echo "<div class='caption' style='margin-top: 10px; font-weight: bold;'>{$productName}<br>{$productPrice}đ/kg</div>";
+            echo "<div class='icons' style='margin-top: 10px;'>
+                    <a href='./itemInfo/{$productLink}' class='info-icon' title='Xem chi tiết' style='margin-right: 10px; font-size: 20px; color: #444;'>
+                        <i class='fa-solid fa-circle-info'></i>
+                    </a>
+                    <button class='add-to-cart'
+                        data-id='{$productId}'
+                        data-name='" . htmlspecialchars($productName) . "'
+                        data-price='{$productPrice}'>
+                        <i class='fas fa-cart-plus'></i>
+                    </button>
+                  </div>";
+            echo "</div>";
         }
+        
 
-        $conn->close();
-        ?>
+        echo "</div>";
+    } else {
+        echo "<h3>Không tìm thấy sản phẩm nào phù hợp với từ khóa: <em>" . htmlspecialchars($keyword) . "</em></h3>";
+    }
 
-    
-    </div>
+    $stmt->close();
+} else {
+    echo "<p>Vui lòng nhập từ khóa tìm kiếm.</p>";
+}
+
+$conn->close();
+?>
     <div class="policy-container" >
         <div >
             <img src="../img/policy1.png" alt="policy1">
@@ -413,53 +450,100 @@
         </div>
     </div>
 
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Về chúng tôi</h3>
-                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-        </div>
+    <div class="grid wide" style="justify-content: space-evenly;">
+        <div class="row">
+            <div class="col l-3 m-6 c-12">
+                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
+                    Về chúng tôi 
+                </a>
+                <div>
+                    <ul >
+                        
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col l-3 m-6 c-12">
+                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
+                    Tin khuyến mãi
+                </a>
+                <div >
+                    <ul >
+                        
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col l-3 m-6 c-12">
+                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
+                    Dịch vụ
+                </a>
+                <div >
+                    <ul >
+                        
+                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
+                        
+                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
+                        
+                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
+                        
+                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col l-3 m-6 c-12">
+                <div >
+                    <div class="social_footer row">
+                        <div>Kết nối với chúng tôi</div>
+                        <ul class="follow_option col l-12 " style="margin-left: -30px;">	
+                            
+                            <li>
+                                <a href="#" title="Theo dõi Facebook Sea Fruits"><i class="fab fa-facebook-f"></i></a>
+                            </li>
+                            
+                            <li>
+                                <a href="#" title="Theo dõi Google Sea Fruits"><i class="fab fa-google"></i></a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a href="#" title="Theo dõi Instagam Sea Fruits"><i class="fab fa-instagram"></i></a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a href="#" title="Theo dõi Youtube Sea Fruits"><i class="fab fa-youtube"></i></a>
+                            </li>
+                            
+                        </ul>
+                        </div>
+                    </div>
+            </div>
     </div>
-            <div class="footer-section">
-                <h3>Liên kết nhanh</h3>
-                <ul>
-                    <li><a href="../index.php">Trang chủ</a></li>
-                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
-                    <li><a href="./newslogin.php">Tin tức</a></li>
-                    <li><a href="./contactlogin.html">Liên hệ</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Dịch vụ</h3>
-                <ul>
-                    <li><a href="#">Giao hàng nhanh</a></li>
-                    <li><a href="#">Đổi trả dễ dàng</a></li>
-                    <li><a href="#">Thanh toán an toàn</a></li>
-                    <li><a href="#">Bảo hành chất lượng</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Liên hệ</h3>
-                <ul class="contact-info">
-                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
-                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
-                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
-        </div>
     </div>
 
     <script>
-
-    const input = document.getElementById("searchInput");
+const input = document.getElementById("searchInput");
     const suggestBox = document.getElementById("suggestBox");
     
     input.addEventListener("keyup", function () {
@@ -489,7 +573,7 @@
             suggestBox.innerHTML = "";
         }
     });
-
+        
 
     //Thêm giỏ hàng
 document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -540,7 +624,8 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
      });
  });        
 
-    document.getElementById("toggleSearch").addEventListener("click", function () {
+
+document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
 
@@ -555,8 +640,13 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
             modal.style.display = "none";
         }
     };
-   </script>
+    </script>
 
-
-   </body>
+<footer>  
+    <div>
+        Copyright by us<b>&#8482</b>
+    </div>
+</footer>  
+    </body>
 </html>
+

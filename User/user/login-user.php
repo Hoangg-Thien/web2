@@ -18,13 +18,13 @@
 
             <form action="login.php" method="POST">
                 <div class="input_wrapper">
-                    <input type="text" name="username" id="user" class="input_field" required>
+                    <input type="text" name="user_name" id="user" class="input_field" required>
                     <label for="user" class="label">Tên Đăng Nhập</label>
                     <i class="fa-regular fa-user icon"></i>
                 </div>
 
                 <div class="input_wrapper">
-                    <input type="password" name="password" id="password" class="input_field" required>
+                    <input type="password" name="hashPass" id="password" class="input_field" required>
                     <label for="password" class="label">Mật Khẩu</label>
                     <i class="fa-solid fa-lock icon"></i>
                     <i class="fa-solid fa-eye-slash icon toggle-password" onclick="togglePasswordVisibility()"></i>
@@ -36,7 +36,7 @@
                         <label for="remember">Nhớ Tài Khoản</label>
                     </div>
                     <div class="forgot">
-                        <a target="_blank" href="../user/forgotpass.html">Quên Mật Khẩu?</a>
+                        <a target="_blank" href="../user/forgotpass.php">Quên Mật Khẩu?</a>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
             </form>
 
             <div class="signup">
-                <span>Bạn chưa có tài khoản? <a target="_blank" href="../user/regis.html">Đăng Ký Ngay</a></span>
+                <span>Bạn chưa có tài khoản? <a target="_blank" href="../user/regis.php">Đăng Ký Ngay</a></span>
             </div>
         </div>
     </div>

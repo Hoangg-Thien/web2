@@ -68,11 +68,11 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM</div>  
             <div class="menu">  
-                <a href="../index.html" >Trang chủ</a>  
-                <a href="../user/introducelogin.html">Giới thiệu</a>  
-                <a href="../user/newslogin.html">Tin tức</a>  
-                <a href="../user/contactlogin.html">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/introducelogin.php">Giới thiệu</a>  
+                <a href="../user/newslogin.php">Tin tức</a>  
+                <a href="../user/contactlogin.php">Liên hệ</a>   
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
@@ -89,10 +89,10 @@
                     <span>Hi,User!</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
+                  <a href="../user/userinfo.php">Tài khoản</a>
+                  <a href="../user/history-user.php">Lịch sử</a>
+                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.php">Đăng xuất</a>
                 </div>
               </div>
         </div>  

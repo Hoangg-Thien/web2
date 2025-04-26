@@ -1,78 +1,92 @@
 <!DOCTYPE html>  
-<html lang="en">  
+<html lang="vi">  
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/contact.css">  
-    <link rel="stylesheet" href="../styles/grid.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../styles/index.css">  
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trang Liên Hệ</title>  
+    <title>Trái cây Việt </title>  
     <style>  
-        .search-container {  
-            display: flex;  
-            align-items: center;  
-            margin-top: 20px;  
-        }  
-
-        #searchBox {  
-            padding: 10px;  
-            border-radius: 5px;  
-            border: 1px solid #ccc;  
-            width: 80%;  
-            margin-right: 10px;  
-        }  
-
-        button {  
-            padding: 10px 20px;  
-            border: none;  
-            background-color: #4CAF50;  
-            color: white;  
-            border-radius: 5px;  
-            cursor: pointer;  
-        }
-        .contact-container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        .contact-info {
-            margin-bottom: 20px;
-        }
-        .contact-info p {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        .contact-info strong {
-            color: #4CAF50;
-        }
-        .contact-form {
+        .search-container {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
         }
-        .contact-form input, .contact-form textarea {
-            width: 100%;
+        #searchBox {
             padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
             border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+            margin-right: 10px;
         }
-        .contact-form button {
+        button {
+            padding: 10px 20px;
+            border: none;
             background-color: #4CAF50;
             color: white;
-            padding: 10px;
-            border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
         }
-        .contact-form button:hover {
-            background-color: #333;
-        }  
+        button:hover {
+            background-color: #45a049;
+        }
+        #searchResults {
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        #searchResults a {
+            display: block;
+            padding: 5px;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 5px;
+        }
+        #searchResults a:hover {
+            text-decoration: underline;
+        }
+        #priorityFruits {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            display: none;
+            border-radius: 5px;
+        }
+        #priorityFruits ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #priorityFruits li {
+            margin-bottom: 8px;
+        }
+        #priorityFruits a {
+            color: blue;
+            text-decoration: none;
+        }
+        #priorityFruits a:hover {
+            text-decoration: underline;
+        }
+        .search-result {
+            display: block;
+            margin: 5px 0;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .search-result:hover {
+            text-decoration: underline;
+        }
+        .empty {
+            color: red;
+            font-weight: bold;
+        }
         .dropdown {
             position: relative;
             display: inline-block;
@@ -113,12 +127,179 @@
         .dropdown-button span{
             color: #333;
         }
-        button:hover {
-            background-color: #45a049 !important;
+        .modal {
+            display: none; /* Ban đầu ẩn */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        /* Nội dung popup */
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Hiệu ứng mở popup */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Nút đóng popup */
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .close:hover {
+            color: red;
+        }
+
+        /* Tùy chỉnh select */
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Nút lọc */
+        button {
+            background: green;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+    
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+    
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .page-link {
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+        .page-link:hover {
+            background-color: #f0f0f0;
+        }
+        .page-link.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        .page-link.disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+
         h2 {
             text-align: center;
             color: #333;
+        }
+        .contact-container {
+            width: 90%;
+    max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+    margin: 30px auto; /* Giảm khoảng cách trên và dưới */
+    background: #fff;
+    padding: 30px; /* Tăng padding giúp nội dung thoáng hơn */
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+        }
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        .contact-info p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .contact-info strong {
+            color: #4CAF50;
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .contact-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .contact-form button:hover {
+            background-color: #333;
         }
     </style>  
 </head>  
@@ -155,170 +336,291 @@
         </div>  
 
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM</div>  
+            <div class="product-category">DANH MỤC SẢN PHẨM
+                <ul>
+                    <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
+                    <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables.php">Rau củ  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
+                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
+                </ul>
+            </div>  
             <div class="menu">  
-                <a href="../index.html" >Trang chủ</a>  
-                <a href="../user/introducelogin.html">Giới thiệu</a>  
-                <a href="../user/newslogin.html">Tin tức</a>  
-                <a href="../user/contactlogin.html" class="active">Liên hệ</a>   
-                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/introducelogin.php">Giới thiệu</a>  
+                <a href="../user/newslogin.php">Tin tức</a>  
+                <a href="../user/contactlogin.php">Liên hệ</a>   
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
             </div>  
-            <div class="search-container">  
-                <div>  
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">  
-                    <button onclick="searchProducts()">Tìm kiếm</button>  
+            <div class="search-container">
+                <form action="searchProducts.php" method="GET">
+                <!-- Tìm kiếm đơn giản -->
+                <div>
+                    <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+                    <div id="suggestBox" class="autocomplete-suggestions"></div>
+                    <button type="submit">Tìm kiếm</button>
+                    <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+                </div>
+            
+                <!-- Kết quả -->
+                <div id="searchResults"></div>
+            
+                <div id="priorityFruits" class="hidden">
+                    <ul>
+                    </ul>
+                </div>   
+                <div id="searchModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Tìm kiếm nâng cao</h2>
+                        
+                        <label>Khoảng giá:</label>
+                        <select id="priceRange">
+                            <option>Tất cả</option>
+                            <option>30k-70k</option>
+                            <option>Trên 70k</option>
+                        </select>
+                
+                        <label>Danh mục:</label>
+                        <select id="sortedList">
+                            <option>A->Z</option>
+                            <option>Z->A</option>
+                        </select>
+                
+                        <button onclick="smartSearchProducts()">Lọc</button>
+                    </div>
                 </div>  
-            </div>  
+                </form>
+            </div>
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
                     <span>Hi,User!</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a href="../user/userinfo.html">Tài khoản</a>
-                  <a href="../user/history-user.html">Lịch sử</a>
-                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.html">Đăng xuất</a>
+                  <a href="../user/userinfo.php">Tài khoản</a>
+                  <a href="../user/history-user.php">Lịch sử</a>
+                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.php">Đăng xuất</a>
                 </div>
-              </div>
+            </div>
         </div>  
     </div> 
+
     <div class="contact-container">
-        <h2>Liên Hệ</h2>
-        <div class="contact-info">
-            <p><strong>Email:</strong> AboutUs@gmmail.com</p>
-            <p><strong>Hotline:</strong> 1234567890</p>
-            <p><strong>Địa chỉ:</strong> 273 Đ. An Dương Vương, Phường 2, Quận 5, Hồ Chí Minh, Việt Nam</p>
-        </div>
-        <h3>Gửi tin nhắn cho chúng tôi</h3>
-        <form class="contact-form">
-            <input type="text" name="name" placeholder="Họ và tên" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="text" name="phone" placeholder="Số điện thoại">
-            <textarea name="message" rows="5" placeholder="Nội dung tin nhắn" required></textarea>
-            <button type="submit">Gửi</button>
-        </form>
-    </div>
-    <div class="grid wide" style="justify-content: space-evenly;">
-        <div class="row">
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Về chúng tôi 
-                </a>
-                <div>
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="../user/introduce.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="../user/declious-fruits.html"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
-                        
-                        <li class="li_menu"><a href="../user/news.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="../user/contact.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                        
-                    </ul>
-                </div>
-            </div>
+        
+            <h2>Liên Hệ</h2>
             
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Tin khuyến mãi
-                </a>
-                <div >
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="../user/introduce.html"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="../user/declious-fruits.html"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
-                        
-                        <li class="li_menu"><a href="../user/news.html"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="../user/contact.html"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                        
-                    </ul>
-                </div>
+            <div class="contact-info">
+                <p><strong>Email:</strong>  AboutUs@gmmail.com</p>
+                <p><strong>Hotline:</strong> 1234567890</p>
+                <p><strong>Địa chỉ:</strong> 273 Đ. An Dương Vương, Phường 2, Quận 5, Hồ Chí Minh, Việt Nam</p>
             </div>
-
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Dịch vụ
-                </a>
-                <div >
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../index.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col l-3 m-6 c-12">
-                <div >
     
-                    <div class="social_footer row">
-                        <div>Kết nối với chúng tôi</div>
-                        <ul class="follow_option col l-12 " style="margin-left: -50px;">	
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Facebook Sea Fruits"><i class="fab fa-facebook-f"></i></a>
-                            </li>
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Google Sea Fruits"><i class="fab fa-google"></i></a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Instagam Sea Fruits"><i class="fab fa-instagram"></i></a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Youtube Sea Fruits"><i class="fab fa-youtube"></i></a>
-                            </li>
-                            
-                        </ul>
-                    </div>
+            <h3>Gửi tin nhắn cho chúng tôi</h3>
+            <form class="contact-form" id="contactForm">
+                <input type="text" name="name" placeholder="Họ và tên" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="phone" placeholder="Số điện thoại">
+                <textarea name="message" rows="5" placeholder="Nội dung tin nhắn" required></textarea>
+                <button type="submit">Gửi</button>
+            </form>
+        
+    </div>
     
-
+    <div class="policy-container" >
+        <div >
+            <img src="../img/policy1.png" alt="policy1">
+            <div style="margin-left: -30px;padding: 10px;font-weight: 700;font-size: 20px;">Giao hàng miễn phí</div>
+            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Với đơn hàng hơn 300.000đ</div>
         </div>
-            </div>
-    </div>
-    </div>
-    <script>
-        document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
-    });
-
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
-    </script>
-    <footer>  
         <div>
-            Copyright by us<b>&#8482</b>
+            <img src="../img/policy2.png" alt="policy2">
+            <div style="margin-left: -20px;padding: 10px;font-weight: 700;font-size: 20px;">Hỗ trợ 24/7</div>
+            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
         </div>
-    </footer>  
-</body>  
+        <div>
+            <img src="../img/policy3.jpg" alt="policy3">
+            <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
+            <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
+        </div>
+        <div >
+            <img src="../img/policy4.png" alt="policy2">
+            <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Giá tiêu chuẩn</div>
+            <div style="margin-left:-10px;color:#444444;font-size: 14px;">Tiết kiệm 10% giá thị trường</div>
+        </div>
+    </div>
+
+    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
+        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
+        <div style="padding:10px;">
+            <div>Hotline: 0123456789</div>
+            <div>Email: AboutUs@gmail.com</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+    </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="./newslogin.php">Tin tức</a></li>
+                    <li><a href="./contactlogin.html">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+
+        //Thêm giỏ hàng
+document.querySelectorAll('.add-to-cart').forEach(button => {
+     button.addEventListener('click', function() {
+         const productId = this.dataset.id;
+         const productName = this.dataset.name;
+         const productPrice = this.dataset.price;
+ 
+         fetch('/web2/User/user/cart-handle.php', {
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({
+                 action: 'add',
+                 product_id: productId,
+                 product_name: productName,
+                 product_price: productPrice
+             })
+         }).then(res => res.json())
+           .then(data => {
+               if (data.success) {
+                   // Update cart icon badge
+                   document.querySelector('#cart-count').innerText = data.cart_count;
+ 
+                   // Hiển thị thông báo popup giữa màn hình
+                   const notification = document.createElement('div');
+                   notification.textContent = 'Đã thêm vào giỏ hàng';
+                   notification.style.position = 'fixed';
+                   notification.style.top = '50%';
+                   notification.style.left = '50%';
+                   notification.style.transform = 'translate(-50%, -50%)';
+                   notification.style.backgroundColor = '#4CAF50';
+                   notification.style.color = '#fff';
+                   notification.style.padding = '16px 28px';
+                   notification.style.borderRadius = '10px';
+                   notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                   notification.style.zIndex = 9999;
+                   notification.style.fontSize = '16px';
+                   notification.style.fontWeight = '500';
+                   document.body.appendChild(notification);
+ 
+                   setTimeout(() => {
+                       document.body.removeChild(notification);
+                   }, 2000);
+               } else {
+                   alert(data.message);
+               }
+           });
+     });
+ });        
+        const input = document.getElementById("searchInput");
+    const suggestBox = document.getElementById("suggestBox");
+    
+    input.addEventListener("keyup", function () {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestBox.innerHTML = "";
+                    data.forEach(item => {
+                        const div = document.createElement("div");
+                        div.textContent = item;
+                        div.onclick = () => {
+                            input.value = item;
+                            suggestBox.innerHTML = "";
+                        };
+                        suggestBox.appendChild(div);
+                    });
+                });
+        } else {
+            suggestBox.innerHTML = "";
+        }
+    });
+    
+    document.addEventListener("click", function (e) {
+        if (e.target !== input) {
+            suggestBox.innerHTML = "";
+        }
+    });
+        
+
+
+      
+
+
+        document.querySelector('.dropdown-button').addEventListener('click', function() {
+     const dropdown = this.parentElement;
+     dropdown.classList.toggle('active');
+   });
+
+   window.addEventListener('click', function(e) {
+     const dropdown = document.querySelector('.dropdown');
+     if (!dropdown.contains(e.target)) {
+       dropdown.classList.remove('active');
+     }
+   });
+   document.getElementById("toggleSearch").addEventListener("click", function () {
+        document.getElementById("searchModal").style.display = "flex";
+    });
+
+    document.querySelector(".close").addEventListener("click", function () {
+        document.getElementById("searchModal").style.display = "none";
+    });
+
+    // Đóng khi nhấn ra ngoài modal
+    window.onclick = function (event) {
+        let modal = document.getElementById("searchModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+   </script>
+
+ 
+   </body>
 </html>

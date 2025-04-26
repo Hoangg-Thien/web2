@@ -79,7 +79,7 @@
             <nav aria-label="breadcrumb">  
                 <div class="breadcrumb">  
                     <div>  
-                        <a href="../index.html" target="_blank" style="text-decoration: none; color: #ccc">Trang chủ</a>  
+                        <a href="../index.php" target="_blank" style="text-decoration: none; color: #ccc">Trang chủ</a>  
                     </div>  
                 </div>  
             </nav>  
@@ -109,4 +109,3 @@
     </footer>  
 </body>  
 </html>  
-<script src="../User/js/cart.js"> </script>

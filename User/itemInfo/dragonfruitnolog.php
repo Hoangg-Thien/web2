@@ -205,4 +205,3 @@
         Copyright by us<b>&#8482</b>
     </div>
 </footer>
-<script src="../js/function.js"></script>

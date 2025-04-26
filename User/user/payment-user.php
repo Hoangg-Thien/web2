@@ -75,7 +75,7 @@
             <nav aria-label="breadcrumb">  
                 <div class="breadcrumb">  
                     <div>  
-                        <a href="../index.html" target="_blank" style="text-decoration: none; color:#ccc">Trang chủ</a>  
+                        <a href="../index.php" target="_blank" style="text-decoration: none; color:#ccc">Trang chủ</a>  
                     </div>  
                 </div>  
             </nav>  
@@ -197,7 +197,7 @@ function validateForm() {
     if (!name || !phone || !address) {  
         alert('Vui lòng nhập đầy đủ thông tin trước khi xác nhận.');  
     } else {  
-        window.location.href = 'thanks.html';  
+        window.location.href = 'thanks.php';  
     }  
 }
     </script>

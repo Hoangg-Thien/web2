@@ -95,6 +95,7 @@
         </div>
     </div>
 
+
     <div class="grid wide" style="justify-content: space-evenly;">
         <div class="row">
             <div class="col l-3 m-6 c-12">
@@ -206,4 +207,3 @@
 </footer>
 
   
-<script src="../js/function.js"></script>

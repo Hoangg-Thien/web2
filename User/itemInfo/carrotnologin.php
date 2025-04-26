@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-
     <title>Cà rốt</title>  
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/fruit-info.css">  
     <link rel="stylesheet" href="../styles/grid.css">
@@ -41,7 +39,6 @@
     </header>
 
     <div class="item-container">
-
         <img class="fruit-img" src="../img/carot.jpg" alt="carot">
         <div class="item-info">
             <p>
@@ -50,7 +47,6 @@
                 Ngày nhập kho: 14/11/2024<br>
                 HSD: 3-5 ngày sau ngày nhập kho<br>
                 Giá: 30.000đ/kg<br>
-
             </p>
             <div class="quantity-container">
                 <button class="quantity-btn" id="decrease">-</button>
@@ -70,9 +66,7 @@
     </div>
     
     <div style="max-width: 1500px; overflow: hidden; margin: auto;  margin-top: 100px;">  
-
         <img src="../img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; height: 400px; display: block;">  
-
     </div>
     
     <div class="policy-container" >
@@ -87,9 +81,7 @@
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
         </div>
         <div>
-
             <img src="../img/policy3.jpg" alt="policy3">
-
             <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
         </div>
@@ -207,7 +199,6 @@
     </div>
     </div>
 
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
         let addToCartButtons = document.querySelectorAll(".add-to-cart");
@@ -219,13 +210,9 @@
         });
     });
     </script>
-
 </body>
 <footer style="width: 100% ;">
     <div>
         Copyright by us<b>&#8482</b>
     </div>
-
 </footer>
-<script src="../js/function.js"></script>
-

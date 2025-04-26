@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Dâu tây Đà Lạt</title>  
+    <title>Cherry Úc</title>  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/fruit-info.css">  
     <link rel="stylesheet" href="../styles/grid.css">
@@ -38,14 +38,14 @@
     </header>
 
     <div class="item-container">
-        <img class="fruit-img" src="../img/dau-tay.jpg">
+        <img class="fruit-img" src="../img/trai-cherry-Uc.jpg">
         <div class="item-info">
             <p>
-                Tên: Dâu tây Đà Lạt<br>
-                Xuất xứ: Việt Nam <br>
-                Ngày nhập kho: 16/11/2024<br>
+                Tên: Cherry Úc<br>
+                Xuất xứ: Úc <br>
+                Ngày nhập kho: 10/11/2024<br>
                 HSD: 3 tuần sau ngày nhập kho<br>
-                Giá: 45.000đ/kg<br>
+                Giá: 160.000đ/kg<br>
             </p>
             <div class="quantity-container">
                 <button class="quantity-btn" id="decrease">-</button>
@@ -56,14 +56,12 @@
                 <i class="fas fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
             </button>
         </div>
-        
-
     </div>   
-
+  
     <div style="max-width: 1500px; overflow: hidden; margin: auto;  margin-top: 100px;">  
         <img src="../img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; height: 400px; display: block;">  
     </div>
-
+    
     <div class="policy-container" >
         <div >
             <img src="../img/policy1.png" alt="policy1">
@@ -94,7 +92,6 @@
             <div>Email: AboutUs@gmail.com</div>
         </div>
     </div>
-
 
     <div class="grid wide" style="justify-content: space-evenly;">
         <div class="row">
@@ -191,7 +188,6 @@
             </div>
         </div>
     </div>
-    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
         let addToCartButtons = document.querySelectorAll(".add-to-cart");
@@ -210,4 +206,5 @@
         </div>
 </footer>
 
+   
     

@@ -38,7 +38,6 @@
         </a>  
     </header>
 
-
     <div class="item-container">
         <img class="fruit-img" src="../img/cachua.png" alt="tomato">
         <div class="item-info">
@@ -64,7 +63,6 @@
             <a href="../user/cart-user.html">Xem giỏ hàng</a>
             <a href="../user/payment-user.html">Tiến tới thanh toán</a>
         </div>
-
     </div>
     
     <div style="max-width: 1500px; overflow: hidden; margin: auto;  margin-top: 100px;">  
@@ -218,5 +216,3 @@
         Copyright by us<b>&#8482</b>
     </div>
 </footer>
-
-<script src="../js/function.js"></script>
