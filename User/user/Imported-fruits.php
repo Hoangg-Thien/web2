@@ -3,13 +3,12 @@
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="./styles/index.css">
-    <link rel="stylesheet" href="./styles/footer.css">
-    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
-    <title>Tiệm trái cây</title>  
-    <style>
+    <link rel="stylesheet" href="../styles/index.css">  
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
+    <title>Trái cây Nhập Khẩu </title>  
+    <style>  
         .search-container {
             display: flex;
             align-items: center;
@@ -128,7 +127,6 @@
         .dropdown-button span{
             color: #333;
         }
-        
         .modal {
             display: none; /* Ban đầu ẩn */
             position: fixed;
@@ -205,7 +203,6 @@
         button:hover {
             background: #0056b3;
         }
-
         .autocomplete-suggestions {
             border: 1px solid #ccc;
             max-height: 150px;
@@ -232,216 +229,194 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-        
-        /* Product display styles */
-        .product-section {
+        .pagination .page-link {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 6px 12px;
+            background: #ddd;
+            color: #000;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .pagination .page-link:hover {
+            background: #aaa;
+            color: #fff;
+        }
+
+        .pagination .page-link.active {
+            background: #4CAF50;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .pagination .page-link.disabled {
+            background: #eee;
+            color: #aaa;
+            pointer-events: none;
+        }
+
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .list-product {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .list-product h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .product-item {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .product-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .product-image img {
+        .fruit-background {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-
-        .product-info {
-            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 350px;
             text-align: center;
+            transition: transform 0.3s;
+            background-color: white;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .product-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .product-price {
-            color: #e44d26;
-            font-weight: bold;
+        .fruit-background img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
             margin-bottom: 15px;
         }
 
-        .product-actions {
+        .fruit-background .caption {
+            width: 100%;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .fruit-background .icons {
+            width: 100%;
             display: flex;
             justify-content: center;
             gap: 15px;
+            margin-top: 10px;
+            padding: 10px 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            background-color: rgba(255, 255, 255, 0.9);
         }
 
-        .view-details, .add-to-cart {
-            padding: 8px 15px;
-            border-radius: 4px;
+        .fruit-background:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .fruit-background:hover .icons {
+            opacity: 1;
+        }
+
+        .icons a,
+        .icons button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: green;
+            color: white;
+            border-radius: 50%;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .view-details {
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
+        .icons a:hover,
+        .icons button:hover {
+            background-color: darkgreen;
+            transform: scale(1.1);
         }
 
-        .add-to-cart {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-        }
-
-        .view-details:hover, .add-to-cart:hover {
-            opacity: 0.9;
-        }
-
-        /* Pagination styles */
-        .pagination {
-            margin-top: 30px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .page-link {
-            display: inline-block;
-            padding: 8px 14px;
-            background-color: #f1f1f1;
-            border-radius: 6px;
-            text-decoration: none;
-            color: #000;
-            transition: all 0.3s ease;
-        }
-
-        .page-link:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .page-link.active {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-
-        .page-link.disabled {
-            background-color: #e0e0e0;
-            color: #999;
-            pointer-events: none;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        @media screen and (max-width: 768px) {
+            .image-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 15px;
             }
         }
 
-        @media (max-width: 480px) {
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .product-item {
-                margin-bottom: 20px;
+        @media screen and (max-width: 480px) {
+            .image-container {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 15px;
+                padding: 10px;
             }
         }
-    </style>
+    </style>  
 </head>  
 <body>  
     <header>  
         <a href="#" class="fruit">  
-            <img src="./img/carrotheader.png" alt="Cà rốt" />  
+            <img src="../img/carrotheader.png" alt="Cà rốt" />  
             Cà rốt  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/potatoheader.png" alt="Khoai tây" />  
+            <img src="../img/potatoheader.png" alt="Khoai tây" />  
             Khoai tây  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/watermelonheader.png" alt="Dưa hấu" />  
+            <img src="../img/watermelonheader.png" alt="Dưa hấu" />  
             Dưa hấu  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/orangeheader.png" alt="Trái cam" />  
+            <img src="../img/orangeheader.png" alt="Trái cam" />  
             Cam  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/duagangheader.png" alt="Đu đủ" />  
+            <img src="../img/duagangheader.png" alt="Đu đủ" />  
             Đu đủ  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/tomatoheader.png" alt="Cà chua" />  
+            <img src="../img/tomatoheader.png" alt="Cà chua" />  
             Cà chua  
         </a>  
     </header>  
-
-
-    <div class="sea-fruit-container" >  
+    <div class="sea-fruit-container">  
         <div>  
             <div class="sea-fruit">SEA FRUITS</div>  
         </div>  
 
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM 
+            <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./user/declious-fruits.php">Trái cây ngon </a></li>
-                    <li><a href="./user/Vietnamese-fruits.php">Trái cây Việt  </a></li>
-                    <li><a href="./user/Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./user/vegetables.php">Rau củ  </a></li>
-                    <li><a href="./user/Imported-fruits.php">Trái cây Khô</a></li>
-                    <li><a href="./user/Imported-fruits.php">Các loại hạt  </a></li>
+                    <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
+                    <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables.php">Rau củ  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
+                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
-            
             <div class="menu">  
-                <a href="index.php" class="active">Trang chủ</a>  
-                <a href="./user/introducelogin.php">Giới thiệu</a>  
-                <a href="./user/newslogin.php">Tin tức</a>  
-                <a href="./user/contactlogin.php">Liên hệ</a> 
-                <a href="./user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
-                </a>
+                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/introducelogin.php">Giới thiệu</a>  
+                <a href="../user/newslogin.php">Tin tức</a>  
+                <a href="../user/contactlogin.php">Liên hệ</a>   
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
+                    <i class="fas fa-shopping-cart"></i>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                </a>  
             </div>  
             <div class="search-container">
-                <form action="./user/searchProducts.php" method="GET">
+                <form action="searchProducts.php" method="GET">
                 <!-- Tìm kiếm đơn giản -->
                 <div>
                     <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
@@ -480,128 +455,135 @@
                 </div>  
                 </form>
             </div>
-        
-            
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
                     <span>Hi,User!</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a href="./user/userinfo.php">Tài khoản</a>
-                  <a href="./user/history-user.php">Lịch sử</a>
-                  <a href="./user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                  <a href="./user/usernologin.php">Đăng xuất</a>
+                  <a href="../user/userinfo.php">Tài khoản</a>
+                  <a href="../user/history-user.php">Lịch sử</a>
+                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.php">Đăng xuất</a>
                 </div>
-              </div>
+            </div>
         </div>  
-    </div> 
-
-    <div style="max-width: 100%; overflow: hidden; margin: auto;  margin-top: -190px;">  
-        <img src="./img/salefruit.jpg" alt="salefruit" style="width: 100% ; height: 600px; display: block;">  
     </div>  
-    
-    <div class="product-section">    
+    <div >
         <div class="list-product">  
-            <h1>DANH MỤC SẢN PHẨM</h1>  
+            <h1>TRÁI CÂY NHẬP KHẨU</h1>  
         </div>  
+        <?php
+include("connect.php");
 
-        <div class="product-grid">
-            <?php
-            include("./user/connect.php");
+// Số sản phẩm mỗi trang
+$limit = 6;
 
-            $items_per_page = 6;
-            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            $offset = ($page - 1) * $items_per_page;
-            
-            $query = "SELECT * FROM sanpham LIMIT ?, ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("ii", $offset, $items_per_page);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            while($row = $result->fetch_assoc()) {
-                $product_link = "./user/product_detail.php?id=" . $row['product_id'];
-            ?>
-                <div class="product-item">
-                    <div class="product-image">
-                        <img src="./img/<?php echo $row['product_image']; ?>" alt="<?php echo htmlspecialchars($row['product_name']); ?>">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name"><?php echo htmlspecialchars($row['product_name']); ?></h3>
-                        <p class="product-price"><?php echo number_format($row['product_price'], 0, ',', '.'); ?> VND</p>
-                        <div class="product-actions">
-                            <a href="<?php echo $product_link; ?>" class="view-details" title="Xem chi tiết">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                            <button class="add-to-cart" onclick="confirmAddToCart('<?php echo $row['product_id']; ?>')" title="Thêm vào giỏ hàng">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
+// Trang hiện tại
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
 
-        <div class="pagination">
-            <?php
-            $total_query = "SELECT COUNT(*) as total FROM sanpham";
-            $total_result = $conn->query($total_query);
-            $total_row = $total_result->fetch_assoc();
-            $total_pages = ceil($total_row['total'] / $items_per_page);
-            
-            if($page > 1) {
-                echo "<a href='?page=".($page-1)."' class='page-link'>&laquo; Trang trước</a>";
-            }
-            
-            for($i = 1; $i <= $total_pages; $i++) {
-                echo "<a href='?page=".$i."' class='page-link ".($page == $i ? 'active' : '')."'>".$i."</a>";
-            }
-            
-            if($page < $total_pages) {
-                echo "<a href='?page=".($page+1)."' class='page-link'>Trang sau &raquo;</a>";
-            }
-            ?>
-        </div>
-    </div>
+// Offset tính từ trang
+$start = ($page - 1) * $limit;
 
-    <div style="max-width: 100%; overflow: hidden; margin: auto;  margin-top: 100px;">  
-        <img src="./img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; display: block;">  
-    </div>
+// Tổng số sản phẩm với điều kiện lọc
+$totalQuery = "SELECT COUNT(*) AS total FROM sanpham WHERE product_type = 'Trái cây Nhập Khẩu'";
+$totalResult = $conn->query($totalQuery);
+$totalRow = $totalResult->fetch_assoc();
+$totalProducts = $totalRow['total'];
+$totalPages = ceil($totalProducts / $limit);
+
+// Truy vấn sản phẩm theo trang
+$sql = "SELECT * FROM sanpham WHERE product_type = 'Trái cây Nhập Khẩu' LIMIT $start, $limit";
+$result = $conn->query($sql);
+
+// Hiển thị sản phẩm
+if ($result->num_rows > 0) {
+    echo '<div class="image-container">';
+    while ($row = $result->fetch_assoc()) {
+        echo '<div class="fruit-background">
+            <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '">
+            <div class="caption">
+                ' . htmlspecialchars($row['product_name']) . '<br>
+                ' . number_format($row['product_price'], 0, ',', '.') . ' VND
+            </div>
+            <div class="icons">
+                <a href="../itemInfo/' . $row['product_link'] . '" class="info-icon" title="Xem thông tin chi tiết">
+                    <i class="fa-solid fa-circle-info fa-lg"></i>
+                </a>
+                <button class="add-to-cart-btn" title="Thêm vào giỏ hàng" onclick="confirmAddToCart(\'' . $row['product_id'] . '\')">
+                    <i class="fas fa-cart-plus fa-lg"></i>
+                </button>
+            </div>
+        </div>';
+    }
+    echo '</div>';
+} else {
+    echo "<p>Không có sản phẩm nào.</p>";
+}
+
+// Hiển thị phân trang
+echo '<div class="pagination" style="margin-top: 20px; text-align: center;">';
+
+// Nút "Trang trước"
+if ($page > 1) {
+    echo '<a href="?page=' . ($page - 1) . '" class="page-link">&laquo; Trang trước</a>';
+} else {
+    echo '<span class="page-link disabled">&laquo; Trang trước</span>';
+}
+
+// Các số trang
+for ($i = 1; $i <= $totalPages; $i++) {
+    echo '<a href="?page=' . $i . '" class="page-link ' . ($i == $page ? 'active' : '') . '">' . $i . '</a>';
+}
+
+// Nút "Trang sau"
+if ($page < $totalPages) {
+    echo '<a href="?page=' . ($page + 1) . '" class="page-link">Trang sau &raquo;</a>';
+} else {
+    echo '<span class="page-link disabled">Trang sau &raquo;</span>';
+}
+
+echo '</div>';
+
+$conn->close();
+?>
+
     
+    </div>
+        
+    </div>
     <div class="policy-container" >
         <div >
-            <img src="./img/policy1.png" alt="policy1">
+            <img src="../img/policy1.png" alt="policy1">
             <div style="margin-left: -30px;padding: 10px;font-weight: 700;font-size: 20px;">Giao hàng miễn phí</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Với đơn hàng hơn 300.000đ</div>
         </div>
         <div>
-            <img src="./img/policy2.png" alt="policy2">
+            <img src="../img/policy2.png" alt="policy2">
             <div style="margin-left: -20px;padding: 10px;font-weight: 700;font-size: 20px;">Hỗ trợ 24/7</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
         </div>
         <div>
-            <img src="./img/policy3.jpg" alt="policy3">
+            <img src="../img/policy3.jpg" alt="policy3">
             <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
         </div>
         <div >
-            <img src="./img/policy4.png" alt="policy2">
+            <img src="../img/policy4.png" alt="policy2">
             <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Giá tiêu chuẩn</div>
             <div style="margin-left:-10px;color:#444444;font-size: 14px;">Tiết kiệm 10% giá thị trường</div>
         </div>
     </div>
 
     <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
-        <img src="./img/seafruits-logo.png" alt="seafruits-logo">
+        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
         <div style="padding:10px;">
             <div>Hotline: 0123456789</div>
             <div>Email: AboutUs@gmail.com</div>
         </div>
     </div>
-    
+
     <div class="footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -617,10 +599,10 @@
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
                 <ul>
-                    <li><a href="index.php">Trang chủ</a></li>
-                    <li><a href="./user/introducelogin.php">Giới thiệu</a></li>
-                    <li><a href="./user/newslogin.php">Tin tức</a></li>
-                    <li><a href="./user/contactlogin.html">Liên hệ</a></li>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="./newslogin.php">Tin tức</a></li>
+                    <li><a href="./contactlogin.html">Liên hệ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -645,32 +627,16 @@
             <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
     </div>
-    
 
+    <script>
 
-    <script> 
-        
-        function confirmAddToCart(productId) {
-        if (confirm("Bạn có chắc muốn thêm sản phẩm này vào giỏ hàng không?")) {
-            addToCart(productId);
-        }
-    }
-
-    function addToCart(productId) {
-        // Tạm thời dùng alert để test
-        console.log("Thêm sản phẩm: " + productId);
-        alert("Đã thêm sản phẩm vào giỏ hàng!");
-        
-        // TODO: Gửi AJAX hoặc xử lý thêm giỏ hàng thực tế tại đây
-    }
-        
 const input = document.getElementById("searchInput");
     const suggestBox = document.getElementById("suggestBox");
     
     input.addEventListener("keyup", function () {
         const query = input.value.trim();
         if (query.length > 0) {
-            fetch(`./user/suggest.php?term=${encodeURIComponent(query)}`)
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     suggestBox.innerHTML = "";
@@ -695,20 +661,34 @@ const input = document.getElementById("searchInput");
         }
     });
 
+    function confirmAddToCart(productId) {
+        if (confirm("Bạn có chắc muốn thêm sản phẩm này vào giỏ hàng không?")) {
+            addToCart(productId);
+        }
+    }
 
-document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
-    });
+    function addToCart(productId) {
+        // Tạm thời dùng alert để test
+        console.log("Thêm sản phẩm: " + productId);
+        alert("Đã thêm sản phẩm vào giỏ hàng!");
+        
+        // TODO: Gửi AJAX hoặc xử lý thêm giỏ hàng thực tế tại đây
+    }
 
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
 
-    document.getElementById("toggleSearch").addEventListener("click", function () {
+        document.querySelector('.dropdown-button').addEventListener('click', function() {
+     const dropdown = this.parentElement;
+     dropdown.classList.toggle('active');
+   });
+
+   window.addEventListener('click', function(e) {
+     const dropdown = document.querySelector('.dropdown');
+     if (!dropdown.contains(e.target)) {
+       dropdown.classList.remove('active');
+     }
+   });
+
+   document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
 
@@ -723,8 +703,8 @@ document.querySelector('.dropdown-button').addEventListener('click', function() 
             modal.style.display = "none";
         }
     };
-    </script>  
+   </script>
 
-     
-</body>  
+
+   </body>
 </html>

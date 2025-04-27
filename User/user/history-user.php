@@ -1,75 +1,37 @@
 <?php
-require_once('../data/c07db.php');
+session_start();
+require_once('connect.php');
 
-try {
-    // Get all orders for the current user (assuming user_id is stored in session)
-    // For now, we'll get all orders. In a real application, you'd filter by user_id
-    $stmt = $db->prepare("
-        SELECT 
-            o.order_id,
-            o.order_date,
-            o.payment_method,
-            o.shipping_address,
-            o.phone_number,
-            o.status,
-            o.total_amount,
-            u.full_name,
-            u.email
-        FROM orders o
-        JOIN users u ON o.user_id = u.user_id
-        ORDER BY o.order_date DESC
-    ");
+// Kiểm tra đăng nhập
+//if (!isset($_SESSION['user_name'])) {
+ //   header("Location: login.php");
+//exit();
+//}
+
+// Lấy thông tin người dùng
+$user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
+$user = null;
+
+if (!empty($user_name)) {
+    $sql = "SELECT * FROM nguoidung WHERE user_name = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $user_name);
     $stmt->execute();
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Get order items for each order
-    foreach ($orders as &$order) {
-        $stmt = $db->prepare("
-            SELECT 
-                p.product_name,
-                p.image_url,
-                c.unit_price,
-                c.quantity,
-                c.total_amount as total_price
-            FROM chitiethoadon c
-            JOIN products p ON c.product_id = p.product_id
-            WHERE c.order_id = ?
-        ");
-        $stmt->execute([$order['order_id']]);
-        $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-} catch (PDOException $e) {
-    error_log($e->getMessage());
-    $error = "Đã có lỗi xảy ra khi tải lịch sử đơn hàng.";
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
 }
 
-// Helper function to format currency
-function formatCurrency($amount) {
-    return number_format($amount, 0, ',', '.') . 'đ';
-}
-
-// Helper function to format date
-function formatDate($date) {
-    return date('d/m/Y', strtotime($date));
-}
-
-// Helper function to get status class
-function getStatusClass($status) {
-    switch (strtolower($status)) {
-        case 'completed':
-        case 'hoàn thành':
-            return 'status-completed';
-        case 'pending':
-        case 'chờ xử lý':
-            return 'status-pending';
-        case 'cancelled':
-        case 'đã hủy':
-            return 'status-cancelled';
-        default:
-            return 'status-pending';
-    }
-}
+// Lấy lịch sử mua hàng
+$sql = "SELECT h.*, c.total_amount, c.quantity, c.unit_price, s.product_name, s.product_image 
+        FROM hoadon h 
+        JOIN chitiethoadon c ON h.order_id = c.order_id 
+        JOIN sanpham s ON c.product_id = s.product_id 
+        WHERE h.user_name = ? 
+        ORDER BY h.order_date DESC";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_name);
+$stmt->execute();
+$orders = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -79,224 +41,751 @@ function getStatusClass($status) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../styles/news.css">
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/footer.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
     <title>Lịch Sử Mua Hàng - SEA FRUITS</title>
     <style>
-        /* Keep all the existing CSS styles from history-user.html */
-        /* ... existing code ... */
+        /* Order History Styles */
+        .history-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .history-title {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-title i {
+            color: #4CAF50;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            transition: transform 0.2s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .order-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-date {
+            color: #666;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-items {
+            padding: 25px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .item-price {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .item-quantity {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .order-total {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+            font-size: 1.2em;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .no-orders i {
+            font-size: 3em;
+            color: #ddd;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .order-number {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 0 20px 20px;
+        }
+
+        .order-action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .view-details-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .view-details-btn:hover {
+            background: #45a049;
+        }
+
+        .cancel-order-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .cancel-order-btn:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .order-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .item-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .order-action-btn {
+                width: 100%;
+            }
+        }
+
+        /* Existing styles remain unchanged */
+        .search-container {  
+            display: flex;  
+            align-items: center; 
+            margin-top: 20px;  
+        }  
+        #searchBox {  
+            padding: 10px;  
+            border-radius: 5px;  
+            border: 1px solid #ccc; 
+            width: 80%;  
+            margin-right: 10px;  
+        }  
+        button {  
+            padding: 10px 20px;  
+            border: none;  
+            background-color: #4CAF50;
+            color: white;  
+            border-radius: 5px;  
+            cursor: pointer;  
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #searchResults {
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        #searchResults a {
+            display: block;
+            padding: 5px;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 5px;
+        }
+        #searchResults a:hover {
+            text-decoration: underline;
+        }
+        #priorityFruits {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            display: none;
+            border-radius: 5px;
+        }
+        #priorityFruits ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #priorityFruits li {
+            margin-bottom: 8px;
+        }
+        #priorityFruits a {
+            color: blue;
+            text-decoration: none;
+        }
+        #priorityFruits a:hover {
+            text-decoration: underline;
+        }
+        .search-result {
+            display: block;
+            margin: 5px 0;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .search-result:hover {
+            text-decoration: underline;
+        }
+        .empty {
+            color: red;
+            font-weight: bold;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-button {
+            background: none;
+            border: none;      
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        .dropdown-button i {
+            color: #333;
+        }
+        .dropdown-button span {
+            color: #333;
+        }
+
+        /* News container styles */
+        .news-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .featured-news h2, .news-category h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .featured-article {
+            display: flex;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .featured-article img {
+            width: 45%;
+            object-fit: cover;
+        }
+        .category-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            padding: 8px 20px;
+            border: 2px solid #4CAF50;
+            background: white;
+            color: #4CAF50;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .news-item {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .news-item:hover {
+            transform: translateY(-5px);
+        }
+        .news-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .news-content {
+            padding: 20px;
+        }
+        .news-tag {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .news-content h4 {
+            color: #333;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        .date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .date i {
+            margin-right: 5px;
+        }
+        .read-more {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .featured-article {
+                flex-direction: column;
+            }
+            .featured-article img {
+                width: 100%;
+                height: 200px;
+            }
+            .category-buttons {
+                justify-content: center;
+            }
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation and performance optimizations */
+        .news-item {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading state */
+        .news-container {
+            min-height: 400px;
+            position: relative;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Performance optimization */
+        .news-grid {
+            contain: content;
+            will-change: transform;
+        }
+
+        /* Touch targets optimization */
+        @media (pointer: coarse) {
+            .category-btn,
+            .read-more,
+            .share-btn {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 12px 20px;
+            }
+            .article-meta span {
+                padding: 8px 0;
+            }
+        }
+
+        /* Read more button */
+        .read-more-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .read-more-btn:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
-    <!-- Keep the existing header and navigation -->
     <header>
-        <a href="#" class="fruit">
-            <img src="../img/carrotheader.png" alt="Cà rốt" />
-            Cà rốt
-        </a>
-        <a href="#" class="fruit">
-            <img src="../img/potatoheader.png" alt="Khoai tây" />
-            Khoai tây
-        </a>
-        <a href="#" class="fruit">
-            <img src="../img/watermelonheader.png" alt="Dưa hấu" />
-            Dưa hấu
-        </a>
-        <a href="#" class="fruit">
-            <img src="../img/orangeheader.png" alt="Trái cam" />
-            Cam
-        </a>
-        <a href="#" class="fruit">
-            <img src="../img/duagangheader.png" alt="Đu đủ" />
-            Đu đủ
-        </a>
-        <a href="#" class="fruit">
-            <img src="../img/tomatoheader.png" alt="Cà chua" />
-            Cà chua
-        </a>
-    </header>
+        <a href="#" class="fruit">  
+            <img src="../img/carrotheader.png" alt="Cà rốt" />  
+            Cà rốt  
+        </a>  
+        <a href="#" class="fruit">  
+            <img src="../img/potatoheader.png" alt="Khoai tây" />  
+            Khoai tây  
+        </a>  
+        <a href="#" class="fruit">  
+            <img src="../img/watermelonheader.png" alt="Dưa hấu" />  
+            Dưa hấu  
+        </a>  
+        <a href="#" class="fruit">  
+            <img src="../img/orangeheader.png" alt="Trái cam" />  
+            Cam  
+        </a>  
+        <a href="#" class="fruit">  
+            <img src="../img/duagangheader.png" alt="Đu đủ" />  
+            Đu đủ  
+        </a>  
+        <a href="#" class="fruit">  
+            <img src="../img/tomatoheader.png" alt="Cà chua" />  
+            Cà chua  
+        </a>  
+    </header>  
 
-    <div class="sea-fruit-container">
-        <div>
-            <div class="sea-fruit">SEA FRUITS</div>
+    <div class="sea-fruit-container">  
+        <div>  
+            <div class="sea-fruit">SEA FRUITS</div>  
         </div>
 
-        <div style="display: flex; align-items: center; padding: 10px 20px;">
-            <div class="product-category">DANH MỤC SẢN PHẨM</div>
-            <div class="menu">
-                <a href="../index.html" class="active">Trang chủ</a>
-                <a href="./introducelogin.html">Giới thiệu</a>
-                <a href="./newslogin.html">Tin tức</a>
-                <a href="./contactlogin.html">Liên hệ</a>
-                <a href="./cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">
+        <div style="display: flex; align-items: center; padding: 10px 20px;">  
+            <div class="product-category">DANH MỤC SẢN PHẨM 
+                <ul>
+                    <li onmouseover="showFruits('Trái cây ngon')" onmouseout="hideFruits()">Trái cây ngon</li>
+                    <li onmouseover="showFruits('Trái cây Việt')" onmouseout="hideFruits()">Trái cây Việt</li>
+                    <li onmouseover="showFruits('Trái cây nhập khẩu')" onmouseout="hideFruits()">Trái cây nhập khẩu</li>
+                </ul>
+            </div>
+            
+            <div class="fruit-list" id="fruitList" style="display: none;">
+                <h4 id="categoryTitle"></h4>
+                <ul id="fruitItems">
+                    <!-- Trái cây sẽ được thêm bằng JavaScript -->
+                </ul>
+            </div>
+
+            <div class="menu">  
+                <a href="../index.php">Trang chủ</a>  
+                <a href="./introducelogin.php">Giới thiệu</a>  
+                <a href="./newslogin.php">Tin tức</a>  
+                <a href="./contactlogin.php">Liên hệ</a> 
+                <a href="./cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
                 </a>
             </div>
+
             <div class="search-container">
-                <div>
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                    <button onclick="searchProducts()">Tìm kiếm</button>
-                </div>
-                <div id="searchResults"></div>
-                <div id="priorityFruits" class="hidden">
-                    <ul>
-                    </ul>
-                </div>
+                <form method="GET" action="">
+                    <input type="text" id="searchBox" name="search" placeholder="Tìm kiếm tin tức..."
+                           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    <button type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+                </form>
             </div>
+        
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
-                    <span>Hi,User!</span>
+                    <span>Hi, <?php echo isset($user['fullname']) ? htmlspecialchars($user['fullname']) : 'Guest'; ?>!</span>
                 </button>
                 <div class="dropdown-menu">
-                    <a href="./userinfo.html">Tài khoản</a>
-                    <a href="./history-user.php">Lịch sử</a>
-                    <a href="./invoice-summary.html">Tóm tắt hóa đơn</a>
-                    <a href="./usernologin.html">Đăng xuất</a>
+                    <?php if ($user): ?>
+                        <a href="../user/userinfo.php">Tài khoản</a>
+                        <a href="../user/history-user.php">Lịch sử</a>
+                        <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                        <a href="../user/usernologin.php">Đăng xuất</a>
+                    <?php else: ?>
+                        <a href="../user/login.php">Đăng nhập</a>
+                        <a href="../user/register.php">Đăng ký</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="history-container">
-        <div class="history-header">
-            <div class="history-title">
-                <h1>Lịch Sử Mua Hàng</h1>
-            </div>
-            <div class="history-filters">
-                <button class="filter-btn active" onclick="filterOrders('all')">Tất cả</button>
-                <button class="filter-btn" onclick="filterOrders('completed')">Hoàn thành</button>
-                <button class="filter-btn" onclick="filterOrders('pending')">Đang xử lý</button>
-                <button class="filter-btn" onclick="filterOrders('cancelled')">Đã hủy</button>
-            </div>
-        </div>
-
-        <div class="history-list">
-            <?php if (isset($error)): ?>
-                <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
-            <?php elseif (empty($orders)): ?>
-                <div class="empty-message">Bạn chưa có đơn hàng nào.</div>
-            <?php else: ?>
-                <?php foreach ($orders as $order): ?>
-                <div class="history-item" data-status="<?php echo strtolower($order['status']); ?>">
+        <h2 class="history-title">
+            <i class="fas fa-history"></i>
+            Lịch Sử Mua Hàng
+        </h2>
+        
+        <?php if ($orders->num_rows > 0): ?>
+            <?php while($order = $orders->fetch_assoc()): ?>
+                <div class="order-card">
                     <div class="order-header">
+                        <div class="order-number">
+                            <i class="fas fa-receipt"></i>
+                            Mã đơn hàng: #<?php echo str_pad($order['order_id'], 6, '0', STR_PAD_LEFT); ?>
+                        </div>
                         <div class="order-info">
-                            <span class="order-number">Đơn hàng #<?php echo htmlspecialchars($order['order_id']); ?></span>
-                            <span class="order-date">Ngày đặt: <?php echo formatDate($order['order_date']); ?></span>
-                        </div>
-                        <span class="order-status <?php echo getStatusClass($order['status']); ?>">
-                            <?php echo htmlspecialchars($order['status']); ?>
-                        </span>
-                    </div>
-                    <div class="order-details">
-                        <div class="detail-group">
-                            <span class="detail-label">Phương thức thanh toán</span>
-                            <span class="detail-value"><?php echo htmlspecialchars($order['payment_method']); ?></span>
-                        </div>
-                        <div class="detail-group">
-                            <span class="detail-label">Địa chỉ giao hàng</span>
-                            <span class="detail-value"><?php echo htmlspecialchars($order['shipping_address']); ?></span>
-                        </div>
-                        <div class="detail-group">
-                            <span class="detail-label">Số điện thoại</span>
-                            <span class="detail-value"><?php echo htmlspecialchars($order['phone_number']); ?></span>
+                            <div class="order-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?>
+                            </div>
+                            <div class="order-status <?php echo 'status-' . strtolower($order['order_status']); ?>">
+                                <i class="fas fa-circle"></i>
+                                <?php echo htmlspecialchars($order['order_status']); ?>
+                            </div>
                         </div>
                     </div>
                     <div class="order-items">
-                        <div class="item-list">
-                            <?php foreach ($order['items'] as $item): ?>
-                            <div class="item">
-                                <div class="item-info">
-                                    <img src="<?php echo htmlspecialchars($item['image_url']); ?>" 
-                                         alt="<?php echo htmlspecialchars($item['product_name']); ?>" 
-                                         class="item-image">
-                                    <span class="item-name"><?php echo htmlspecialchars($item['product_name']); ?></span>
+                        <div class="item">
+                            <img src="../img/<?php echo htmlspecialchars($order['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($order['product_name']); ?>" 
+                                 class="item-image">
+                            <div class="item-details">
+                                <div class="item-name"><?php echo htmlspecialchars($order['product_name']); ?></div>
+                                <div class="item-price">
+                                    <i class="fas fa-tag"></i>
+                                    Giá: <?php echo number_format($order['unit_price']); ?> VNĐ
                                 </div>
-                                <span class="item-price"><?php echo formatCurrency($item['total_price']); ?></span>
+                                <div class="item-quantity">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Số lượng: <?php echo $order['quantity']; ?>
+                                </div>
                             </div>
-                            <?php endforeach; ?>
                         </div>
-                        <div class="order-total">
-                            <span>Tổng cộng</span>
-                            <span><?php echo formatCurrency($order['total_amount']); ?></span>
-                        </div>
+                    </div>
+                    <div class="order-total">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Tổng tiền: <?php echo number_format($order['total_amount']); ?> VNĐ
                     </div>
                     <div class="order-actions">
-                        <a href="Bill.php?id=<?php echo $order['order_id']; ?>" class="action-btn view-btn">
-                            <i class="fas fa-eye"></i>
-                            Xem chi tiết
-                        </a>
-                        <button class="action-btn reorder-btn" onclick="reorder(<?php echo $order['order_id']; ?>)">
-                            <i class="fas fa-redo"></i>
-                            Đặt lại
+                        <button class="order-action-btn view-details-btn">
+                            <i class="fas fa-eye"></i> Xem chi tiết
                         </button>
+                        <?php if ($order['order_status'] == 'Pending'): ?>
+                            <button class="order-action-btn cancel-order-btn">
+                                <i class="fas fa-times"></i> Hủy đơn hàng
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <div class="no-orders">
+                <i class="fas fa-shopping-bag"></i>
+                <p>Bạn chưa có đơn hàng nào.</p>
+                <a href="../index.php" class="order-action-btn view-details-btn" style="display: inline-block; margin-top: 15px;">
+                    <i class="fas fa-shopping-cart"></i> Mua sắm ngay
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
 
-        <div class="pagination">
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">4</button>
-            <button class="page-btn">5</button>
-            <button class="page-btn">></button>
+    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
+        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
+        <div style="padding:10px;">
+            <div>Hotline: 0123456789</div>
+            <div>Email: AboutUs@gmail.com</div>
         </div>
     </div>
 
-    <!-- Keep the existing footer -->
     <div class="footer">
-        <!-- ... existing footer content ... -->
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="newslogin.php">Tin tức</a></li>
+                    <li><a href="contactlogin.php">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
     </div>
 
     <script>
-        // Filter orders function
-        function filterOrders(status) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Add active class to clicked button
-            event.target.classList.add('active');
-
-            // Get all order items
-            const orders = document.querySelectorAll('.history-item');
-            
-            orders.forEach(order => {
-                const orderStatus = order.getAttribute('data-status');
-                
-                if (status === 'all') {
-                    order.style.display = 'block';
-                } else if (status === 'completed' && orderStatus.includes('hoàn thành')) {
-                    order.style.display = 'block';
-                } else if (status === 'pending' && orderStatus.includes('chờ xử lý')) {
-                    order.style.display = 'block';
-                } else if (status === 'cancelled' && orderStatus.includes('hủy')) {
-                    order.style.display = 'block';
-                } else {
-                    order.style.display = 'none';
-                }
-            });
-        }
-
-        // Reorder function
-        function reorder(orderId) {
-            // Add reorder logic here
-            alert('Chức năng đặt lại đang được phát triển');
-        }
-
-        // Dropdown menu
         document.querySelector('.dropdown-button').addEventListener('click', function() {
             const dropdown = this.parentElement;
             dropdown.classList.toggle('active');
         });
-        
+
         window.addEventListener('click', function(e) {
             const dropdown = document.querySelector('.dropdown');
             if (!dropdown.contains(e.target)) {
@@ -304,10 +793,58 @@ function getStatusClass($status) {
             }
         });
 
-        // Cart count
-        localStorage.setItem('cartCount', 0);
-        let cartCount = 0;
-        document.getElementById('cart-count').textContent = cartCount;
+        function showFruits(category) {
+            let fruitList = document.getElementById("fruitList");
+            let categoryTitle = document.getElementById("categoryTitle");
+            let fruitItems = document.getElementById("fruitItems");
+            
+            categoryTitle.textContent = category;
+            fruitItems.innerHTML = "";
+            
+            const fruits = {
+                "Trái cây ngon": [
+                    { name: "Dâu tây", link: "product-detail.php?name=dautay" },
+                    { name: "Mận hậu", link: "product-detail.php?name=manhau" },
+                    { name: "Xoài cát", link: "product-detail.php?name=xoaicat" },
+                    { name: "Dưa hấu", link: "product-detail.php?name=duahau" },
+                    { name: "Chôm chôm", link: "product-detail.php?name=chomchom" },
+                    { name: "Ổi xá lị", link: "product-detail.php?name=oilaxi" }
+                ],
+                "Trái cây Việt": [
+                    { name: "Mít Thái", link: "product-detail.php?name=mitthai" },
+                    { name: "Sầu riêng Ri6", link: "product-detail.php?name=saurieng" },
+                    { name: "Bưởi da xanh", link: "product-detail.php?name=buoidx" },
+                    { name: "Bòn Bon", link: "product-detail.php?name=bonbon" },
+                    { name: "Quýt đường", link: "product-detail.php?name=quytduong" },
+                    { name: "Mận Hà Nội", link: "product-detail.php?name=manhn" }
+                ],
+                "Trái cây nhập khẩu": [
+                    { name: "Nho Mỹ", link: "product-detail.php?name=nhomy" },
+                    { name: "Táo Nhật", link: "product-detail.php?name=taonhat" },
+                    { name: "Lê Hàn Quốc", link: "product-detail.php?name=lehan" },
+                    { name: "Cherry Úc", link: "product-detail.php?name=cherryuc" },
+                    { name: "Kiwi", link: "product-detail.php?name=kiwi" },
+                    { name: "Lựu Ai Cập", link: "product-detail.php?name=luuaicap" }
+                ]
+            };
+
+            if (fruits[category]) {
+                fruits[category].forEach(fruit => {
+                    let li = document.createElement("li");
+                    let a = document.createElement("a");
+                    a.textContent = fruit.name;
+                    a.href = fruit.link;
+                    li.appendChild(a);
+                    fruitItems.appendChild(li);
+                });
+                fruitList.style.display = "block";
+            }
+        }
+
+        function hideFruits() {
+            let fruitList = document.getElementById("fruitList");
+            fruitList.style.display = "none";
+        }
     </script>
 </body>
 </html> 

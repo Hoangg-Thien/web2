@@ -258,17 +258,24 @@ header {
   transform: scale(0.95);
 }
 .image-container {
-  display: block;
-  grid-template-columns: repeat(3, 1fr);
-  margin: 20px auto;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* Changed to always show 3 columns */
+  gap: 30px;  /* Khoảng cách giữa các cột */
+  padding: 20px;
   max-width: 1200px;
+  margin: 0 auto;
 }
 
-.image-container img {
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
+@media screen and (max-width: 768px) {
+  .image-container {
+      grid-template-columns: repeat(2, 1fr);  /* 2 cột trên màn hình nhỏ hơn */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .image-container {
+      grid-template-columns: repeat(1, 1fr);  /* 1 cột trên màn hình rất nhỏ */
+  }
 }
 
 /* Danh sách trái cây con */
@@ -324,19 +331,52 @@ header {
 }
 
 .fruit-background {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  min-height: 270px;
+  min-height: 350px;
   text-align: center;
   transition: transform 0.3s;
   background-color: white;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  padding: 5px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  padding: 15px;
   position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+.fruit-background img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.fruit-background .caption {
+  width: 100%;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.fruit-background .icons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+  padding: 10px 0;
+}
+
+.fruit-background:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 .icons {
   position: absolute;
   top: 50%;
@@ -383,18 +423,9 @@ header {
   color: green;
   animation: floatUp 1s ease-out;
 }
-.fruit-background:hover {
-  transform: scale(0.95);
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.fruit-background img {
-  margin: 0;
-  max-width: 100%;
-  height: auto;
-}
 .policy-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction:row;
   justify-content: space-around;
   padding: 10px;
 }
@@ -487,10 +518,145 @@ header {
 .follow_option i {
   font-size: 18px;
 }
-footer {
+
+.footer {
+  background: #f8f9fa;
+  padding: 60px 0 20px;
+  margin-top: 60px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding: 0 20px;
+}
+
+.footer-section h3 {
+  color: #333;
   font-size: 20px;
-  background-color: #333;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 12px;
+  font-weight: 600;
+}
+
+.footer-section h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 3px;
+  background: #4CAF50;
+  border-radius: 2px;
+}
+
+.footer-section p {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+  color: #666;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  display: inline-block;
+  position: relative;
+}
+
+.footer-section ul li a:hover {
+  color: #4CAF50;
+  transform: translateX(5px);
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-links a {
+  width: 40px;
+  height: 40px;
+  background: #4CAF50;
   color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.social-links a:hover {
+  background: #45a049;
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.contact-info li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #666;
+  margin-bottom: 18px;
+  font-size: 15px;
+}
+
+.contact-info li i {
+  color: #4CAF50;
+  font-size: 18px;
+  width: 24px;
   text-align: center;
-  width: 100%;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 50px;
+  padding-top: 25px;
+  border-top: 1px solid #eee;
+}
+
+.footer-bottom p {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+}
+
+@media (max-width: 992px) {
+  .footer-content {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-content {
+      grid-template-columns: 1fr;
+  }
+  
+  .footer {
+      padding: 40px 0 20px;
+  }
+  
+  .footer-section h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+  }
 }

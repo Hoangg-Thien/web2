@@ -250,20 +250,8 @@ header {
   color: #b30000;
 }
 
-.update-message i {
-  font-size: 50px;
-  color: green;
-  margin-bottom: 20px;
-}
-
-.update-message h2 {
-  font-size: 35px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
 .update-message p {
-  font-size: 35px;
+  font-size: 20px;
   color: #666;
   margin-bottom: 60px;
 }

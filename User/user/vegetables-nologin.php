@@ -3,13 +3,12 @@
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="./styles/index.css">
-    <link rel="stylesheet" href="./styles/footer.css">
-    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
-    <title>Tiệm trái cây</title>  
-    <style>
+    <link rel="stylesheet" href="../styles/index.css">  
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
+    <title>Rau củ </title>  
+    <style>  
         .search-container {
             display: flex;
             align-items: center;
@@ -128,7 +127,6 @@
         .dropdown-button span{
             color: #333;
         }
-        
         .modal {
             display: none; /* Ban đầu ẩn */
             position: fixed;
@@ -205,7 +203,6 @@
         button:hover {
             background: #0056b3;
         }
-
         .autocomplete-suggestions {
             border: 1px solid #ccc;
             max-height: 150px;
@@ -232,216 +229,64 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-        
-        /* Product display styles */
-        .product-section {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
 
-        .list-product {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .list-product h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .product-item {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .product-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-info {
-            padding: 15px;
-            text-align: center;
-        }
-
-        .product-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .product-price {
-            color: #e44d26;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .product-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .view-details, .add-to-cart {
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .view-details {
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-        }
-
-        .add-to-cart {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-        }
-
-        .view-details:hover, .add-to-cart:hover {
-            opacity: 0.9;
-        }
-
-        /* Pagination styles */
-        .pagination {
-            margin-top: 30px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .page-link {
-            display: inline-block;
-            padding: 8px 14px;
-            background-color: #f1f1f1;
-            border-radius: 6px;
-            text-decoration: none;
-            color: #000;
-            transition: all 0.3s ease;
-        }
-
-        .page-link:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .page-link.active {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-
-        .page-link.disabled {
-            background-color: #e0e0e0;
-            color: #999;
-            pointer-events: none;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-
-        @media (max-width: 480px) {
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .product-item {
-                margin-bottom: 20px;
-            }
-        }
-    </style>
+    </style>  
 </head>  
 <body>  
     <header>  
         <a href="#" class="fruit">  
-            <img src="./img/carrotheader.png" alt="Cà rốt" />  
+            <img src="../img/carrotheader.png" alt="Cà rốt" />  
             Cà rốt  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/potatoheader.png" alt="Khoai tây" />  
+            <img src="../img/potatoheader.png" alt="Khoai tây" />  
             Khoai tây  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/watermelonheader.png" alt="Dưa hấu" />  
+            <img src="../img/watermelonheader.png" alt="Dưa hấu" />  
             Dưa hấu  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/orangeheader.png" alt="Trái cam" />  
+            <img src="../img/orangeheader.png" alt="Trái cam" />  
             Cam  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/duagangheader.png" alt="Đu đủ" />  
+            <img src="../img/duagangheader.png" alt="Đu đủ" />  
             Đu đủ  
         </a>  
         <a href="#" class="fruit">  
-            <img src="./img/tomatoheader.png" alt="Cà chua" />  
+            <img src="../img/tomatoheader.png" alt="Cà chua" />  
             Cà chua  
         </a>  
     </header>  
-
-
-    <div class="sea-fruit-container" >  
+    <div class="sea-fruit-container">  
         <div>  
             <div class="sea-fruit">SEA FRUITS</div>  
         </div>  
 
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM 
+            <div class="product-category">DANH MỤC SẢN PHẨM
                 <ul>
-                    <li><a href="./user/declious-fruits.php">Trái cây ngon </a></li>
-                    <li><a href="./user/Vietnamese-fruits.php">Trái cây Việt  </a></li>
-                    <li><a href="./user/Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./user/vegetables.php">Rau củ  </a></li>
-                    <li><a href="./user/Imported-fruits.php">Trái cây Khô</a></li>
-                    <li><a href="./user/Imported-fruits.php">Các loại hạt  </a></li>
+                    <li><a href="./declious-fruits-nologin.php">Trái cây ngon </a></li>
+                    <li><a href="./VietNamese-fruits-nolog.php">Trái cây Việt  </a></li>
+                    <li><a href="./Imported-fruits-nologin.php">Trái cây Nhập Khẩu </a></li>
+                    <li><a href="./vegetables-nologin.php">Rau củ  </a></li>
+                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
+                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
-            
             <div class="menu">  
-                <a href="index.php" class="active">Trang chủ</a>  
-                <a href="./user/introducelogin.php">Giới thiệu</a>  
-                <a href="./user/newslogin.php">Tin tức</a>  
-                <a href="./user/contactlogin.php">Liên hệ</a> 
-                <a href="./user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
-                </a>
-            </div>  
+                <a href="./usernologin.php" >Trang chủ</a>  
+                <a href="./introduce.php">Giới thiệu</a>  
+                <a href="./news.php">Tin tức</a>  
+                <a href="./contact.php">Liên hệ</a>   
+                <a href="./cartusernologin.php" target="_blank" class="cart-icon" title="Go to Cart">  
+                    <i class="fas fa-shopping-cart"></i>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                </a>  
+            </div>    
             <div class="search-container">
-                <form action="./user/searchProducts.php" method="GET">
+                <form action="./searchProducts-nologin.php" method="GET">
                 <!-- Tìm kiếm đơn giản -->
                 <div>
                     <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
@@ -480,128 +325,92 @@
                 </div>  
                 </form>
             </div>
-        
-            
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="./user/userinfo.php">Tài khoản</a>
-                  <a href="./user/history-user.php">Lịch sử</a>
-                  <a href="./user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                  <a href="./user/usernologin.php">Đăng xuất</a>
-                </div>
-              </div>
+            <div class="auth-buttons">  
+                <a href="../user/regis.php" title="Đăng ký" target="_blank">Đăng ký</a>  
+                <span>|</span>  
+                <a href="../user/login-user.php" title="Đăng nhập" target="_blank">Đăng nhập</a>  
+            </div> 
         </div>  
     </div> 
 
-    <div style="max-width: 100%; overflow: hidden; margin: auto;  margin-top: -190px;">  
-        <img src="./img/salefruit.jpg" alt="salefruit" style="width: 100% ; height: 600px; display: block;">  
-    </div>  
-    
-    <div class="product-section">    
+    <div >
         <div class="list-product">  
-            <h1>DANH MỤC SẢN PHẨM</h1>  
+            <h1>RAU CỦ</h1>  
         </div>  
+        <?php
+include("connect.php");
 
-        <div class="product-grid">
-            <?php
-            include("./user/connect.php");
+$sql = "SELECT * FROM sanpham WHERE product_type = 'Rau Củ'";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    echo '<div class="row image-container">';
+    while ($row = $result->fetch_assoc()) {
 
-            $items_per_page = 6;
-            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            $offset = ($page - 1) * $items_per_page;
-            
-            $query = "SELECT * FROM sanpham LIMIT ?, ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("ii", $offset, $items_per_page);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            while($row = $result->fetch_assoc()) {
-                $product_link = "./user/product_detail.php?id=" . $row['product_id'];
-            ?>
-                <div class="product-item">
-                    <div class="product-image">
-                        <img src="./img/<?php echo $row['product_image']; ?>" alt="<?php echo htmlspecialchars($row['product_name']); ?>">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name"><?php echo htmlspecialchars($row['product_name']); ?></h3>
-                        <p class="product-price"><?php echo number_format($row['product_price'], 0, ',', '.'); ?> VND</p>
-                        <div class="product-actions">
-                            <a href="<?php echo $product_link; ?>" class="view-details" title="Xem chi tiết">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                            <button class="add-to-cart" onclick="confirmAddToCart('<?php echo $row['product_id']; ?>')" title="Thêm vào giỏ hàng">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
+        $productNameSlug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $row['product_name'])));
+
+        echo '
+        <div class="image-container">
+            <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
+                <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
+
+                <div class="caption" style="margin-top: 10px; font-weight: bold;">
+                    ' . htmlspecialchars($row['product_name']) . '<br>
+                    ' . number_format($row['product_price'], 0, ',', '.') . ' VND
                 </div>
-            <?php
-            }
-            ?>
-        </div>
 
-        <div class="pagination">
-            <?php
-            $total_query = "SELECT COUNT(*) as total FROM sanpham";
-            $total_result = $conn->query($total_query);
-            $total_row = $total_result->fetch_assoc();
-            $total_pages = ceil($total_row['total'] / $items_per_page);
-            
-            if($page > 1) {
-                echo "<a href='?page=".($page-1)."' class='page-link'>&laquo; Trang trước</a>";
-            }
-            
-            for($i = 1; $i <= $total_pages; $i++) {
-                echo "<a href='?page=".$i."' class='page-link ".($page == $i ? 'active' : '')."'>".$i."</a>";
-            }
-            
-            if($page < $total_pages) {
-                echo "<a href='?page=".($page+1)."' class='page-link'>Trang sau &raquo;</a>";
-            }
-            ?>
-        </div>
-    </div>
+                <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
+                    <a href="../itemInfo/' . $productNameSlug . '.php" class="info-icon" title="Xem thông tin chi tiết">
+                        <i class="fa-solid fa-circle-info fa-lg"></i>
+                    </a>
+                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng" onclick="confirmAddToCart(\'' . $row['product_id'] . '\')">
+                        <i class="fas fa-cart-plus fa-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>';
+    }
+    echo '</div>';
+} else {
+    echo "<p>Không có sản phẩm còn hàng.</p>";
+}
 
-    <div style="max-width: 100%; overflow: hidden; margin: auto;  margin-top: 100px;">  
-        <img src="./img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; display: block;">  
-    </div>
+$conn->close();
+?>
+
     
+    </div>
+
     <div class="policy-container" >
         <div >
-            <img src="./img/policy1.png" alt="policy1">
+            <img src="../img/policy1.png" alt="policy1">
             <div style="margin-left: -30px;padding: 10px;font-weight: 700;font-size: 20px;">Giao hàng miễn phí</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Với đơn hàng hơn 300.000đ</div>
         </div>
         <div>
-            <img src="./img/policy2.png" alt="policy2">
+            <img src="../img/policy2.png" alt="policy2">
             <div style="margin-left: -20px;padding: 10px;font-weight: 700;font-size: 20px;">Hỗ trợ 24/7</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Nhanh chóng thuận tiện</div>
         </div>
         <div>
-            <img src="./img/policy3.jpg" alt="policy3">
+            <img src="../img/policy3.jpg" alt="policy3">
             <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Đổi trả trong 3 ngày</div>
             <div style="margin-left:-20px;color:#444444;font-size: 14px;">Hấp dẫn chưa từng có</div>
         </div>
         <div >
-            <img src="./img/policy4.png" alt="policy2">
+            <img src="../img/policy4.png" alt="policy2">
             <div style="margin-left: -10px;padding: 10px;font-weight: 700;font-size: 20px;">Giá tiêu chuẩn</div>
             <div style="margin-left:-10px;color:#444444;font-size: 14px;">Tiết kiệm 10% giá thị trường</div>
         </div>
     </div>
 
     <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
-        <img src="./img/seafruits-logo.png" alt="seafruits-logo">
+        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
         <div style="padding:10px;">
             <div>Hotline: 0123456789</div>
             <div>Email: AboutUs@gmail.com</div>
         </div>
     </div>
-    
+
     <div class="footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -617,10 +426,10 @@
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
                 <ul>
-                    <li><a href="index.php">Trang chủ</a></li>
-                    <li><a href="./user/introducelogin.php">Giới thiệu</a></li>
-                    <li><a href="./user/newslogin.php">Tin tức</a></li>
-                    <li><a href="./user/contactlogin.html">Liên hệ</a></li>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="./newslogin.php">Tin tức</a></li>
+                    <li><a href="./contactlogin.html">Liên hệ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -645,32 +454,16 @@
             <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
     </div>
-    
 
+    <script>
 
-    <script> 
-        
-        function confirmAddToCart(productId) {
-        if (confirm("Bạn có chắc muốn thêm sản phẩm này vào giỏ hàng không?")) {
-            addToCart(productId);
-        }
-    }
-
-    function addToCart(productId) {
-        // Tạm thời dùng alert để test
-        console.log("Thêm sản phẩm: " + productId);
-        alert("Đã thêm sản phẩm vào giỏ hàng!");
-        
-        // TODO: Gửi AJAX hoặc xử lý thêm giỏ hàng thực tế tại đây
-    }
-        
 const input = document.getElementById("searchInput");
     const suggestBox = document.getElementById("suggestBox");
     
     input.addEventListener("keyup", function () {
         const query = input.value.trim();
         if (query.length > 0) {
-            fetch(`./user/suggest.php?term=${encodeURIComponent(query)}`)
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     suggestBox.innerHTML = "";
@@ -696,17 +489,15 @@ const input = document.getElementById("searchInput");
     });
 
 
-document.querySelector('.dropdown-button').addEventListener('click', function() {
-      const dropdown = this.parentElement;
-      dropdown.classList.toggle('active');
-    });
 
-    window.addEventListener('click', function(e) {
-      const dropdown = document.querySelector('.dropdown');
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
+    function confirmAddToCart(productId) {
+        if (confirm("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập không?" )) {
+            window.location.href = "../user/login-user.php";
+        } else {
+            alert("Bạn đã hủy thêm sản phẩm vào giỏ hàng.");
+            addToCart(productId);   
+        }
+    }
 
     document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
@@ -723,8 +514,7 @@ document.querySelector('.dropdown-button').addEventListener('click', function() 
             modal.style.display = "none";
         }
     };
-    </script>  
+    </script>
 
-     
-</body>  
+    </body>
 </html>

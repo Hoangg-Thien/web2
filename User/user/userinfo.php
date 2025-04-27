@@ -4,10 +4,10 @@
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/invoice-summary.css">  
+    <link rel="stylesheet" href="../styles/userinfo.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trang Tóm Tắt Hóa Đơn</title>  
+    <title>Trang Tài Khoản</title>  
     <style>  
         .search-container {  
             display: flex;  
@@ -68,11 +68,11 @@
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM</div>  
             <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
-                <a href="../user/introducelogin.php">Giới thiệu</a>  
-                <a href="../user/newslogin.php">Tin tức</a>  
-                <a href="../user/contactlogin.php">Liên hệ</a>   
-                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
+                <a href="../index.html" >Trang chủ</a>  
+                <a href="../user/introducelogin.html">Giới thiệu</a>  
+                <a href="../user/newslogin.html">Tin tức</a>  
+                <a href="../user/contactlogin.html">Liên hệ</a>   
+                <a href="../user/cart-user.html" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
@@ -89,54 +89,37 @@
                     <span>Hi,User!</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a href="../user/userinfo.php">Tài khoản</a>
-                  <a href="../user/history-user.php">Lịch sử</a>
-                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.php">Đăng xuất</a>
+                  <a href="../user/userinfo.html">Tài khoản</a>
+                  <a href="../user/history-user.html">Lịch sử</a>
+                  <a href="../user/invoice-summary.html">Tóm tắt hóa đơn</a>
+                  <a href="../user/usernologin.html">Đăng xuất</a>
                 </div>
               </div>
         </div>  
-    </div>
-    <h1>Tóm Tắt Hóa Đơn</h1>
+    </div> 
     <main class="main-content">
-        <div class="summary-container">
-            <table class="invoice-table">
-                <thead>
-                    <tr>
-                        <th>Mã hóa đơn</th>
-                        <th>Ngày</th>
-                        <th>Tổng tiền (VND)</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>SF01</td>
-                        <td>2024-11-25</td>
-                        <td>1,200,000</td>
-                        <td>Đã thanh toán</td>
-                        <td><a href="#">Xem</a></td>
-                    </tr>
-                    <tr>
-                        <td>SF02</td>
-                        <td>2024-11-20</td>
-                        <td>850,000</td>
-                        <td>Đang xử lý</td>
-                        <td><a href="#">Xem</a></td>
-                    </tr>
-                    <tr>
-                        <td>SF03</td>
-                        <td>2024-11-10</td>
-                        <td>500,000</td>
-                        <td>Đã hủy</td>
-                        <td><a href="#">Xem</a></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="breadcrumb">
+            <a class="black" href="../index.html">Trang chủ</a> > <a href="../user/userinfo.html">Trang khách hàng</a>
+        </div>
+        <div class="account-info">
+            <div class="account-left">
+                <h2>TRANG TÀI KHOẢN</h2>
+                <p>Xin chào, <span class="user-name">Huy</span>!</p>
+                <ul>
+                    <li><a class="green" href="../user/userinfo.html">Thông tin tài khoản</a></li>
+                    <li><a  href="../user/cart-user.html">Đơn hàng của bạn</a></li>
+                    <li><a  href="#">Đổi mật khẩu</a></li>
+                    
+                </ul>
+            </div>
+            <div class="account-right">
+                <h2>THÔNG TIN TÀI KHOẢN</h2>
+                <p><strong>Họ tên:</strong> Huy</p>
+                <p><strong>Email:</strong> gg@gmail.com</p>
+            </div>
         </div>
     </main>
-     <section class="customer_service container">
+    <section class="customer_service container">
         <div class="col-md-4">
             <h3>Dịch vụ khách hàng</h3>
             <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn.</p>
