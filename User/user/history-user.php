@@ -13,12 +13,12 @@ $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
 $user = null;
 
 if (!empty($user_name)) {
-    $sql = "SELECT * FROM nguoidung WHERE user_name = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $user_name);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+$sql = "SELECT * FROM nguoidung WHERE user_name = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_name);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
 }
 
 // Lấy lịch sử mua hàng
@@ -640,15 +640,15 @@ $orders = $stmt->get_result();
         
             <div class="dropdown">
                 <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
+                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
                     <span>Hi, <?php echo isset($user['fullname']) ? htmlspecialchars($user['fullname']) : 'Guest'; ?>!</span>
                 </button>
                 <div class="dropdown-menu">
                     <?php if ($user): ?>
-                        <a href="../user/userinfo.php">Tài khoản</a>
-                        <a href="../user/history-user.php">Lịch sử</a>
-                        <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                        <a href="../user/usernologin.php">Đăng xuất</a>
+                    <a href="../user/userinfo.php">Tài khoản</a>
+                    <a href="../user/history-user.php">Lịch sử</a>
+                    <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                    <a href="../user/usernologin.php">Đăng xuất</a>
                     <?php else: ?>
                         <a href="../user/login.php">Đăng nhập</a>
                         <a href="../user/register.php">Đăng ký</a>

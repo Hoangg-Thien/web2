@@ -17,19 +17,24 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
-// Lấy danh sách hóa đơn
-$invoice_query = "SELECT h.*, 
-                 GROUP_CONCAT(CONCAT(s.ten_sanpham, '|', ct.soluong, '|', ct.gia) SEPARATOR '||') as order_items
-                 FROM hoadon h
-                 LEFT JOIN chitiethoadon ct ON h.invoice_id = ct.invoice_id
-                 LEFT JOIN sanpham s ON ct.product_id = s.product_id
-                 WHERE h.user_id = ?
-                 GROUP BY h.invoice_id
-                 ORDER BY h.order_date DESC";
-$stmt = $conn->prepare($invoice_query);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$invoices = $stmt->get_result();
+// Lấy thông tin hóa đơn chi tiết
+if (isset($_GET['id'])) {
+    $invoice_id = $_GET['id'];
+    $invoice_query = "SELECT h.*, 
+                     GROUP_CONCAT(CONCAT(s.ten_sanpham, '|', ct.soluong, '|', ct.gia) SEPARATOR '||') as order_items
+                     FROM hoadon h
+                     LEFT JOIN chitiethoadon ct ON h.invoice_id = ct.invoice_id
+                     LEFT JOIN sanpham s ON ct.product_id = s.product_id
+                     WHERE h.invoice_id = ? AND h.user_id = ?
+                     GROUP BY h.invoice_id";
+    $stmt = $conn->prepare($invoice_query);
+    $stmt->bind_param("ii", $invoice_id, $user_id);
+    $stmt->execute();
+    $invoice = $stmt->get_result()->fetch_assoc();
+} else {
+    header("Location: invoice-summary.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +42,7 @@ $invoices = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tóm Tắt Hóa Đơn - SEA FRUITS</title>
+    <title>Chi Tiết Hóa Đơn - SEA FRUITS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../styles/news.css">
@@ -229,8 +234,8 @@ $invoices = $stmt->get_result();
             display: block;
         }
 
-        /* Invoice styles */
-        .invoice-container {
+        /* Invoice detail styles */
+        .invoice-detail-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 2rem;
@@ -258,137 +263,43 @@ $invoices = $stmt->get_result();
             font-size: 2rem;
         }
 
-        .invoice-filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1.5rem;
-            border: 2px solid var(--primary-color);
-            border-radius: 20px;
-            background: none;
-            color: var(--primary-color);
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .filter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .invoice-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .invoice-item {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .invoice-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
         .invoice-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .invoice-number {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .invoice-date {
-            color: var(--light-text);
-            font-size: 0.9rem;
-        }
-
-        .invoice-status {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .status-completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .invoice-details {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .detail-group {
+        .info-group {
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
         }
 
-        .detail-label {
+        .info-label {
             color: var(--light-text);
             font-size: 0.9rem;
         }
 
-        .detail-value {
+        .info-value {
             font-weight: 500;
         }
 
         .invoice-items {
-            margin-top: 1rem;
+            margin-top: 2rem;
         }
 
         .item-list {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
         .item {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             align-items: center;
-            padding: 0.5rem 0;
+            padding: 1rem;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -413,25 +324,40 @@ $invoices = $stmt->get_result();
             font-weight: 500;
         }
 
-        .item-price {
-            color: var(--primary-color);
-            font-weight: 500;
+        .item-quantity, .item-price, .item-total {
+            text-align: right;
         }
 
         .invoice-total {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
             padding-top: 1rem;
             border-top: 2px solid var(--border-color);
+        }
+
+        .total-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: right;
+        }
+
+        .total-label {
+            color: var(--light-text);
+        }
+
+        .total-value {
             font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-color);
         }
 
         .invoice-actions {
             display: flex;
+            justify-content: flex-end;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 2rem;
         }
 
         .action-btn {
@@ -446,15 +372,15 @@ $invoices = $stmt->get_result();
             transition: all 0.3s ease;
         }
 
-        .view-btn {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .download-btn {
+        .back-btn {
             background: white;
             color: var(--primary-color);
             border: 2px solid var(--primary-color);
+        }
+
+        .download-btn {
+            background: var(--primary-color);
+            color: white;
         }
 
         .action-btn:hover {
@@ -462,58 +388,19 @@ $invoices = $stmt->get_result();
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
-
-        .page-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .page-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .page-btn:hover {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
         @media (max-width: 768px) {
-            .invoice-container {
+            .invoice-detail-container {
                 margin: 1rem;
                 padding: 1rem;
             }
 
-            .invoice-title {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-
-            .invoice-filters {
-                justify-content: center;
-            }
-
-            .invoice-header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-
-            .invoice-details {
+            .item {
                 grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .item-quantity, .item-price, .item-total {
+                text-align: left;
             }
 
             .invoice-actions {
@@ -611,111 +498,96 @@ $invoices = $stmt->get_result();
      </div>
  </div>
 
-    <div class="invoice-container">
+    <div class="invoice-detail-container">
         <div class="invoice-header">
             <div class="invoice-title">
-                <h1>Tóm Tắt Hóa Đơn</h1>
-            </div>
-            <div class="invoice-filters">
-                <button class="filter-btn active" onclick="filterInvoices('all')">Tất cả</button>
-                <button class="filter-btn" onclick="filterInvoices('completed')">Hoàn thành</button>
-                <button class="filter-btn" onclick="filterInvoices('pending')">Đang xử lý</button>
-                <button class="filter-btn" onclick="filterInvoices('cancelled')">Đã hủy</button>
+                <h1>Chi Tiết Hóa Đơn #<?php echo $invoice['invoice_id']; ?></h1>
             </div>
         </div>
 
-        <div class="invoice-list">
-            <?php
-            if ($invoices && $invoices->num_rows > 0) {
-                while ($invoice = $invoices->fetch_assoc()) {
-                    $order_items = explode('||', $invoice['order_items']);
-                    $total = 0;
-            ?>
-                <div class="invoice-item">
-                    <div class="invoice-header">
-                        <div class="invoice-info">
-                            <span class="invoice-number">Hóa đơn #<?php echo $invoice['invoice_id']; ?></span>
-                            <span class="invoice-date">Ngày đặt: <?php echo date('d/m/Y', strtotime($invoice['order_date'])); ?></span>
-                        </div>
-                        <span class="invoice-status status-<?php echo strtolower($invoice['status']); ?>">
-                            <?php 
-                            switch($invoice['status']) {
-                                case 'completed':
-                                    echo 'Hoàn thành';
-                                    break;
-                                case 'pending':
-                                    echo 'Đang xử lý';
-                                    break;
-                                case 'cancelled':
-                                    echo 'Đã hủy';
-                                    break;
-                            }
-                            ?>
-                        </span>
-                    </div>
-                    <div class="invoice-details">
-                        <div class="detail-group">
-                            <span class="detail-label">Phương thức thanh toán</span>
-                            <span class="detail-value"><?php echo $invoice['payment_method']; ?></span>
-                        </div>
-                        <div class="detail-group">
-                            <span class="detail-label">Địa chỉ giao hàng</span>
-                            <span class="detail-value"><?php echo $invoice['shipping_address']; ?></span>
-                        </div>
-                        <div class="detail-group">
-                            <span class="detail-label">Số điện thoại</span>
-                            <span class="detail-value"><?php echo $invoice['phone']; ?></span>
-                        </div>
-                    </div>
-                    <div class="invoice-items">
-                        <div class="item-list">
-                            <?php
-                            foreach ($order_items as $item) {
-                                list($name, $quantity, $price) = explode('|', $item);
-                                $subtotal = $price * $quantity;
-                                $total += $subtotal;
-                            ?>
-                                <div class="item">
-                                    <div class="item-info">
-                                        <img src="../img/<?php echo strtolower(str_replace(' ', '-', $name)); ?>.jpg" 
-                                             alt="<?php echo $name; ?>" class="item-image">
-                                        <span class="item-name"><?php echo $name; ?></span>
-                                    </div>
-                                    <span class="item-price"><?php echo number_format($subtotal); ?>đ</span>
-                                </div>
-                            <?php } ?>
-                        </div>
-                        <div class="invoice-total">
-                            <span>Tổng cộng</span>
-                            <span><?php echo number_format($total); ?>đ</span>
-                        </div>
-                    </div>
-                    <div class="invoice-actions">
-                        <button class="action-btn view-btn" onclick="viewInvoiceDetails(<?php echo $invoice['invoice_id']; ?>)">
-                            <i class="fas fa-eye"></i>
-                            Xem chi tiết
-                        </button>
-                        <button class="action-btn download-btn" onclick="downloadInvoice(<?php echo $invoice['invoice_id']; ?>)">
-                            <i class="fas fa-download"></i>
-                            Tải xuống
-                        </button>
-                    </div>
+        <div class="invoice-info">
+            <div class="info-group">
+                <span class="info-label">Ngày đặt hàng</span>
+                <span class="info-value"><?php echo date('d/m/Y', strtotime($invoice['order_date'])); ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Trạng thái</span>
+                <span class="info-value status-<?php echo strtolower($invoice['status']); ?>">
+                    <?php 
+                    switch($invoice['status']) {
+                        case 'completed':
+                            echo 'Hoàn thành';
+                            break;
+                        case 'pending':
+                            echo 'Đang xử lý';
+                            break;
+                        case 'cancelled':
+                            echo 'Đã hủy';
+                            break;
+                    }
+                    ?>
+                </span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Phương thức thanh toán</span>
+                <span class="info-value"><?php echo $invoice['payment_method']; ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Địa chỉ giao hàng</span>
+                <span class="info-value"><?php echo $invoice['shipping_address']; ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Số điện thoại</span>
+                <span class="info-value"><?php echo $invoice['phone']; ?></span>
+            </div>
+        </div>
+
+        <div class="invoice-items">
+            <div class="item-list">
+                <div class="item" style="font-weight: bold; border-bottom: 2px solid var(--border-color);">
+                    <div class="item-info">Sản phẩm</div>
+                    <div class="item-quantity">Số lượng</div>
+                    <div class="item-price">Đơn giá</div>
+                    <div class="item-total">Thành tiền</div>
                 </div>
-            <?php
-                }
-            } else {
-                echo '<p class="no-invoices">Bạn chưa có hóa đơn nào.</p>';
-            }
-            ?>
+                <?php
+                $order_items = explode('||', $invoice['order_items']);
+                $total = 0;
+                foreach ($order_items as $item) {
+                    list($name, $quantity, $price) = explode('|', $item);
+                    $subtotal = $price * $quantity;
+                    $total += $subtotal;
+                ?>
+                    <div class="item">
+                        <div class="item-info">
+                            <img src="../img/<?php echo strtolower(str_replace(' ', '-', $name)); ?>.jpg" 
+                                 alt="<?php echo $name; ?>" class="item-image">
+                            <span class="item-name"><?php echo $name; ?></span>
+                        </div>
+                        <div class="item-quantity"><?php echo $quantity; ?></div>
+                        <div class="item-price"><?php echo number_format($price); ?>đ</div>
+                        <div class="item-total"><?php echo number_format($subtotal); ?>đ</div>
+                    </div>
+                <?php } ?>
+            </div>
+
+            <div class="invoice-total">
+                <div class="total-group">
+                    <span class="total-label">Tổng cộng</span>
+                    <span class="total-value"><?php echo number_format($total); ?>đ</span>
+                </div>
+            </div>
         </div>
 
-        <div class="pagination">
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">4</button>
-            <button class="page-btn">5</button>
-            <button class="page-btn">></button>
+        <div class="invoice-actions">
+            <button class="action-btn back-btn" onclick="window.location.href='invoice-summary.php'">
+                <i class="fas fa-arrow-left"></i>
+                Quay lại
+            </button>
+            <button class="action-btn download-btn" onclick="downloadInvoice(<?php echo $invoice['invoice_id']; ?>)">
+                <i class="fas fa-download"></i>
+                Tải xuống
+            </button>
         </div>
     </div>
 
@@ -764,46 +636,6 @@ $invoices = $stmt->get_result();
     </div>
 
     <script>
-        // JavaScript for filtering invoices
-        function filterInvoices(status) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Add active class to clicked button
-            event.target.classList.add('active');
-
-            // Get all invoice items
-            const invoices = document.querySelectorAll('.invoice-item');
-            
-            invoices.forEach(invoice => {
-                const invoiceStatus = invoice.querySelector('.invoice-status');
-                
-                if (status === 'all') {
-                    invoice.style.display = 'block';
-                } else if (status === 'completed' && invoiceStatus.classList.contains('status-completed')) {
-                    invoice.style.display = 'block';
-                } else if (status === 'pending' && invoiceStatus.classList.contains('status-pending')) {
-                    invoice.style.display = 'block';
-                } else if (status === 'cancelled' && invoiceStatus.classList.contains('status-cancelled')) {
-                    invoice.style.display = 'block';
-                } else {
-                    invoice.style.display = 'none';
-                }
-            });
-        }
-
-        // JavaScript for viewing invoice details
-        function viewInvoiceDetails(invoiceId) {
-            window.location.href = `invoice-detail.php?id=${invoiceId}`;
-        }
-
-        // JavaScript for downloading invoice
-        function downloadInvoice(invoiceId) {
-            window.location.href = `download-invoice.php?id=${invoiceId}`;
-        }
-
         // JavaScript for dropdown menu
         document.querySelector('.dropdown-button').addEventListener('click', function() {
             const dropdown = this.parentElement;
@@ -869,6 +701,11 @@ $invoices = $stmt->get_result();
         function hideFruits() {
             let fruitList = document.getElementById("fruitList");
             fruitList.style.display = "none";
+        }
+
+        // JavaScript for downloading invoice
+        function downloadInvoice(invoiceId) {
+            window.location.href = `download-invoice.php?id=${invoiceId}`;
         }
     </script>
 </body>

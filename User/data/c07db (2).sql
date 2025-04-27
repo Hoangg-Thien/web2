@@ -452,3 +452,69 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Sửa đổi bảng nguoidung trước tiên
+ALTER TABLE `nguoidung`
+DROP PRIMARY KEY,
+ADD COLUMN `user_id` INT AUTO_INCREMENT PRIMARY KEY FIRST,
+ADD COLUMN `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ADD UNIQUE KEY `user_name` (`user_name`),
+ADD UNIQUE KEY `user_email` (`user_email`),
+MODIFY COLUMN `user_role` ENUM('admin', 'manager', 'customer') NOT NULL DEFAULT 'customer',
+MODIFY COLUMN `user_status` ENUM('active', 'inactive', 'banned') NOT NULL DEFAULT 'active';
+
+-- Xóa bảng bills nếu tồn tại
+DROP TABLE IF EXISTS `bill_items`;
+DROP TABLE IF EXISTS `bills`;
+
+-- Tạo bảng bills
+CREATE TABLE `bills` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `customer_name` VARCHAR(100) NOT NULL,
+    `phone` VARCHAR(20) NOT NULL,
+    `shipping_address` TEXT NOT NULL,
+    `payment_method` ENUM('cash', 'bank_transfer', 'credit_card', 'momo', 'zalopay') NOT NULL,
+    `status` ENUM('pending', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    `total_amount` DECIMAL(10,2) NOT NULL DEFAULT 0,
+    `shipping_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
+    `discount_amount` DECIMAL(10,2) NOT NULL DEFAULT 0,
+    `final_amount` DECIMAL(10,2) NOT NULL DEFAULT 0,
+    `notes` TEXT,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `nguoidung`(`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Tạo bảng bill_items
+CREATE TABLE `bill_items` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `bill_id` INT NOT NULL,
+    `product_id` VARCHAR(50),
+    `product_name` VARCHAR(255) NOT NULL,
+    `product_image` VARCHAR(255),
+    `quantity` INT NOT NULL,
+    `unit_price` DECIMAL(10,2) NOT NULL,
+    `total_amount` DECIMAL(10,2) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`bill_id`) REFERENCES `bills`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`product_id`) REFERENCES `sanpham`(`product_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Thêm dữ liệu mẫu cho bills
+INSERT INTO bills (user_id, customer_name, phone, shipping_address, payment_method, status, total_amount, final_amount) VALUES
+(1, 'Nguyễn Văn A', '0123456789', '123 Đường ABC, Quận 1, TP.HCM', 'cash', 'completed', 500000, 500000),
+(2, 'Trần Thị B', '0987654321', '456 Đường XYZ, Quận 2, TP.HCM', 'bank_transfer', 'pending', 300000, 300000),
+(3, 'Lê Văn C', '0369852147', '789 Đường DEF, Quận 3, TP.HCM', 'credit_card', 'completed', 800000, 800000),
+(4, 'Phạm Thị D', '0587412369', '321 Đường GHI, Quận 4, TP.HCM', 'cash', 'cancelled', 400000, 400000);
+
+-- Thêm dữ liệu mẫu cho bill_items
+INSERT INTO bill_items (bill_id, product_id, product_name, product_image, quantity, unit_price, total_amount) VALUES
+(1, 'F001', 'Chuối Chín Nam Mỹ', 'trai-chuoi.jpg', 2, 160000, 320000),
+(1, 'F002', 'Kiwi', 'trai-kiwi.jpg', 1, 160000, 160000),
+(1, 'F003', 'Lựu Ai Cập', 'trai-luu.jpg', 1, 160000, 160000),
+(2, 'F004', 'Mận Đỏ An Phước', 'trai-man-do.jpg', 3, 45000, 135000),
+(2, 'F005', 'Mãng Cầu Xiêm', 'trai-mang-cau.jpg', 2, 45000, 90000),
+(3, 'F006', 'Nho Mỹ', 'trai-nho-My.jpg', 5, 160000, 800000),
+(4, 'F007', 'Ổi Xá Lị', 'trai-oi.jpg', 4, 45000, 180000),
+(4, 'F008', 'Thanh Long Ruột Đỏ', 'trai-thanh-long.jpg', 3, 45000, 135000);
