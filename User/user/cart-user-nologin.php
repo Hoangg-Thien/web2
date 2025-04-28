@@ -523,59 +523,51 @@ $total = 0;
     </div>
 
     <script>
-    let debounceTimeout;
-    function searchProducts() 
-    {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-    const searchBox = document.getElementById("searchBox");
-    const searchQuery = searchBox.value.toLowerCase();
-    const searchResults = document.getElementById("searchResults");
-    const priorityFruits = document.getElementById("priorityFruits");
-    priorityFruits.style.display = "none";
-    searchResults.innerHTML = "";
-    const filteredProducts = fruits.filter(product =>
-        product.name.toLowerCase().includes(searchQuery)
-    );
-    filteredProducts.sort((a, b) => b.priority - a.priority);
-
-    if (filteredProducts.length > 0) {
-        filteredProducts.forEach(product => {
-            const productLink = document.createElement("a");
-            productLink.href = product.link;
-            productLink.innerText = product.name;
-            productLink.classList.add("search-result"); 
-            searchResults.appendChild(productLink);
-        });
-
-        searchResults.style.display = "block";
-    } else {
-        searchResults.innerHTML = "<span class='empty'>Không tìm thấy sản phẩm nào</span>";
-        searchResults.style.display = "block";
-    }
-
- 
-    setTimeout(() => {
-        searchBox.value = ""; 
-        searchResults.style.display = "none"; 
-        searchResults.innerHTML = "";
-        priorityFruits.style.display = "block"; 
-    }, 5000); 
-}, 500); 
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-        let addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
-
-        addToCartButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                alert("Bạn cần phải đăng nhập để thêm vào giỏ hàng!");
-            });
-        });
+    const input = document.getElementById("searchInput");
+    const suggestBox = document.getElementById("suggestBox");
+    
+    input.addEventListener("keyup", function () {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestBox.innerHTML = "";
+                    data.forEach(item => {
+                        const div = document.createElement("div");
+                        div.textContent = item;
+                        div.onclick = () => {
+                            input.value = item;
+                            suggestBox.innerHTML = "";
+                        };
+                        suggestBox.appendChild(div);
+                    });
+                });
+        } else {
+            suggestBox.innerHTML = "";
+        }
+    });
+    
+    document.addEventListener("click", function (e) {
+        if (e.target !== input) {
+            suggestBox.innerHTML = "";
+        }
     });
 
 
-document.getElementById("toggleSearch").addEventListener("click", function () {
+document.querySelector('.dropdown-button').addEventListener('click', function() {
+      const dropdown = this.parentElement;
+      dropdown.classList.toggle('active');
+    });
+
+    window.addEventListener('click', function(e) {
+      const dropdown = document.querySelector('.dropdown');
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
 
