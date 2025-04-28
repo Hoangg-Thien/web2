@@ -7,6 +7,12 @@ function fetchAllProducts() {
         .then(response => response.json())
         .then(data => {
             products = data;
+            const savedPage = parseInt(localStorage.getItem('currentPage'), 10);
+            if (!isNaN(savedPage) && savedPage > 0) {
+                currentPage = savedPage;
+            } else {
+                currentPage = 1;
+            }
             displayProducts(currentPage);
         })
         .catch(error => {
@@ -15,7 +21,6 @@ function fetchAllProducts() {
         });
 }
 
-// Hiển thị sản phẩm
 function displayProducts(page) {
     const productTable = document.getElementById("productTable");
     productTable.innerHTML = "";
@@ -44,7 +49,6 @@ function displayProducts(page) {
 
     setupPagination();
 }
-
 // Xóa sản phẩm
 function deleteProduct(productId) {
     const product = products.find(p => p.product_id === productId);
@@ -53,15 +57,30 @@ function deleteProduct(productId) {
         return;
     }
 
-    $('#ModalRM .modal-body').html(`
-        <div class="alert alert-warning">
-            <strong>Cảnh báo!</strong>
-        </div>
-        <p>Bạn có chắc chắn muốn xóa sản phẩm:</p>
-        <h4><strong>${product.product_name}</strong></h4>
-        <small>Mã sản phẩm: ${product.product_id}</small>
-    `);
+    const status = product.product_status ? product.product_status.trim().toLowerCase() : '';
 
+    let modalMessage = '';
+    if (product.product_status === 'Còn hàng') {
+        modalMessage = `
+            <div class="alert alert-warning">
+                <strong>Cảnh báo!</strong> Sản phẩm này đang còn hàng.
+            </div>
+            <p>Bạn có chắc chắn muốn xóa sản phẩm:</p>
+            <h4><strong>${product.product_name}</strong></h4>
+            <small>Mã sản phẩm: ${product.product_id}</small>
+        `;
+    } else {
+        modalMessage = `
+            <div class="alert alert-info">
+                <strong>Thông báo:</strong> Sản phẩm đã hết hàng. Sẽ ẩn khỏi giao diện.
+            </div>
+            <p>Sản phẩm:</p>
+            <h4><strong>${product.product_name}</strong></h4>
+            <small>Mã sản phẩm: ${product.product_id}</small>
+        `;
+    }
+
+    $('#ModalRM .modal-body').html(modalMessage);
     $('#ModalRM').modal('show');
 
     $('#confirmDelete').off('click').on('click', function() {
@@ -70,25 +89,28 @@ function deleteProduct(productId) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `product_id=${productId}`
+            body: `product_id=${productId}&status=${encodeURIComponent(product.product_status)}`
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Xóa khỏi mảng và cập nhật giao diện
-                const index = products.findIndex(p => p.product_id === productId);
-                if (index !== -1) {
-                    products.splice(index, 1);
+                if (status === 'hết hàng') {
+                    product.hidden = true;
+                } else {
+                    const index = products.findIndex(p => p.product_id === productId);
+                    if (index !== -1) {
+                        products.splice(index, 1);
+                    }
                 }
 
                 $('#ModalRM').modal('hide');
                 displayProducts(currentPage);
             } else {
-                alert('Xóa thất bại: ' + data.message);
+                alert('Xử lý thất bại: ' + data.message);
             }
         })
         .catch(error => {
-            console.error('Lỗi khi gửi yêu cầu xóa:', error);
+            console.error('Lỗi khi gửi yêu cầu:', error);
             alert('Đã có lỗi xảy ra.');
         });
     });
@@ -119,8 +141,6 @@ function editProduct(productId) {
             alert("Có lỗi xảy ra khi tải dữ liệu sản phẩm.");
         });
 }
-
-// Phân trang
 function setupPagination() {
     const pagination = document.getElementById("pagination");
     const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -153,8 +173,9 @@ function changePage(page) {
     const totalPages = Math.ceil(products.length / itemsPerPage);
     if (page < 1 || page > totalPages) return;
     currentPage = page;
+    localStorage.setItem('currentPage', currentPage);
     displayProducts(currentPage);
 }
 
-// Gọi khi trang tải xong
+// Chỉ gọi fetchAllProducts khi trang load xong
 document.addEventListener("DOMContentLoaded", fetchAllProducts);

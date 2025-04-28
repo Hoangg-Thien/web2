@@ -1,4 +1,3 @@
-<<<<<<< HEAD:admin/index.php
 <?php
 session_start();
 require './pages/connect.php';

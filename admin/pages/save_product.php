@@ -1,4 +1,3 @@
-
 <?php
     require_once 'connect.php';
 
@@ -11,10 +10,11 @@
         $status = $_POST['status'];
         $description = $_POST['description'];
 
+        // Xử lý hình ảnh
         $image_path = '';
         if(isset($_FILES['product-image']) && $_FILES['product-image']['error'] == 0){
             $upload_dir = '../img/';
-            $file_name = time() . '_' . $_FILES['product-image']['name'];
+            $file_name = time() . '_' . basename($_FILES['product-image']['name']);
             $target_file = $upload_dir . $file_name;
 
             if (!is_writable($upload_dir)) {
@@ -28,21 +28,42 @@
             }
         }
 
-        $sql = "INSERT INTO sanpham(product_id, product_name, category_id, product_type, product_price, product_status, product_image, product_description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // Tự động set hidden theo status
+        $hidden = (strtolower($status) == 'hết hàng') ? 1 : 0;
+
+        // Tạm gán product_link và productnolo_link bằng chuỗi rỗng hoặc khoảng trắng
+        $product_link = ' ';
+        $productnolog_link = ' ';
+
+        // Thêm hidden, product_link, productnolo_link vào câu lệnh INSERT
+        $sql = "INSERT INTO sanpham(product_id, product_name, category_id, product_type, product_price, product_status, product_image, product_description, hidden, product_link, productnolog_link)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             die("Lỗi chuẩn bị SQL: " . $conn->error);
         }
 
-        $stmt->bind_param("ssssssss", $product_code, $product_name, $category_id, $type, $price, $status, $image_path, $description);
+        // Bind đủ 11 tham số
+        $stmt->bind_param("ssssssssiss", 
+            $product_code, 
+            $product_name, 
+            $category_id, 
+            $type, 
+            $price, 
+            $status, 
+            $image_path, 
+            $description, 
+            $hidden, 
+            $product_link, 
+            $productnolog_link
+        );
 
         if($stmt->execute()){
             header("Location: addpro.php?success");
             exit();
-        }else{
-            header("Location: addpro.php?error");
+        } else {
+            echo "SQL Error: " . $stmt->error;
             exit();
         }
 

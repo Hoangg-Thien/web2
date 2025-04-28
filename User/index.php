@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!DOCTYPE html>  
 <html lang="vi">  
 <head>  
@@ -335,13 +338,26 @@
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
+                    <span>
+            <?php
+            if (isset($_SESSION['user_name'])) {
+                echo "Xin chào, <strong>" . htmlspecialchars($_SESSION['user_name']) . "</strong>!";
+            } else {
+                echo "Xin chào, khách!";
+            }
+            ?>
+        </span>
                 </button>
                 <div class="dropdown-menu">
+                <?php if (isset($_SESSION['user_name'])): ?>
                   <a href="./user/userinfo.php">Tài khoản</a>
                   <a href="./user/history-user.php">Lịch sử</a>
                   <a href="./user/invoice-summary.php">Tóm tắt hóa đơn</a>
                   <a href="./user/usernologin.php">Đăng xuất</a>
+                  <?php else: ?>
+                  <a href="./user/login-user.php">Đăng nhập</a>
+                  <a href="./user/regis.php">Đăng ký</a>
+                <?php endif; ?>
                 </div>
               </div>
         </div>  
@@ -406,16 +422,17 @@
     // Tính offset
     $start = ($page - 1) * $limit;
 
-    // Lấy tổng số sản phẩm
-    $totalQuery = "SELECT COUNT(*) as total FROM sanpham";
-    $totalResult = $conn->query($totalQuery);
-    $totalRow = $totalResult->fetch_assoc();
-    $totalProducts = $totalRow['total'];
-    $totalPages = ceil($totalProducts / $limit);
+   // Lấy tổng số sản phẩm
+$totalQuery = "SELECT COUNT(*) as total FROM sanpham WHERE hidden = 0";
+$totalResult = $conn->query($totalQuery);
+$totalRow = $totalResult->fetch_assoc();
+$totalProducts = $totalRow['total'];
+$totalPages = ceil($totalProducts / $limit);
 
-    // Truy vấn sản phẩm theo trang
-    $sql = "SELECT * FROM sanpham LIMIT $start, $limit";
-    $result = $conn->query($sql);
+// Truy vấn sản phẩm theo trang
+$sql = "SELECT * FROM sanpham WHERE hidden = 0 LIMIT $start, $limit";
+$result = $conn->query($sql);
+
 
     // Hiển thị sản phẩm
     if ($result->num_rows > 0) {
