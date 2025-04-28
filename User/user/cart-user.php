@@ -133,6 +133,7 @@ $total = 0;
         .dropdown-button span{
             color: #333;
         }
+        
         .modal {
             display: none; /* Ban đầu ẩn */
             position: fixed;
@@ -210,6 +211,33 @@ $total = 0;
             background: #0056b3;
         }
 
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+    
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+    
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
     </style>  
 </head>  
 <body>  
@@ -264,43 +292,46 @@ $total = 0;
                     <i class="fas fa-shopping-cart"></i>  
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
     <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
-</span>
+</span> </a>
 
             </div>  
-            <div class="search-container">   
+           
+            <div class="search-container">
+    <form action="searchProducts.php" method="GET">
+        <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+        <div id="suggestBox" class="autocomplete-suggestions"></div>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button type="submit">Tìm kiếm</button>
+            <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+        </div>
+
+        <!-- Modal nâng cao -->
+        <div id="searchModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Tìm kiếm nâng cao</h2>
                 
-                <div >
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                    <button onclick="searchProducts()">Tìm kiếm</button>
-                    <button id="toggleSearch">Tìm kiếm nâng cao</button>
-                </div>  
-                <div id="searchResults"></div>
-                <div id="priorityFruits" class="hidden">
-                    <ul>
-                    </ul>
-                </div>   
-                <div id="searchModal" class="modal" style="display:none;">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Tìm kiếm nâng cao</h2>
-                        
-                        <label>Khoảng giá:</label>
-                        <select id="priceRange">
-                            <option>Tất cả</option>
-                            <option>30k-70k</option>
-                            <option>Trên 70k</option>
-                        </select>
-                
-                        <label>Danh mục:</label>
-                        <select id="sortedList">
-                            <option>A->Z</option>
-                            <option>Z->A</option>
-                        </select>
-                
-                        <button onclick="smartSearchProducts()">Lọc</button>
-                    </div>
-            </div>  
-                </div>
+                <label>Khoảng giá:</label>
+                <select id="priceRange">
+                    <option>Tất cả</option>
+                    <option>30k-70k</option>
+                    <option>Trên 70k</option>
+                </select>
+        
+                <label>Danh mục:</label>
+                <select id="sortedList">
+                    <option>A->Z</option>
+                    <option>Z->A</option>
+                </select>
+        
+                <button onclick="smartSearchProducts()">Lọc</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
             <div class="dropdown">
                 <button class="dropdown-button">
                     <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
@@ -370,7 +401,7 @@ $total = 0;
 
     <?php if (!empty($cart)): ?>
         <div style="text-align: center; margin-top: 30px;">
-            <button onclick="location.href='checkout.php'" style="padding: 12px 24px; background-color: #4CAF50; color: white; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">
+            <button onclick="location.href='payment-user.php'" style="padding: 12px 24px; background-color: #4CAF50; color: white; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">
                 Tiến hành thanh toán
             </button>
         </div>
@@ -503,73 +534,42 @@ $total = 0;
     </div>
     </div>
 
-    <script>
+  
 
-         const fruits = [
-    { name: "Mãng cầu xiêm", link: "../itemInfo/custard-apple.html", priority: 1  },
-    { name: "Thanh long ruột đỏ", link: "../itemInfo/dragon-fruit.html", priority: 2  },
-    { name: "Xoài cát", link: "../itemInfo/mango.html", priority: 3 },
-    { name: "Dưa hấu Long An", link: "../itemInfo/watermelon.html", priority: 4 },
-    { name: "Chôm chôm", link: "../itemInfo/rambutant.html", priority: 55 },
-    { name: "Ổi xá lị", link: "./itemInfo/guava.html", priority: 6 }
-    ];
-
-    let debounceTimeout;
-    function searchProducts() 
-    {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-    const searchBox = document.getElementById("searchBox");
-    const searchQuery = searchBox.value.toLowerCase();
-    const searchResults = document.getElementById("searchResults");
-    const priorityFruits = document.getElementById("priorityFruits");
-    priorityFruits.style.display = "none";
-    searchResults.innerHTML = "";
-    const filteredProducts = fruits.filter(product =>
-        product.name.toLowerCase().includes(searchQuery)
-    );
-    filteredProducts.sort((a, b) => b.priority - a.priority);
-
-    if (filteredProducts.length > 0) {
-        filteredProducts.forEach(product => {
-            const productLink = document.createElement("a");
-            productLink.href = product.link;
-            productLink.innerText = product.name;
-            productLink.classList.add("search-result"); 
-            searchResults.appendChild(productLink);
-        });
-
-        searchResults.style.display = "block";
-    } else {
-        searchResults.innerHTML = "<span class='empty'>Không tìm thấy sản phẩm nào</span>";
-        searchResults.style.display = "block";
-    }
-
- 
-    setTimeout(() => {
-        searchBox.value = ""; 
-        searchResults.style.display = "none"; 
-        searchResults.innerHTML = "";
-        priorityFruits.style.display = "block"; 
-    }, 5000); 
-}, 500); 
-}
+<script>
+const input = document.getElementById("searchInput");
+    const suggestBox = document.getElementById("suggestBox");
+    
+    input.addEventListener("keyup", function () {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestBox.innerHTML = "";
+                    data.forEach(item => {
+                        const div = document.createElement("div");
+                        div.textContent = item;
+                        div.onclick = () => {
+                            input.value = item;
+                            suggestBox.innerHTML = "";
+                        };
+                        suggestBox.appendChild(div);
+                    });
+                });
+        } else {
+            suggestBox.innerHTML = "";
+        }
+    });
+    
+    document.addEventListener("click", function (e) {
+        if (e.target !== input) {
+            suggestBox.innerHTML = "";
+        }
+    });
 
 
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-button.addEventListener('click', function() {
-    const isConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?");
-    if (isConfirmed) 
-    {
-        cartCount++;
-        document.getElementById('cart-count').textContent = cartCount;
-        localStorage.setItem('cartCount', cartCount);
-    }
-});
-});
-
-
-         document.querySelector('.dropdown-button').addEventListener('click', function() {
+document.querySelector('.dropdown-button').addEventListener('click', function() {
       const dropdown = this.parentElement;
       dropdown.classList.toggle('active');
     });
@@ -596,9 +596,7 @@ button.addEventListener('click', function() {
             modal.style.display = "none";
         }
     };
-    </script>
-
-<script src="../js/cart.js"></script>
+</script>
 
 
 <footer>  

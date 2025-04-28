@@ -133,6 +133,7 @@ $total = 0;
         .dropdown-button span{
             color: #333;
         }
+        
         .modal {
             display: none; /* Ban đầu ẩn */
             position: fixed;
@@ -209,6 +210,33 @@ $total = 0;
         button:hover {
             background: #0056b3;
         }
+
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+    
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+    
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
        
     </style>  
 </head>  
@@ -265,40 +293,41 @@ $total = 0;
                     <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
                 </a>  
             </div>    
-            <div class="search-container">   
+            <div class="search-container">
+    <form action="searchProducts.php" method="GET">
+        <input type="text" name="search" id="searchInput" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+        <div id="suggestBox" class="autocomplete-suggestions"></div>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button type="submit">Tìm kiếm</button>
+            <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+        </div>
+
+        <!-- Modal nâng cao -->
+        <div id="searchModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Tìm kiếm nâng cao</h2>
                 
-                <div >
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                    <button onclick="searchProducts()">Tìm kiếm</button>
-                    <button id="toggleSearch">Tìm kiếm nâng cao</button>
-                </div>  
-                <div id="searchResults"></div>
-                <div id="priorityFruits" class="hidden">
-                    <ul>
-                    </ul>
-                </div>   
-                <div id="searchModal" class="modal" style="display:none;">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2>Tìm kiếm nâng cao</h2>
-                        
-                        <label>Khoảng giá:</label>
-                        <select id="priceRange">
-                            <option>Tất cả</option>
-                            <option>30k-70k</option>
-                            <option>Trên 70k</option>
-                        </select>
-                
-                        <label>Danh mục:</label>
-                        <select id="sortedList">
-                            <option>A->Z</option>
-                            <option>Z->A</option>
-                        </select>
-                
-                        <button onclick="smartSearchProducts()">Lọc</button>
-                    </div>
-                </div>  
-                </div>
+                <label>Khoảng giá:</label>
+                <select id="priceRange">
+                    <option>Tất cả</option>
+                    <option>30k-70k</option>
+                    <option>Trên 70k</option>
+                </select>
+        
+                <label>Danh mục:</label>
+                <select id="sortedList">
+                    <option>A->Z</option>
+                    <option>Z->A</option>
+                </select>
+        
+                <button onclick="smartSearchProducts()">Lọc</button>
+            </div>
+        </div>
+
+    </form>
+</div>
             <div class="auth-buttons">  
                 <a href="../user/regis.php" title="Đăng ký" target="_blank">Đăng ký</a>  
                 <span>|</span>  

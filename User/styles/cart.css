@@ -1,3 +1,14 @@
+#suggestBox {
+  position: absolute;
+  top: 100%; /* ➔ ngay dưới input */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
 body {
   font-family: Arial, sans-serif;
   background-color: #f8f9fa;
