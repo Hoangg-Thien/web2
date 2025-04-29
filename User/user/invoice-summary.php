@@ -1,175 +1,956 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/invoice-summary.css">  
+<?php
+session_start();
+require_once('connect.php');
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user_name'])) {
+    header("Location: login-user.php");
+    exit();
+}
+
+$user_name = $_SESSION['user_name'];
+
+// Lấy thông tin người dùng
+$user_query = "SELECT * FROM nguoidung WHERE user_name = ?";
+$stmt = $conn->prepare($user_query);
+$stmt->bind_param("s", $user_name);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+
+// Lấy danh sách hóa đơn
+$sql = "SELECT h.order_id as invoice_id, h.order_status as status, h.order_date, h.PaymentMethod as payment_method, 
+        CONCAT(h.address, ', ', h.district, ', ', h.city) as shipping_address, h.phone,
+        GROUP_CONCAT(CONCAT(s.product_name, '|', c.quantity, '|', s.product_price, '|', s.product_image) SEPARATOR '||') as order_items
+                 FROM hoadon h
+        JOIN chitiethoadon c ON h.order_id = c.order_id
+        JOIN sanpham s ON c.product_id = s.product_id
+        WHERE h.user_name = ?
+        GROUP BY h.order_id
+                 ORDER BY h.order_date DESC";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_name);
+$stmt->execute();
+$invoices = $stmt->get_result();
+?>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tóm Tắt Hóa Đơn - SEA FRUITS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles/news.css">
     <link rel="stylesheet" href="../styles/grid.css">
-    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trang Tóm Tắt Hóa Đơn</title>  
-    <style>  
-        .search-container {  
-            display: flex;  
-            align-items: center;  
-            margin-top: 20px;  
-        }  
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
+    <style>
+        /* Header styles */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
 
-        #searchBox {  
-            padding: 10px;  
-            border-radius: 5px;  
-            border: 1px solid #ccc;  
-            width: 80%;  
-            margin-right: 10px;  
-        }  
+        #searchBox {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+            margin-right: 10px;
+        }
 
-        button {  
-            padding: 10px 20px;  
-            border: none;  
-            background-color: #4CAF50;  
-            color: white;  
-            border-radius: 5px;  
-            cursor: pointer;  
-        }  
-    </style>  
-</head>  
-<body>  
-    <header>  
-        <a href="#" class="fruit">  
-            <img src="../img/carrotheader.png" alt="Cà rốt" />  
-            Cà rốt  
-        </a>  
-        <a href="#" class="fruit">  
-            <img src="../img/potatoheader.png" alt="Khoai tây" />  
-            Khoai tây  
-        </a>  
-        <a href="#" class="fruit">  
-            <img src="../img/watermelonheader.png" alt="Dưa hấu" />  
-            Dưa hấu  
-        </a>  
-        <a href="#" class="fruit">  
-            <img src="../img/orangeheader.png" alt="Trái cam" />  
-            Cam  
-        </a>  
-        <a href="#" class="fruit">  
-            <img src="../img/duagangheader.png" alt="Đu đủ" />  
-            Đu đủ  
-        </a>  
-        <a href="#" class="fruit">  
-            <img src="../img/tomatoheader.png" alt="Cà chua" />  
-            Cà chua  
-        </a>  
-    </header>  
-    <div class="sea-fruit-container">  
-        <div>  
-            <div class="sea-fruit">SEA FRUITS</div>  
-        </div>  
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-        <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM</div>  
-            <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
-                <a href="../user/introducelogin.php">Giới thiệu</a>  
-                <a href="../user/newslogin.php">Tin tức</a>  
-                <a href="../user/contactlogin.php">Liên hệ</a>   
-                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
-                    <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
-                </a>  
-            </div>  
-            <div class="search-container">  
-                <div>  
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">  
-                    <button onclick="searchProducts()">Tìm kiếm</button>  
-                </div>  
-            </div>  
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="../user/userinfo.php">Tài khoản</a>
-                  <a href="../user/history-user.php">Lịch sử</a>
-                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.php">Đăng xuất</a>
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #searchResults {
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+
+        #searchResults a {
+            display: block;
+            padding: 5px;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 5px;
+        }
+
+        #searchResults a:hover {
+            text-decoration: underline;
+        }
+
+        #priorityFruits {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            display: none;
+            border-radius: 5px;
+        }
+
+        #priorityFruits ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #priorityFruits li {
+            margin-bottom: 8px;
+        }
+
+        #priorityFruits a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        #priorityFruits a:hover {
+            text-decoration: underline;
+        }
+
+        .search-result {
+            display: block;
+            margin: 5px 0;
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .search-result:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            color: red;
+            font-weight: bold;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-button i {
+            color: #333;
+        }
+
+        .dropdown-button span {
+            color: #333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .close:hover {
+            color: red;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: green;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 250px;
+        }
+
+        .autocomplete-suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .autocomplete-suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        /* Invoice styles */
+        .invoice-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .invoice-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .invoice-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .invoice-title h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .invoice-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            background: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .invoice-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .invoice-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .invoice-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .invoice-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .invoice-number {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .invoice-date {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .invoice-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .invoice-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .detail-label {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .invoice-items {
+            margin-top: 1rem;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .item-price {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .invoice-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        .invoice-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .download-btn {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .invoice-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .invoice-title {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .invoice-filters {
+                justify-content: center;
+            }
+
+            .invoice-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .invoice-details {
+                grid-template-columns: 1fr;
+            }
+
+            .invoice-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+     <a href="#" class="fruit">  
+         <img src="../img/carrotheader.png" alt="Cà rốt" />  
+         Cà rốt  
+     </a>  
+     <a href="#" class="fruit">  
+         <img src="../img/potatoheader.png" alt="Khoai tây" />  
+         Khoai tây  
+     </a>  
+     <a href="#" class="fruit">  
+         <img src="../img/watermelonheader.png" alt="Dưa hấu" />  
+         Dưa hấu  
+     </a>  
+     <a href="#" class="fruit">  
+         <img src="../img/orangeheader.png" alt="Trái cam" />  
+         Cam  
+     </a>  
+     <a href="#" class="fruit">  
+         <img src="../img/duagangheader.png" alt="Đu đủ" />  
+         Đu đủ  
+     </a>  
+     <a href="#" class="fruit">  
+         <img src="../img/tomatoheader.png" alt="Cà chua" />  
+         Cà chua  
+     </a>  
+ </header>  
+ <div class="sea-fruit-container">  
+     <div>  
+         <div class="sea-fruit">SEA FRUITS</div>  
+     </div>
+        <div style="display: flex; align-items: center; padding: 10px;">
+         <div class="product-category">DANH MỤC SẢN PHẨM 
+             <ul>
+                    <li><a href="declious-fruits.php">Trái cây ngon</a></li>
+                    <li><a href="Vietnamese-fruits.php">Trái cây Việt</a></li>
+                    <li><a href="Imported-fruits.php">Trái cây nhập khẩu</a></li>
+                    <li><a href="vegetables.php">Rau củ</a></li>
+                    <li><a href="Imported-fruits.php">Trái cây nhập khẩu</a></li>
+                    <li><a href="Imported-fruits.php">Các loại khác</a></li>
+             </ul>
+         </div>
+         
+         <div class="menu">  
+                <a href="../index.php" class="active">Trang chủ</a>  
+                <a href="introducelogin.php">Giới thiệu</a>  
+                <a href="newslogin.php">Tin tức</a>  
+                <a href="contactlogin.php">Liên hệ</a> 
+                <a href="cart-user.php" target="_blank" class="cart-icon">
+                 <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" style="margin-left: 5px; font-size: 14px;">0</span>
+             </a>
+         </div>
+         <div class="search-container">
+                <form action="searchProducts.php" method="GET">
+                    <div>
+                        <input type="text" name="search" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+                        <div id="suggestBox" class="autocomplete-suggestions"></div>
+                        <button type="submit">Tìm kiếm</button>
+                        <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
+                    </div>
+                
+                    <div id="searchResults"></div>
+                
+                    <div id="priorityFruits" class="hidden">
+                        <ul>
+                        </ul>
+                    </div>   
+                    <div id="searchModal" class="modal" style="display:none">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>Tìm kiếm nâng cao</h2>
+                            
+                            <label>Khoảng giá:</label>
+                            <select id="priceRange">
+                                <option>Tất cả</option>
+                                <option>30k-70k</option>
+                                <option>Trên 70k</option>
+                            </select>
+                    
+                            <label>Danh mục:</label>
+                            <select id="sortedList">
+                                <option>A->Z</option>
+                                <option>Z->A</option>
+                            </select>
+                    
+                            <button onclick="smartSearchProducts()">Lọc</button>
+                        </div>
+                    </div>  
+             </form>
+         </div>
+        
+     
+         <div class="dropdown">
+             <button class="dropdown-button">
+                    <i class="fa-solid fa-user" style="margin-right: 5px;"></i>
+                    <span>
+                        <?php
+                        if (isset($_SESSION['user_name'])) {
+                            echo "Xin chào, <strong>" . htmlspecialchars($_SESSION['user_name']) . "</strong>";
+                        } else {
+                            echo "Xin chào, khách!";
+                        }
+                        ?>
+                    </span>
+             </button>
+             <div class="dropdown-menu">
+                    <?php if (isset($_SESSION['user_name'])): ?>
+                        <a href="userinfo.php">Tài khoản</a>
+                        <a href="history-user.php">Lịch sử</a>
+                        <a href="invoice-summary.php">Tóm tắt hóa đơn</a>
+                        <a href="usernologin.php">Đăng xuất</a>
+                 <?php else: ?>
+                        <a href="login-user.php">Đăng nhập</a>
+                        <a href="regis.php">Đăng ký</a>
+                 <?php endif; ?>
+             </div>
+         </div>
+     </div>
+ </div>
+
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <div class="invoice-title">
+                <h1>Tóm Tắt Hóa Đơn</h1>
+            </div>
+        </div>
+
+        <div class="invoice-list">
+            <?php
+            if ($invoices && $invoices->num_rows > 0) {
+                while ($invoice = $invoices->fetch_assoc()) {
+                    $order_items = explode('||', $invoice['order_items']);
+                    $total = 0;
+            ?>
+                <div class="invoice-item">
+                    <div class="invoice-header">
+                        <div class="invoice-info">
+                            <span class="invoice-number">Hóa đơn #<?php echo $invoice['invoice_id']; ?></span>
+                            <span class="invoice-date">Ngày đặt: <?php echo date('d/m/Y', strtotime($invoice['order_date'])); ?></span>
+                        </div>
+                        <span class="invoice-status status-<?php echo strtolower($invoice['status']); ?>">
+                            <?php 
+                            switch($invoice['status']) {
+                                case 'completed':
+                                    echo 'Hoàn thành';
+                                    break;
+                                case 'pending':
+                                    echo 'Đang xử lý';
+                                    break;
+                                case 'cancelled':
+                                    echo 'Đã hủy';
+                                    break;
+                            }
+                            ?>
+                        </span>
+                    </div>
+                    <div class="invoice-details">
+                        <div class="detail-group">
+                            <span class="detail-label">Phương thức thanh toán</span>
+                            <span class="detail-value"><?php echo $invoice['payment_method']; ?></span>
+                        </div>
+                        <div class="detail-group">
+                            <span class="detail-label">Địa chỉ giao hàng</span>
+                            <span class="detail-value"><?php echo $invoice['shipping_address']; ?></span>
+                        </div>
+                        <div class="detail-group">
+                            <span class="detail-label">Số điện thoại</span>
+                            <span class="detail-value"><?php echo $invoice['phone']; ?></span>
+                        </div>
+                    </div>
+                    <div class="invoice-items">
+                        <div class="item-list">
+                            <?php
+                            foreach ($order_items as $item) {
+                                list($name, $quantity, $price, $image) = explode('|', $item);
+                                $subtotal = $price * $quantity;
+                                $total += $subtotal;
+                            ?>
+                                <div class="item">
+                                    <div class="item-info">
+                                        <img src="../img/<?php echo $image; ?>" 
+                                             alt="<?php echo $name; ?>" class="item-image">
+                                        <span class="item-name"><?php echo $name; ?></span>
+                                    </div>
+                                    <span class="item-price"><?php echo number_format($subtotal); ?>đ</span>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="invoice-total">
+                            <span>Tổng cộng</span>
+                            <span><?php echo number_format($total); ?>đ</span>
+                        </div>
+                    </div>
+                    <div class="invoice-actions">
+                        <button class="action-btn view-btn" onclick="viewInvoiceDetails(<?php echo $invoice['invoice_id']; ?>)">
+                            <i class="fas fa-eye"></i>
+                            Xem chi tiết
+                        </button>
+                    </div>
                 </div>
-              </div>
-        </div>  
+            <?php
+                }
+            } else {
+                echo '<p class="no-invoices">Bạn chưa có hóa đơn nào.</p>';
+            }
+            ?>
+        </div>
+
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">></button>
+        </div>
     </div>
-    <h1>Tóm Tắt Hóa Đơn</h1>
-    <main class="main-content">
-        <div class="summary-container">
-            <table class="invoice-table">
-                <thead>
-                    <tr>
-                        <th>Mã hóa đơn</th>
-                        <th>Ngày</th>
-                        <th>Tổng tiền (VND)</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>SF01</td>
-                        <td>2024-11-25</td>
-                        <td>1,200,000</td>
-                        <td>Đã thanh toán</td>
-                        <td><a href="#">Xem</a></td>
-                    </tr>
-                    <tr>
-                        <td>SF02</td>
-                        <td>2024-11-20</td>
-                        <td>850,000</td>
-                        <td>Đang xử lý</td>
-                        <td><a href="#">Xem</a></td>
-                    </tr>
-                    <tr>
-                        <td>SF03</td>
-                        <td>2024-11-10</td>
-                        <td>500,000</td>
-                        <td>Đã hủy</td>
-                        <td><a href="#">Xem</a></td>
-                    </tr>
-                </tbody>
-            </table>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="newslogin.php">Tin tức</a></li>
+                    <li><a href="contactlogin.php">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
         </div>
-    </main>
-     <section class="customer_service container">
-        <div class="col-md-4">
-            <h3>Dịch vụ khách hàng</h3>
-            <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn.</p>
-            <ul>
-                <li><strong>Hotline:</strong> 0123 456 789</li>
-                <li><strong>Email:</strong> AboutUs@shop.com</li>
-                <li><strong>Thời gian làm việc:</strong> 8h - 20h hàng ngày</li>
-            </ul>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
-        <div class="col-md-4">
-            <h3>Thông tin shop</h3>
-            <p>Tên shop: SeaFruits</p>
-            <p>Địa chỉ: 273, An Dương Vương, Quận 5, TPHCM</p>
-            <p>Chúng tôi cung cấp trái cây tươi ngon nhất.</p>
-        </div>
-    </section>
+    </div>
+
     <script>
+        // JavaScript for filtering invoices
+        function filterInvoices(status) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Get all invoice items
+            const invoices = document.querySelectorAll('.invoice-item');
+            
+            invoices.forEach(invoice => {
+                const invoiceStatus = invoice.querySelector('.invoice-status');
+                
+                if (status === 'all') {
+                    invoice.style.display = 'block';
+                } else if (status === 'completed' && invoiceStatus.classList.contains('status-completed')) {
+                    invoice.style.display = 'block';
+                } else if (status === 'pending' && invoiceStatus.classList.contains('status-pending')) {
+                    invoice.style.display = 'block';
+                } else if (status === 'cancelled' && invoiceStatus.classList.contains('status-cancelled')) {
+                    invoice.style.display = 'block';
+                } else {
+                    invoice.style.display = 'none';
+                }
+            });
+        }
+
+        // JavaScript for viewing invoice details
+        function viewInvoiceDetails(invoiceId) {
+            window.location.href = `invoice-detail.php?id=${invoiceId}`;
+        }
+
+        // JavaScript for dropdown menu
         document.querySelector('.dropdown-button').addEventListener('click', function() {
-          const dropdown = this.parentElement;
-          dropdown.classList.toggle('active');
+            const dropdown = this.parentElement;
+            dropdown.classList.toggle('active');
         });
-    
+        
         window.addEventListener('click', function(e) {
-          const dropdown = document.querySelector('.dropdown');
-          if (!dropdown.contains(e.target)) {
-            dropdown.classList.remove('active');
-          }
+            const dropdown = document.querySelector('.dropdown');
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
         });
+
+        // JavaScript for product categories
+        function showFruits(category) {
+            let fruitList = document.getElementById("fruitList");
+            let categoryTitle = document.getElementById("categoryTitle");
+            let fruitItems = document.getElementById("fruitItems");
+
+            categoryTitle.textContent = category;
+            fruitItems.innerHTML = "";
+
+            const fruits = {
+                "Trái cây ngon": [
+                    { name: "Dâu tây", link: "product-detail.php?name=dautay" },
+                    { name: "Mận hậu", link: "product-detail.php?name=manhau" },
+                    { name: "Xoài cát", link: "product-detail.php?name=xoaicat" },
+                    { name: "Dưa hấu", link: "product-detail.php?name=duahau" },
+                    { name: "Chôm chôm", link: "product-detail.php?name=chomchom" },
+                    { name: "Ổi xá lị", link: "product-detail.php?name=oilaxi" }
+                ],
+                "Trái cây Việt": [
+                    { name: "Mít Thái", link: "product-detail.php?name=mitthai" },
+                    { name: "Sầu riêng Ri6", link: "product-detail.php?name=saurieng" },
+                    { name: "Bưởi da xanh", link: "product-detail.php?name=buoidx" },
+                    { name: "Bòn Bon", link: "product-detail.php?name=bonbon" },
+                    { name: "Quýt đường", link: "product-detail.php?name=quytduong" },
+                    { name: "Mận Hà Nội", link: "product-detail.php?name=manhn" }
+                ],
+                "Trái cây nhập khẩu": [
+                    { name: "Nho Mỹ", link: "product-detail.php?name=nhomy" },
+                    { name: "Táo Nhật", link: "product-detail.php?name=taonhat" },
+                    { name: "Lê Hàn Quốc", link: "product-detail.php?name=lehan" },
+                    { name: "Cherry Úc", link: "product-detail.php?name=cherryuc" },
+                    { name: "Kiwi", link: "product-detail.php?name=kiwi" },
+                    { name: "Lựu Ai Cập", link: "product-detail.php?name=luuaicap" }
+                ]
+            };
+
+            if (fruits[category]) {
+                fruits[category].forEach(fruit => {
+                    let li = document.createElement("li");
+                    let a = document.createElement("a");
+                    a.textContent = fruit.name;
+                    a.href = fruit.link;
+                    li.appendChild(a);
+                    fruitItems.appendChild(li);
+                });
+                fruitList.style.display = "block";
+            }
+        }
+
+        function hideFruits() {
+            let fruitList = document.getElementById("fruitList");
+            fruitList.style.display = "none";
+        }
     </script>
-    <footer>  
-        <div>
-            Copyright by us<b>&#8482</b>
-        </div>
-    </footer>  
-</body>  
-</html>
+</body>
+</html> 

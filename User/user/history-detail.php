@@ -3,35 +3,44 @@ session_start();
 require_once('connect.php');
 
 // Kiểm tra đăng nhập
-//if (!isset($_SESSION['user_name'])) {
- //   header("Location: login.php");
-//exit();
-//}
-
-// Lấy thông tin người dùng
-$user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
-$user = null;
-
-if (!empty($user_name)) {
-$sql = "SELECT * FROM nguoidung WHERE user_name = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $user_name);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: login-user.php");
+    exit();
 }
 
-// Lấy lịch sử mua hàng
-$sql = "SELECT h.*, c.total_amount, c.quantity, c.unit_price, s.product_name, s.product_image 
-        FROM hoadon h 
-        JOIN chitiethoadon c ON h.order_id = c.order_id 
-        JOIN sanpham s ON c.product_id = s.product_id 
-        WHERE h.user_name = ? 
-        ORDER BY h.order_date DESC";
+// Kiểm tra ID đơn hàng
+if (!isset($_GET['id'])) {
+    header("Location: history-user.php");
+    exit();
+}
+
+$order_id = $_GET['id'];
+$user_name = $_SESSION['user_name'];
+
+// Lấy thông tin chi tiết đơn hàng
+$sql = "SELECT h.order_id, h.order_status, h.order_date, h.PaymentMethod, 
+        CONCAT(h.address, ', ', h.district, ', ', h.city) as shipping_address, 
+        h.phone, h.customerName, h.receipter,
+        GROUP_CONCAT(CONCAT(s.product_name, '|', c.quantity, '|', s.product_price, '|', s.product_image) SEPARATOR '||') as order_items
+        FROM hoadon h
+        JOIN chitiethoadon c ON h.order_id = c.order_id
+        JOIN sanpham s ON c.product_id = s.product_id
+        WHERE h.order_id = ? AND h.user_name = ?
+        GROUP BY h.order_id";
+
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $user_name);
+$stmt->bind_param("is", $order_id, $user_name);
 $stmt->execute();
-$orders = $stmt->get_result();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    header("Location: history-user.php");
+    exit();
+}
+
+$order = $result->fetch_assoc();
+$order_items = explode('||', $order['order_items']);
+$total = 0;
 ?>
 
 <!DOCTYPE html>
@@ -45,78 +54,129 @@ $orders = $stmt->get_result();
     <link rel="stylesheet" href="../styles/index.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
-    <title>Lịch Sử Mua Hàng - SEA FRUITS</title>
+    <title>Chi Tiết Đơn Hàng - SEA FRUITS</title>
     <style>
-        /* Order History Styles */
-        .history-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .history-title {
-            color: #333;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .history-title i {
-            color: #4CAF50;
-        }
-
-        .order-card {
-            background: #fff;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            transition: transform 0.2s ease;
-        }
-
-        .order-card:hover {
-            transform: translateY(-2px);
+        .order-detail-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .order-header {
-            background: #f8f9fa;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        .order-title {
+            color: #4CAF50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
         }
 
         .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .order-items {
+            margin-bottom: 2rem;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
-        .order-date {
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .item-quantity {
             color: #666;
-            font-size: 0.95em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .order-status {
-            padding: 8px 15px;
+        .item-price {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 2rem;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #45a049;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .status-completed {
@@ -124,154 +184,15 @@ $orders = $stmt->get_result();
             color: #155724;
         }
 
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
         .status-cancelled {
             background: #f8d7da;
             color: #721c24;
         }
-
-        .order-items {
-            padding: 25px;
-        }
-
-        .item {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .item:last-child {
-            border-bottom: none;
-        }
-
-        .item-image {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-
-        .item-price {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 5px;
-        }
-
-        .item-quantity {
-            color: #666;
-            font-size: 0.95em;
-        }
-
-        .order-total {
-            padding: 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
-            text-align: right;
-            font-weight: bold;
-            color: #333;
-            font-size: 1.1em;
-        }
-
-        .no-orders {
-            text-align: center;
-            padding: 50px 20px;
-            color: #666;
-            font-size: 1.2em;
-            background: #f8f9fa;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .no-orders i {
-            font-size: 3em;
-            color: #ddd;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .order-number {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .order-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            padding: 0 20px 20px;
-        }
-
-        .order-action-btn {
-            padding: 8px 15px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .view-details-btn {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .view-details-btn:hover {
-            background: #45a049;
-        }
-
-        .cancel-order-btn {
-            background: #dc3545;
-            color: white;
-        }
-
-        .cancel-order-btn:hover {
-            background: #c82333;
-        }
-
-        @media (max-width: 768px) {
-            .order-info {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .item {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-
-            .item-image {
-                width: 100%;
-                height: 200px;
-            }
-
-            .order-actions {
-                flex-direction: column;
-            }
-
-            .order-action-btn {
-                width: 100%;
-            }
-        }
-
-        /* Existing styles remain unchanged */
         .search-container {
             display: flex;
             align-items: center;
@@ -361,22 +282,25 @@ $orders = $stmt->get_result();
             font-size: 18px;
             display: flex;
             align-items: center;
+            padding: 10px;
         }
         .dropdown-menu {
             display: none;
             position: absolute;
             top: 100%;
-            left: 0;
+            right: 0;
             background-color: #f9f9f9;
             min-width: 160px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             z-index: 1;
+            border-radius: 5px;
         }
         .dropdown-menu a {
             display: block;
             padding: 10px;
             text-decoration: none;
             color: black;
+            transition: background-color 0.3s;
         }
         .dropdown-menu a:hover {
             background-color: #f1f1f1;
@@ -386,11 +310,11 @@ $orders = $stmt->get_result();
         }
         .dropdown-button i {
             color: #333;
+            margin-right: 5px;
         }
         .dropdown-button span {
             color: #333;
         }
-
         /* News container styles */
         .news-container {
             max-width: 1200px;
@@ -437,7 +361,7 @@ $orders = $stmt->get_result();
         }
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, 
             gap: 30px;
         }
         .news-item {
@@ -490,7 +414,6 @@ $orders = $stmt->get_result();
         .read-more:hover {
             text-decoration: underline;
         }
-
         /* Responsive styles */
         @media (max-width: 768px) {
             .featured-article {
@@ -507,7 +430,6 @@ $orders = $stmt->get_result();
                 grid-template-columns: 1fr;
             }
         }
-
         /* Animation and performance optimizations */
         .news-item {
             animation: fadeIn 0.5s ease;
@@ -522,7 +444,6 @@ $orders = $stmt->get_result();
                 transform: translateY(0);
             }
         }
-
         /* Loading state */
         .news-container {
             min-height: 400px;
@@ -534,13 +455,11 @@ $orders = $stmt->get_result();
             left: 50%;
             transform: translate(-50%, -50%);
         }
-
         /* Performance optimization */
         .news-grid {
             contain: content;
             will-change: transform;
         }
-
         /* Touch targets optimization */
         @media (pointer: coarse) {
             .category-btn,
@@ -554,7 +473,6 @@ $orders = $stmt->get_result();
                 padding: 8px 0;
             }
         }
-
         /* Read more button */
         .read-more-btn {
             display: inline-block;
@@ -568,7 +486,6 @@ $orders = $stmt->get_result();
         .read-more-btn:hover {
             background-color: #45a049;
         }
-
         .modal {
             display: none; /* Ban đầu ẩn */
             position: fixed;
@@ -703,7 +620,7 @@ $orders = $stmt->get_result();
             
             <div class="dropdown">
                 <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 5px;"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>
                         <?php
                         if (isset($_SESSION['user_name'])) {
@@ -728,83 +645,88 @@ $orders = $stmt->get_result();
             </div>
         </div>  
     </div>
-
-    <div class="history-container">
-        <h2 class="history-title">
-            <i class="fas fa-history"></i>
-            Lịch Sử Mua Hàng
-        </h2>
-        
-        <?php if ($orders->num_rows > 0): ?>
-            <?php while($order = $orders->fetch_assoc()): ?>
-                <div class="order-card">
-                    <div class="order-header">
-                        <div class="order-number">
-                            <i class="fas fa-receipt"></i>
-                            Mã đơn hàng: #<?php echo str_pad($order['order_id'], 6, '0', STR_PAD_LEFT); ?>
-                        </div>
-                        <div class="order-info">
-                            <div class="order-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?>
-                            </div>
-                            <div class="order-status <?php echo 'status-' . strtolower($order['order_status']); ?>">
-                                <i class="fas fa-circle"></i>
-                                <?php echo htmlspecialchars($order['order_status']); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="order-items">
-                        <div class="item">
-                            <img src="../img/<?php echo htmlspecialchars($order['product_image']); ?>" 
-                                 alt="<?php echo htmlspecialchars($order['product_name']); ?>" 
-                                 class="item-image">
-                            <div class="item-details">
-                                <div class="item-name"><?php echo htmlspecialchars($order['product_name']); ?></div>
-                                <div class="item-price">
-                                    <i class="fas fa-tag"></i>
-                                    Giá: <?php echo number_format($order['unit_price']); ?> VNĐ
-                                </div>
-                                <div class="item-quantity">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Số lượng: <?php echo $order['quantity']; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="order-total">
-                        <i class="fas fa-money-bill-wave"></i>
-                        Tổng tiền: <?php echo number_format($order['total_amount']); ?> VNĐ
-                    </div>
-                    <div class="order-actions">
-                        <a href="history-detail.php?id=<?php echo $order['order_id']; ?>" class="order-action-btn view-details-btn">
-                            <i class="fas fa-eye"></i> Xem chi tiết
-                        </a>
-                        <?php if ($order['order_status'] == 'Pending'): ?>
-                            <button class="order-action-btn cancel-order-btn">
-                                <i class="fas fa-times"></i> Hủy đơn hàng
-                            </button>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <div class="no-orders">
-                <i class="fas fa-shopping-bag"></i>
-                <p>Bạn chưa có đơn hàng nào.</p>
-                <a href="../index.php" class="order-action-btn view-details-btn" style="display: inline-block; margin-top: 15px;">
-                    <i class="fas fa-shopping-cart"></i> Mua sắm ngay
-                </a>
-            </div>
-        <?php endif; ?>
-    </div>
-
-    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
-        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
-        <div style="padding:10px;">
-            <div>Hotline: 0123456789</div>
-            <div>Email: AboutUs@gmail.com</div>
+    <div class="order-detail-container">
+        <div class="order-header">
+            <h1 class="order-title">Chi Tiết Đơn Hàng #<?php echo $order['order_id']; ?></h1>
+            <span class="status-badge status-<?php echo strtolower($order['order_status']); ?>">
+                <?php 
+                switch($order['order_status']) {
+                    case 'Giao thành công':
+                        echo 'Hoàn thành';
+                        break;
+                    case 'Đã xác nhận':
+                        echo 'Đang xử lý';
+                        break;
+                    case 'Chưa xác nhận':
+                        echo 'Đang chờ xác nhận';
+                        break;
+                    case 'Đã hủy':
+                        echo 'Đã hủy';
+                        break;
+                    default:
+                        echo $order['order_status'];
+                }
+                ?>
+            </span>
         </div>
+
+        <div class="order-info">
+            <div class="info-group">
+                <span class="info-label">Ngày đặt hàng</span>
+                <span class="info-value"><?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Phương thức thanh toán</span>
+                <span class="info-value"><?php echo $order['PaymentMethod']; ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Tên khách hàng</span>
+                <span class="info-value"><?php echo $order['customerName']; ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Người nhận</span>
+                <span class="info-value"><?php echo $order['receipter']; ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Địa chỉ giao hàng</span>
+                <span class="info-value"><?php echo $order['shipping_address']; ?></span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Số điện thoại</span>
+                <span class="info-value"><?php echo $order['phone']; ?></span>
+            </div>
+        </div>
+
+        <div class="order-items">
+            <h2>Sản phẩm đã đặt</h2>
+            <div class="item-list">
+                <?php
+                foreach ($order_items as $item) {
+                    list($name, $quantity, $price, $image) = explode('|', $item);
+                    $subtotal = $price * $quantity;
+                    $total += $subtotal;
+                ?>
+                    <div class="item">
+                        <div class="item-info">
+                            <img src="../img/<?php echo $image; ?>" alt="<?php echo $name; ?>" class="item-image">
+                            <div>
+                                <div class="item-name"><?php echo $name; ?></div>
+                                <div class="item-quantity">Số lượng: <?php echo $quantity; ?></div>
+                            </div>
+                        </div>
+                        <div class="item-price"><?php echo number_format($subtotal); ?>đ</div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="order-total">
+                <span>Tổng cộng</span>
+                <span><?php echo number_format($total); ?>đ</span>
+            </div>
+        </div>
+
+        <a href="history-user.php" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
     </div>
 
     <div class="footer">
@@ -850,72 +772,68 @@ $orders = $stmt->get_result();
             <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
     </div>
-
     <script>
-        document.querySelector('.dropdown-button').addEventListener('click', function() {
-            const dropdown = this.parentElement;
-            dropdown.classList.toggle('active');
-        });
-
-        window.addEventListener('click', function(e) {
-            const dropdown = document.querySelector('.dropdown');
-            if (!dropdown.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-
-        function showFruits(category) {
-            let fruitList = document.getElementById("fruitList");
-            let categoryTitle = document.getElementById("categoryTitle");
-            let fruitItems = document.getElementById("fruitItems");
-            
-            categoryTitle.textContent = category;
-            fruitItems.innerHTML = "";
-            
-            const fruits = {
-                "Trái cây ngon": [
-                    { name: "Dâu tây", link: "product-detail.php?name=dautay" },
-                    { name: "Mận hậu", link: "product-detail.php?name=manhau" },
-                    { name: "Xoài cát", link: "product-detail.php?name=xoaicat" },
-                    { name: "Dưa hấu", link: "product-detail.php?name=duahau" },
-                    { name: "Chôm chôm", link: "product-detail.php?name=chomchom" },
-                    { name: "Ổi xá lị", link: "product-detail.php?name=oilaxi" }
-                ],
-                "Trái cây Việt": [
-                    { name: "Mít Thái", link: "product-detail.php?name=mitthai" },
-                    { name: "Sầu riêng Ri6", link: "product-detail.php?name=saurieng" },
-                    { name: "Bưởi da xanh", link: "product-detail.php?name=buoidx" },
-                    { name: "Bòn Bon", link: "product-detail.php?name=bonbon" },
-                    { name: "Quýt đường", link: "product-detail.php?name=quytduong" },
-                    { name: "Mận Hà Nội", link: "product-detail.php?name=manhn" }
-                ],
-                "Trái cây nhập khẩu": [
-                    { name: "Nho Mỹ", link: "product-detail.php?name=nhomy" },
-                    { name: "Táo Nhật", link: "product-detail.php?name=taonhat" },
-                    { name: "Lê Hàn Quốc", link: "product-detail.php?name=lehan" },
-                    { name: "Cherry Úc", link: "product-detail.php?name=cherryuc" },
-                    { name: "Kiwi", link: "product-detail.php?name=kiwi" },
-                    { name: "Lựu Ai Cập", link: "product-detail.php?name=luuaicap" }
-                ]
-            };
-
-            if (fruits[category]) {
-                fruits[category].forEach(fruit => {
-                    let li = document.createElement("li");
-                    let a = document.createElement("a");
-                    a.textContent = fruit.name;
-                    a.href = fruit.link;
-                    li.appendChild(a);
-                    fruitItems.appendChild(li);
-                });
-                fruitList.style.display = "block";
-            }
+    document.querySelector('.dropdown-button').addEventListener('click', function() {
+        const dropdown = this.parentElement;
+        dropdown.classList.toggle('active');
+    });
+    window.addEventListener('click', function(e) {
+        const dropdown = document.querySelector('.dropdown');
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
         }
-
-        function hideFruits() {
-            let fruitList = document.getElementById("fruitList");
-            fruitList.style.display = "none";
+    });
+    function showFruits(category) {
+        let fruitList = document.getElementById("fruitList");
+        let categoryTitle = document.getElementById("categoryTitle");
+        let fruitItems = document.getElementById("fruitItems");
+        
+        categoryTitle.textContent = category;
+        fruitItems.innerHTML = "";
+        
+        const fruits = {
+            "Trái cây ngon": [
+                { name: "Dâu tây", link: "product-detail.php?name=dautay" },
+                { name: "Mận hậu", link: "product-detail.php?name=manhau" },
+                { name: "Xoài cát", link: "product-detail.php?name=xoaicat" },
+                { name: "Dưa hấu", link: "product-detail.php?name=duahau" },
+                { name: "Chôm chôm", link: "product-detail.php?name=chomchom" },
+                { name: "Ổi xá lị", link: "product-detail.php?name=oilaxi" }
+            ],
+            "Trái cây Việt": [
+                { name: "Mít Thái", link: "product-detail.php?name=mitthai" },
+                { name: "Sầu riêng Ri6", link: "product-detail.php?name=saurieng" },
+                { name: "Bưởi da xanh", link: "product-detail.php?name=buoidx" },
+                { name: "Bòn Bon", link: "product-detail.php?name=bonbon" },
+                { name: "Quýt đường", link: "product-detail.php?name=quytduong" },
+                { name: "Mận Hà Nội", link: "product-detail.php?name=manhn" }
+            ],
+            "Trái cây nhập khẩu": [
+                { name: "Nho Mỹ", link: "product-detail.php?name=nhomy" },
+                { name: "Táo Nhật", link: "product-detail.php?name=taonhat" },
+                { name: "Lê Hàn Quốc", link: "product-detail.php?name=lehan" },
+                { name: "Cherry Úc", link: "product-detail.php?name=cherryuc" },
+                { name: "Kiwi", link: "product-detail.php?name=kiwi" },
+                { name: "Lựu Ai Cập", link: "product-detail.php?name=luuaicap" }
+            ]
+        };
+        if (fruits[category]) {
+            fruits[category].forEach(fruit => {
+                let li = document.createElement("li");
+                let a = document.createElement("a");
+                a.textContent = fruit.name;
+                a.href = fruit.link;
+                li.appendChild(a);
+                fruitItems.appendChild(li);
+            });
+            fruitList.style.display = "block";
         }
-    </script>
+    }
+    function hideFruits() {
+        let fruitList = document.getElementById("fruitList");
+        fruitList.style.display = "none";
+    }
+</script>
+         
 </body>
 </html> 

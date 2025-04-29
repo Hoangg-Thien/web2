@@ -1,71 +1,207 @@
 <?php
 session_start();
 ?>
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
-    <link rel="stylesheet" href="../styles/userinfo.css">  
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../styles/grid.css">
-    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-    <title>Trang Tài Khoản</title>  
-    <style>  
-        .search-container {  
-            display: flex;  
-            align-items: center;  
-            margin-top: 20px;  
-        }  
-        #searchBox {  
-            padding: 10px;  
-            border-radius: 5px;  
-            border: 1px solid #ccc;  
-            width: 80%;  
-            margin-right: 10px;  
-        }  
-        button {  
-            padding: 10px 20px;  
-            border: none;  
-            background-color: #4CAF50;  
-            color: white;  
-            border-radius: 5px;  
-            cursor: pointer;  
-        }  
-    </style>  
-</head>  
-<body>  
-    <header>  
-        <a href="#" class="fruit"><img src="../img/carrotheader.png" alt="Cà rốt" /> Cà rốt</a>  
-        <a href="#" class="fruit"><img src="../img/potatoheader.png" alt="Khoai tây" /> Khoai tây</a>  
-        <a href="#" class="fruit"><img src="../img/watermelonheader.png" alt="Dưa hấu" /> Dưa hấu</a>  
-        <a href="#" class="fruit"><img src="../img/orangeheader.png" alt="Trái cam" /> Cam</a>  
-        <a href="#" class="fruit"><img src="../img/duagangheader.png" alt="Đu đủ" /> Đu đủ</a>  
-        <a href="#" class="fruit"><img src="../img/tomatoheader.png" alt="Cà chua" /> Cà chua</a>  
-    </header>  
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
+    <title>Thông Tin Tài Khoản - SEA FRUITS</title>
+    <style>
+         .search-container {
+     display: flex;
+     align-items: center;
+     margin-top: 20px;
+ }
+ #searchBox {
+     padding: 10px;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+     width: 80%;
+     margin-right: 10px;
+ }
+ button {
+     padding: 10px 20px;
+     border: none;
+     background-color: #4CAF50;
+     color: white;
+     border-radius: 5px;
+     cursor: pointer;
+ }
+ button:hover {
+     background-color: #45a049;
+ }
+ #searchResults {
+     border: 1px solid #ccc;
+     max-height: 300px;
+     overflow-y: auto;
+     margin-top: 15px;
+     padding: 10px;
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     display: none;
+ }
+ #searchResults a {
+     display: block;
+     padding: 5px;
+     color: #333;
+     text-decoration: none;
+     margin-bottom: 5px;
+ }
+ #searchResults a:hover {
+     text-decoration: underline;
+ }
+ #priorityFruits {
+     margin-top: 10px;
+     padding: 10px;
+     border: 1px solid #ccc;
+     background-color: #f0f0f0;
+     display: none;
+     border-radius: 5px;
+ }
+ #priorityFruits ul {
+     list-style-type: none;
+     padding: 0;
+ }
+ #priorityFruits li {
+     margin-bottom: 8px;
+ }
+ #priorityFruits a {
+     color: blue;
+     text-decoration: none;
+ }
+ #priorityFruits a:hover {
+     text-decoration: underline;
+ }
+ .search-result {
+     display: block;
+     margin: 5px 0;
+     color: #0066cc;
+     text-decoration: none;
+ }
+ .search-result:hover {
+     text-decoration: underline;
+ }
+ .empty {
+     color: red;
+     font-weight: bold;
+ }
+ .dropdown {
+     position: relative;
+     display: inline-block;
+ }
+ .dropdown-button {
+     background: none;
+     border: none;      
+     cursor: pointer;
+     font-size: 18px;
+     display: flex;
+     align-items: center;
+ }
+ .dropdown-menu {
+     display: none;
+     position: absolute;
+     top: 100%;
+     left: 0;
+     background-color: #f9f9f9;
+     min-width: 160px;
+     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+     z-index: 1;
+ }
+ .dropdown-menu a {
+     display: block;
+     padding: 10px;
+     text-decoration: none;
+     color: black;
+ }
+ .dropdown-menu a:hover {
+     background-color: #f1f1f1;
+ }
+ .dropdown.active .dropdown-menu {
+     display: block;
+ }
+ .dropdown-button i{
+     color: #333;
+ }
+ .dropdown-button span{
+     color: #333;
+ }
+ 
+ .modal {
+     display: none; /* Ban đầu ẩn */
+     position: fixed;
+     z-index: 1000;
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     background-color: rgba(0, 0, 0, 0.4);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+ /* Nội dung popup */
+ .modal-content {
+     background: white;
+     padding: 20px;
+     border-radius: 10px;
+     width: 300px;
+     text-align: center;
+     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+     position: relative;
+     animation: fadeIn 0.3s ease-in-out;
+ }
+ /* Hiệu ứng mở popup */
+ @keyframes fadeIn {
+     from {
+         opacity: 0;
+         transform: translateY(-20px);
+     }
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="fruit"><img src="../img/carrotheader.png" alt="Cà rốt" /> Cà rốt</a>
+        <a href="#" class="fruit"><img src="../img/potatoheader.png" alt="Khoai tây" /> Khoai tây</a>
+        <a href="#" class="fruit"><img src="../img/watermelonheader.png" alt="Dưa hấu" /> Dưa hấu</a>
+        <a href="#" class="fruit"><img src="../img/orangeheader.png" alt="Trái cam" /> Cam</a>
+        <a href="#" class="fruit"><img src="../img/duagangheader.png" alt="Đu đủ" /> Đu đủ</a>
+        <a href="#" class="fruit"><img src="../img/tomatoheader.png" alt="Cà chua" /> Cà chua</a>
+    </header>
 
-    <div class="sea-fruit-container">  
-        <div><div class="sea-fruit">SEA FRUITS</div></div>  
+    <div class="sea-fruit-container">
+        <div><div class="sea-fruit">SEA FRUITS</div></div>
 
-        <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM</div>  
-            <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
-                <a href="../user/introducelogin.php">Giới thiệu</a>  
-                <a href="../user/newslogin.php">Tin tức</a>  
+        <div style="display: flex; align-items: center; padding: 10px 20px;">
+            <div class="product-category">DANH MỤC SẢN PHẨM</div>
+            <div class="menu">
+                <a href="../index.php" >Trang chủ</a>
+                <a href="../user/introducelogin.php">Giới thiệu</a>
+                <a href="../user/newslogin.php">Tin tức</a>
                 <a href="../user/contactlogin.php">Liên hệ</a>   
-                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
-                    <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
-                </a>  
-            </div>  
+                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
+                </a>
+            </div>
 
-            <div class="search-container">  
-                <div>  
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">  
-                    <button onclick="searchProducts()">Tìm kiếm</button>  
-                </div>  
-            </div>  
+            <div class="search-container">
+                <div>
+                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
+                    <button onclick="searchProducts()">Tìm kiếm</button>
+                </div>
+            </div>
 
             <div class="dropdown">
                 <button class="dropdown-button">

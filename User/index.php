@@ -423,14 +423,14 @@ session_start();
     $start = ($page - 1) * $limit;
 
    // Lấy tổng số sản phẩm
-$totalQuery = "SELECT COUNT(*) as total FROM sanpham WHERE hidden = 0";
+$totalQuery = "SELECT COUNT(*) as total FROM sanpham";
 $totalResult = $conn->query($totalQuery);
 $totalRow = $totalResult->fetch_assoc();
 $totalProducts = $totalRow['total'];
 $totalPages = ceil($totalProducts / $limit);
 
 // Truy vấn sản phẩm theo trang
-$sql = "SELECT * FROM sanpham WHERE hidden = 0 LIMIT $start, $limit";
+$sql = "SELECT * FROM sanpham LIMIT $start, $limit";
 $result = $conn->query($sql);
 
 
@@ -449,7 +449,7 @@ $result = $conn->query($sql);
                 </div>
 
                 <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
-                    <a href="./itemInfo/' . $row['product_link'] . '" class="info-icon" title="Xem thông tin chi tiết">
+                    <a href="./itemInfo/product_detail.php?id=' . $row['product_id'] . '" class="info-icon" title="Xem thông tin chi tiết">
                         <i class="fa-solid fa-circle-info fa-lg"></i>
                     </a>
                     <button class="add-to-cart-btn" title="Thêm vào giỏ hàng" onclick="confirmAddToCart(\'' . $row['product_id'] . '\')">
