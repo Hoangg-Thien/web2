@@ -5,7 +5,8 @@ include 'connect.php';
 if(isset($_POST['submit'])) {
     $username = trim($_POST['user_name']); 
     $password = $_POST['hashPass']; 
-    $stmt = $conn->prepare("SELECT user_id, fullname, user_name, hashPass FROM nguoidung WHERE user_name = ?");
+
+    $stmt = $conn->prepare("SELECT fullname, user_name, hashPass, user_email FROM nguoidung WHERE user_name = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -14,10 +15,10 @@ if(isset($_POST['submit'])) {
         $row = $result->fetch_assoc();
         
         if(password_verify($password, $row['hashPass'])) { 
-            $_SESSION['user_id'] = $row['user_id'];
-            $_SESSION['fullname'] = $row['fullname'];
             $_SESSION['user_name'] = $row['user_name'];
-            
+            $_SESSION['fullname'] = $row['fullname'];
+            $_SESSION['user_email'] = $row['user_email']; 
+
             echo "<script>alert('Đăng nhập thành công!'); window.location.href='../index.php';</script>";
             exit();
         } else {

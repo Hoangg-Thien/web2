@@ -380,7 +380,7 @@
                     <a href="../user/introduce.php">Giới thiệu</a>  
                     <a href="../user/news.php">Tin tức</a>  
                     <a href="../user/contact.php">Liên hệ</a> 
-                    <a href="../user/cartusernologin.php" target="_blank" class="cart-icon" title="Go to Cart">
+                    <a href="../user/cart-user-nologin.php" target="_blank" class="cart-icon" title="Go to Cart">
                         <i class="fas fa-shopping-cart"></i>
                         <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
                     </a>

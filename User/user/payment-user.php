@@ -1,9 +1,40 @@
 <?php
-session_start(); // luôn có dòng này để đọc session
+session_start(); // luôn có dòng này để đọc session\
 
-$user = [];
-if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
+if (!isset($_SESSION['user_name'])) {
+  echo "Bạn chưa đăng nhập.";
+  exit();
+}
+
+// Kết nối database
+$pdo = new PDO("mysql:host=localhost;dbname=c07db", "root", "");
+
+// Lấy user_name từ session
+$user_name = $_SESSION['user_name'];
+
+// Truy vấn database lấy thông tin user
+$stmt = $pdo->prepare("SELECT fullname, user_email, phone, user_address,district,city FROM nguoidung WHERE user_name = ?");
+$stmt->execute([$user_name]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+  echo "Không tìm thấy thông tin người dùng.";
+  exit();
+}
+// Xử lý form thanh toán
+if (isset($_POST['submit_payment'])) { // submit_payment là name="submit_payment" của nút submit
+
+  // Tạo session mới chứa thông tin thanh toán
+  $_SESSION['payment_info'] = [
+      'full_name' => $_POST['full_name'],
+      'address' => $_POST['address'],
+      'phone' => $_POST['phone'],
+      'payment_method' => $_POST['payment_method']
+  ];
+
+  // Chuyển sang trang hóa đơn
+  header('Location: invoice.php');
+  exit;
 }
 ?>
 
@@ -220,10 +251,10 @@ if (method === 'credit_card') {
   if (isChecked) {
     // Khi tích chọn ô, tự động điền thông tin
     document.getElementById('name').value = '<?php echo addslashes($user['fullname'] ?? ''); ?>';
-    document.getElementById('address').value = '<?php echo addslashes(($user['address'] ?? '') . ', ' . ($user['district'] ?? '') . ', ' . ($user['city'] ?? '')); ?>';
+    document.getElementById('address').value = '<?php echo addslashes(($user['user_address'] ?? '') . ', ' . ($user['district'] ?? '') . ', ' . ($user['city'] ?? '')); ?>';
 
     document.getElementById('phone').value = '<?php echo addslashes($user['phone'] ?? ''); ?>';
-    document.getElementById('email').value = '<?php echo addslashes($user['email'] ?? ''); ?>';
+    document.getElementById('email').value = '<?php echo addslashes($user['user_email'] ?? ''); ?>';
   } else {
     // Khi bỏ tick, xóa dữ liệu
     document.getElementById('name').value = '';
