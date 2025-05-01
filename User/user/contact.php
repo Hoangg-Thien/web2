@@ -1,3 +1,8 @@
+<?php
+session_start();
+$cart = $_SESSION['cart'] ?? [];
+$total = 0;
+?>
 <!DOCTYPE html>  
 <html lang="vi">  
 <head>  
@@ -7,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/index.css">  
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
+   
+
     <title>Trái cây Việt </title>  
     <style>  
         .search-container {
@@ -277,7 +284,8 @@
             background-color: #333;
         }
        
-    </style>  
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
 </head>  
 <body>  
     <header>  
@@ -329,7 +337,9 @@
                 <a href="./contact.php">Liên hệ</a>   
                 <a href="./cartusernologin.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
+    <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
+</span>
                 </a>  
             </div>    
             <div class="search-container">
@@ -555,7 +565,7 @@ const input = document.getElementById("searchInput");
     });
 
 
-    //Thêm giỏ hàng
+     //Thêm giỏ hàng
 document.querySelectorAll('.add-to-cart').forEach(button => {
      button.addEventListener('click', function() {
          const productId = this.dataset.id;
@@ -605,7 +615,17 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
  });        
 
 
-        
+        document.querySelector('.dropdown-button').addEventListener('click', function() {
+     const dropdown = this.parentElement;
+     dropdown.classList.toggle('active');
+   });
+
+   window.addEventListener('click', function(e) {
+     const dropdown = document.querySelector('.dropdown');
+     if (!dropdown.contains(e.target)) {
+       dropdown.classList.remove('active');
+     }
+   });
    document.getElementById("toggleSearch").addEventListener("click", function () {
         document.getElementById("searchModal").style.display = "flex";
     });
@@ -614,6 +634,9 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         document.getElementById("searchModal").style.display = "none";
     });
 
+
+    
+
     // Đóng khi nhấn ra ngoài modal
     window.onclick = function (event) {
         let modal = document.getElementById("searchModal");
@@ -621,7 +644,36 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
             modal.style.display = "none";
         }
     };
+
+    function updateCart(action, productId) {
+    fetch('/web2/User/user/cart-handle.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action, product_id: productId})
+    }).then(() => location.reload());
+}
    </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("#contactForm"); // dùng đúng form
+    if (form) {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Cảm ơn bạn!',
+                text: 'Thông tin của bạn đã được gửi đến chúng tôi.',
+                icon: 'success',
+                confirmButtonText: 'Đóng'
+            }).then(() => {
+                form.submit();
+            });
+        });
+    }
+});
+</script>
+
 
 <footer>  
    <div>
@@ -630,3 +682,4 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 </footer>  
    </body>
 </html>
+

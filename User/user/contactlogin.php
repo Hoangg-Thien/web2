@@ -1,3 +1,8 @@
+<?php
+session_start();
+$cart = $_SESSION['cart'] ?? [];
+$total = 0;
+?>
 <!DOCTYPE html>  
 <html lang="vi">  
 <head>  
@@ -7,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/index.css">  
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
+ 
+
     <title>Trái cây Việt </title>  
     <style>  
         .search-container {
@@ -301,7 +308,8 @@
         .contact-form button:hover {
             background-color: #333;
         }
-    </style>  
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
 </head>  
 <body>  
     <header>  
@@ -353,7 +361,9 @@
                 <a href="../user/contactlogin.php">Liên hệ</a>   
                 <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
+    <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
+</span>
                 </a>  
             </div>  
             <div class="search-container">
@@ -612,6 +622,75 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         document.getElementById("searchModal").style.display = "none";
     });
 
+     //Thêm giỏ hàng
+document.querySelectorAll('.add-to-cart').forEach(button => {
+     button.addEventListener('click', function() {
+         const productId = this.dataset.id;
+         const productName = this.dataset.name;
+         const productPrice = this.dataset.price;
+ 
+         fetch('/web2/User/user/cart-handle.php', {
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({
+                 action: 'add',
+                 product_id: productId,
+                 product_name: productName,
+                 product_price: productPrice
+             })
+         }).then(res => res.json())
+           .then(data => {
+               if (data.success) {
+                   // Update cart icon badge
+                   document.querySelector('#cart-count').innerText = data.cart_count;
+ 
+                   // Hiển thị thông báo popup giữa màn hình
+                   const notification = document.createElement('div');
+                   notification.textContent = 'Đã thêm vào giỏ hàng';
+                   notification.style.position = 'fixed';
+                   notification.style.top = '50%';
+                   notification.style.left = '50%';
+                   notification.style.transform = 'translate(-50%, -50%)';
+                   notification.style.backgroundColor = '#4CAF50';
+                   notification.style.color = '#fff';
+                   notification.style.padding = '16px 28px';
+                   notification.style.borderRadius = '10px';
+                   notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                   notification.style.zIndex = 9999;
+                   notification.style.fontSize = '16px';
+                   notification.style.fontWeight = '500';
+                   document.body.appendChild(notification);
+ 
+                   setTimeout(() => {
+                       document.body.removeChild(notification);
+                   }, 2000);
+               } else {
+                   alert(data.message);
+               }
+           });
+     });
+ });        
+
+
+        document.querySelector('.dropdown-button').addEventListener('click', function() {
+     const dropdown = this.parentElement;
+     dropdown.classList.toggle('active');
+   });
+
+   window.addEventListener('click', function(e) {
+     const dropdown = document.querySelector('.dropdown');
+     if (!dropdown.contains(e.target)) {
+       dropdown.classList.remove('active');
+     }
+   });
+   document.getElementById("toggleSearch").addEventListener("click", function () {
+        document.getElementById("searchModal").style.display = "flex";
+    });
+
+    document.querySelector(".close").addEventListener("click", function () {
+        document.getElementById("searchModal").style.display = "none";
+    });
+
     // Đóng khi nhấn ra ngoài modal
     window.onclick = function (event) {
         let modal = document.getElementById("searchModal");
@@ -619,8 +698,43 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
             modal.style.display = "none";
         }
     };
+
+    function updateCart(action, productId) {
+    fetch('/web2/User/user/cart-handle.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action, product_id: productId})
+    }).then(() => location.reload());
+}
+
    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("#contactForm"); // dùng đúng form
+    if (form) {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Cảm ơn bạn!',
+                text: 'Thông tin của bạn đã được gửi đến chúng tôi.',
+                icon: 'success',
+                confirmButtonText: 'Đóng'
+            }).then(() => {
+                form.submit();
+            });
+        });
+    }
+});
+</script>
+
+
+
 
  
    </body>
 </html>
+
+
