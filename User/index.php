@@ -1,5 +1,10 @@
 
 
+<?php
+session_start();
+$cart = $_SESSION['cart'] ?? [];
+$total = 0;
+?>
 <!DOCTYPE html>  
 <html lang="vi">  
 <head>  
@@ -288,8 +293,10 @@
                 <a href="./user/newslogin.php">Tin tức</a>  
                 <a href="./user/contactlogin.php">Liên hệ</a> 
                 <a href="./user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
+                <i class="fas fa-shopping-cart"></i>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
+    <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
+</span>
                 </a>
             </div>  
             <div class="search-container">
@@ -670,6 +677,15 @@ document.querySelector('.dropdown-button').addEventListener('click', function() 
             modal.style.display = "none";
         }
     };
+
+
+    function updateCart(action, productId) {
+    fetch('/web2/User/user/cart-handle.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action, product_id: productId})
+    }).then(() => location.reload());
+}
     </script>  
 
      

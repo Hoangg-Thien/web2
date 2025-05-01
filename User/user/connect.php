@@ -12,6 +12,7 @@ if ($conn->connect_error) {
     die("Kết nối thất bại: " . $conn->connect_error);
 }
 
+
 // Đặt bộ mã ký tự để hỗ trợ tiếng Việt
 $conn->set_charset("utf8mb4");
 ?>
