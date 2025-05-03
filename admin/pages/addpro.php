@@ -77,9 +77,6 @@ if (!isset($_SESSION['user_name'])) {
                                 <option value="Trái cây Ngon">Trái cây Ngon</option>
                                 <option value="Trái cây Việt">Trái cây Việt</option>
                                 <option value="Trái cây Nhập Khẩu">Trái cây Nhập Khẩu</option>
-                                <option value="Rau Củ">Rau Củ</option>
-                                <option value="Trái cây khô">Trái cây khô</option>
-                                <option value="Hạt">Hạt</option>
                             </select>
                     </div>
                 </div>

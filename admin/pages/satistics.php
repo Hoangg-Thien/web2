@@ -73,93 +73,133 @@ uasort($merged_customers, function($a, $b) {
 // Lấy 5 khách hàng có mức mua cao nhất
 $top_customers = array_slice($merged_customers, 0, 5);
 
-session_start();
-if (!isset($_SESSION['user_name'])) {
-    header("Location: /web2/login.php");
-    exit();
-}
-
-// Top 3 sản phẩm bán chạy
-$best_sellers_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
-                    SUM(cthd.quantity) as total_sold
+// Truy vấn để lấy 5 sản phẩm bán chạy nhất
+$top_products_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
+                    SUM(cthd.quantity) as total_sold,
+                    SUM(cthd.quantity * sp.product_price) as total_revenue
                     FROM sanpham sp
                     JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
                     JOIN hoadon hd ON cthd.order_id = hd.order_id
                     WHERE 1=1 $where_clause
                     GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
                     ORDER BY total_sold DESC
-                    LIMIT 3";
+                    LIMIT 5";
 
-$best_sellers_result = mysqli_query($conn, $best_sellers_sql);
-$best_sellers = [];
-$total_best_sellers = 0;
+$top_products_result = mysqli_query($conn, $top_products_sql);
+$top_products = [];
 
-if ($best_sellers_result && mysqli_num_rows($best_sellers_result) > 0) {
-    while ($product = mysqli_fetch_assoc($best_sellers_result)) {
-        $best_sellers[] = $product;
-        $total_best_sellers += ($product['total_sold'] * $product['product_price']);
+if ($top_products_result && mysqli_num_rows($top_products_result) > 0) {
+    while ($product = mysqli_fetch_assoc($top_products_result)) {
+        // Truy vấn đơn hàng liên quan đến sản phẩm
+        $product_orders_sql = "SELECT DISTINCT hd.order_id, hd.order_date, nd.fullname
+                      FROM hoadon hd
+                      JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
+                      LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
+                      WHERE cthd.product_id = '{$product['product_id']}'
+                      $where_clause
+                      ORDER BY hd.order_date DESC";
+
+        $product_orders_result = mysqli_query($conn, $product_orders_sql);
+        $product['orders'] = [];
+        $product['order_count'] = 0;
+        
+        if ($product_orders_result && mysqli_num_rows($product_orders_result) > 0) {
+            while ($order = mysqli_fetch_assoc($product_orders_result)) {
+                $product['orders'][] = $order;
+                $product['order_count']++;
+            }
+        }
+        
+        $top_products[] = $product;
     }
 }
 
-// Top 3 sản phẩm bán ế
-$worst_sellers_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
-                      COALESCE(SUM(cthd.quantity), 0) as total_sold
-                      FROM sanpham sp
-                      LEFT JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
-                      LEFT JOIN hoadon hd ON cthd.order_id = hd.order_id AND (1=1 $where_clause)
-                      GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
-                      ORDER BY total_sold ASC
-                      LIMIT 3";
+// Truy vấn để lấy sản phẩm bán chạy nhất
+$best_seller_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
+                    SUM(cthd.quantity) as total_sold,
+                    SUM(cthd.quantity * sp.product_price) as total_revenue
+                    FROM sanpham sp
+                    JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
+                    JOIN hoadon hd ON cthd.order_id = hd.order_id
+                    WHERE 1=1 $where_clause
+                    GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
+                    ORDER BY total_sold DESC
+                    LIMIT 1";
 
-$worst_sellers_result = mysqli_query($conn, $worst_sellers_sql);
-$worst_sellers = [];
-$total_worst_sellers = 0;
+$best_seller_result = mysqli_query($conn, $best_seller_sql);
+$best_seller = null;
 
-if ($worst_sellers_result && mysqli_num_rows($worst_sellers_result) > 0) {
-    while ($product = mysqli_fetch_assoc($worst_sellers_result)) {
-        $worst_sellers[] = $product;
-        $total_worst_sellers += ($product['total_sold'] * $product['product_price']);
-    }
-}
+// Truy vấn để lấy sản phẩm bán ế nhất
+$worst_seller_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.product_image, 
+                    COALESCE(SUM(cthd.quantity), 0) as total_sold,
+                    COALESCE(SUM(cthd.quantity * sp.product_price), 0) as total_revenue
+                    FROM sanpham sp
+                    LEFT JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
+                    LEFT JOIN hoadon hd ON cthd.order_id = hd.order_id AND (1=1 $where_clause)
+                    GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
+                    HAVING total_sold > 0
+                    ORDER BY total_sold ASC
+                    LIMIT 1";
 
-// truy vấn hóa đơn sp bán chạy/ ế
-foreach ($best_sellers as &$product) {
-    $product_orders_sql = "SELECT DISTINCT hd.order_id, hd.order_date, nd.fullname
-                          FROM hoadon hd
-                          JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
-                          LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
-                          WHERE cthd.product_id = '{$product['product_id']}'
-                          $where_clause
-                          ORDER BY hd.order_date DESC";
+$worst_seller_result = mysqli_query($conn, $worst_seller_sql);
+$worst_seller = null;
+
+// Xử lý sản phẩm bán chạy nhất
+if ($best_seller_result && mysqli_num_rows($best_seller_result) > 0) {
+    $best_seller = mysqli_fetch_assoc($best_seller_result);
     
+    // Truy vấn đơn hàng liên quan đến sản phẩm bán chạy
+    $product_orders_sql = "SELECT DISTINCT hd.order_id, hd.order_date, nd.fullname
+                      FROM hoadon hd
+                      JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
+                      LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
+                      WHERE cthd.product_id = '{$best_seller['product_id']}'
+                      $where_clause
+                      ORDER BY hd.order_date DESC";
+
     $product_orders_result = mysqli_query($conn, $product_orders_sql);
-    $product['orders'] = [];
+    $best_seller['orders'] = [];
+    $best_seller['order_count'] = 0;
     
     if ($product_orders_result && mysqli_num_rows($product_orders_result) > 0) {
         while ($order = mysqli_fetch_assoc($product_orders_result)) {
-            $product['orders'][] = $order;
+            $best_seller['orders'][] = $order;
+            $best_seller['order_count']++;
         }
     }
 }
 
-foreach ($worst_sellers as &$product) {
-    $product_orders_sql = "SELECT DISTINCT hd.order_id, hd.order_date, nd.fullname
-                          FROM hoadon hd
-                          JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
-                          LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
-                          WHERE cthd.product_id = '{$product['product_id']}'
-                          $where_clause
-                          ORDER BY hd.order_date DESC";
+// Xử lý sản phẩm bán ế nhất
+if ($worst_seller_result && mysqli_num_rows($worst_seller_result) > 0) {
+    $worst_seller = mysqli_fetch_assoc($worst_seller_result);
     
+    // Truy vấn đơn hàng liên quan đến sản phẩm bán ế
+    $product_orders_sql = "SELECT DISTINCT hd.order_id, hd.order_date, nd.fullname
+                      FROM hoadon hd
+                      JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
+                      LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
+                      WHERE cthd.product_id = '{$worst_seller['product_id']}'
+                      $where_clause
+                      ORDER BY hd.order_date DESC";
+
     $product_orders_result = mysqli_query($conn, $product_orders_sql);
-    $product['orders'] = [];
+    $worst_seller['orders'] = [];
+    $worst_seller['order_count'] = 0;
     
     if ($product_orders_result && mysqli_num_rows($product_orders_result) > 0) {
         while ($order = mysqli_fetch_assoc($product_orders_result)) {
-            $product['orders'][] = $order;
+            $worst_seller['orders'][] = $order;
+            $worst_seller['order_count']++;
         }
     }
 }
+
+session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: /web2/login.php");
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -191,7 +231,7 @@ foreach ($worst_sellers as &$product) {
             z-index: 1;
             border-radius: 4px;
             right: 0;
-            max-height: 200px;
+            max-height: 130px;
             overflow-y: auto; 
         }
         
@@ -221,30 +261,136 @@ foreach ($worst_sellers as &$product) {
             color: #666;
             margin-top: 3px;
         }
-        .dropdown-menu{
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 250px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 4px;
-            right: 0;
-            top: auto;
-            margin-bottom: 5px;
-            bottom: 100%;
-            max-height: 200px;
-            overflow-y: auto; 
-        }
-        .dropdown-menu a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            white-space: nowrap;
+        .product-comparison-section {
+        margin-bottom: 30px;
+    }
+    
+    .section-title {
+        color: #333;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #17ab1d;
+    }
+    
+    .product-comparison-container {
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .product-comparison-wrapper {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .single-product {
+        justify-content: center;
+    }
+    
+    .product-card {
+        position: relative;
+        width: 250px;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+    
+    .best-seller-card {
+        background-color: #f0f9f0;
+        border: 2px solid #17ab1d;
+    }
+    
+    .worst-seller-card {
+        background-color: #fff9f9;
+        border: 2px solid #ff6b6b;
+    }
+    
+    .product-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #17ab1d;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1;
+    }
+    
+    .product-badge.worst {
+        background-color: #ff6b6b;
+    }
+    
+    .product-image-container {
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    
+    .product-image-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+    
+    .product-card:hover .product-image-container img {
+        transform: scale(1.1);
+    }
+    
+    .product-name {
+        margin-top: 10px;
+    }
+    
+    .product-name h4 {
+        color: #333;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .product-sold {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .no-data {
+        text-align: center;
+        padding: 30px;
+        font-style: italic;
+        color: #999;
+    }
+    
+    @media (max-width: 768px) {
+        .product-comparison-wrapper {
+            flex-direction: column;
+            align-items: center;
         }
         
-        .dropdown-menu a:hover {background-color: #f1f1f1}
+        .product-card {
+            width: 90%;
+            max-width: 250px;
+            margin-bottom: 20px;
+        }
+    }
     </style>
 </head>
 
@@ -304,7 +450,7 @@ foreach ($worst_sellers as &$product) {
         <button style="outline: none; margin-top: 10px;" id="resetLocationFilter" class="btn btn-reset">Đặt lại</button>
 
         <div>
-            <h3 class="tile-title">5 KHÁCH HÀNG CÓ MỨC MUA CAO NHẤT</h3>
+            <h3 class="tile-title">CÁC KHÁCH HÀNG CÓ MỨC MUA CAO NHẤT</h3>
         </div>
         <div class="tile-body">
             <table class="table table-hover table-bordered" id="sampleTable">
@@ -380,105 +526,146 @@ foreach ($worst_sellers as &$product) {
             </table>
         </div>
 
-              <!-- SẢN PHẨM BÁN CHẠY -->
-              <div class="product-section best-sellers">
-                    <h3 class="tile-title">SẢN PHẨM BÁN CHẠY</h3>
-                    <div class="tile-body">
-                        <div class="row">
-                            <?php if (!empty($best_sellers)): ?>
-                                <?php foreach ($best_sellers as $product): ?>
-                                    <div class="col-md-4">
-                                        <div class="product-card">
-                                            <div class="product-image">
-                                                <img src="../img/<?php echo htmlspecialchars($product['product_image']); ?>" 
-                                                    alt="<?php echo htmlspecialchars($product['product_name']); ?>">
-                                            </div>
-                                            <div class="product-info">
-                                                <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
-                                                <p><strong>Số lượng đã bán:</strong> <?php echo $product['total_sold']; ?>kg</p>
-                                                <p><strong>Tổng doanh thu:</strong> <?php echo number_format($product['total_sold'] * $product['product_price'], 0, ',', '.'); ?>đ</p>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-info1 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="fa-solid fa-circle-info"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <?php if (!empty($product['orders'])): ?>
-                                                            <?php foreach ($product['orders'] as $index => $order): ?>
-                                                                <?php 
-                                                                    $order_date = date('d/m/Y', strtotime($order['order_date'])); 
-                                                                ?>
-                                                                <a href="satictics_detail.php?id=<?php echo $order['order_id']; ?>">
-                                                                    Đơn <?php echo ($index + 1); ?>: <?php echo $order_date; ?>
-                                                                </a>
-                                                            <?php endforeach; ?>
-                                                        <?php else: ?>
-                                                            <a href="javascript:void(0)" style="cursor: default; background-color: #f9f9f9;">Không có dữ liệu đơn hàng</a>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <div class="col-md-12">
-                                    <div class="no-data">Không có dữ liệu sản phẩm bán chạy</div>
-                                </div>
-                            <?php endif; ?>
+                    <div>
+                    <h3 class="tile-title">CÁC SẢN PHẨM BÁN CHẠY NHẤT</h3>
+                </div>
+            <div class="tile-body">
+                <table class="table table-hover table-bordered" id="sampleTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Sản phẩm</th>
+                            <th>Số lượng đã bán</th>
+                            <th>Tổng doanh thu</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        $rank = 1;
+                        
+                        if (!empty($top_products)) {
+                            foreach ($top_products as $product) {
+                                
+                                // Tạo button xem chi tiết
+                                if ($product['order_count'] == 1 && !empty($product['orders'])) {
+                                    // Nếu chỉ có 1 đơn hàng thì tạo button đơn giản
+                                    $order = reset($product['orders']);
+                                    $button = '<a href="satictics_detail.php?id=' . $order['order_id'] . '" class="btn btn-info btn-sm" style="background-color: #17ab1d; color: white; border: none; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                                                <i class="fa fa-eye"></i> Xem đơn hàng
+                                            </a>';
+                                } else if ($product['order_count'] > 1) {
+                                    // Nếu có nhiều đơn hàng thì tạo dropdown
+                                    $button = '<div class="dropdown">
+                                                <button class="btn btn-info1 dropdown-toggle" type="button" id="dropdownContentButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i></i>▼ Xem đơn hàng
+                                                </button>
+                                                <div class="dropdown-content">';
+                                    
+                                    usort($product['orders'], function($a, $b) {
+                                        return strtotime($a['order_date']) - strtotime($b['order_date']);
+                                    });
+                                    
+                                    // Thêm link cho từng đơn hàng
+                                    foreach ($product['orders'] as $index => $order) {
+                                        $order_date = date('d/m/Y', strtotime($order['order_date']));
+                                        $button .= '<a href="satictics_detail.php?id=' . $order['order_id'] . '">
+                                                    Đơn ' . ($index + 1) . ': ' . $order_date . '
+                                                </a>';
+                                    }
+                                    
+                                    $button .= '</div></div>';
+                                } else {
+                                    $button = '<span class="text-muted">Không có đơn hàng</span>';
+                                }
+                        ?>
+                        <tr>
+                            <td><?php echo $rank++; ?></td>
+                            <td><?php echo htmlspecialchars($product['product_name']); ?></td>
+                            <td><?php echo $product['total_sold']; ?> kg</td>
+                            <td><?php echo number_format($product['total_revenue'], 0, ',', '.') . 'đ'; ?></td>
+                            <td><?php echo $button; ?></td>
+                        </tr>
+                        <?php
+                            }
+                        } else {
+                        ?>
+                        <tr>
+                            <td colspan="6" class="text-center">Không có dữ liệu sản phẩm</td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+<div class="product-comparison-section">
+    <h3 class="section-title">THÔNG TIN SẢN PHẨM NỔI BẬT</h3>
+    <div class="tile-body">
+        <div class="product-comparison-container">
+            <?php if ($best_seller && $worst_seller): ?>
+                <div class="product-comparison-wrapper">
+                    <!-- Sản phẩm bán chạy nhất -->
+                    <div class="product-card best-seller-card">
+                        <div class="product-badge"><i class="fa fa-trophy"></i> Bán chạy nhất</div>
+                        <div class="product-image-container">
+                            <img src="../img/<?php echo htmlspecialchars($best_seller['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($best_seller['product_name']); ?>">
+                        </div>
+                        <div class="product-name">
+                            <h4><?php echo htmlspecialchars($best_seller['product_name']); ?></h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Sản phẩm bán ế nhất -->
+                    <div class="product-card worst-seller-card">
+                        <div class="product-badge worst"><i class="fa fa-exclamation-circle"></i> Bán ít nhất</div>
+                        <div class="product-image-container">
+                            <img src="../img/<?php echo htmlspecialchars($worst_seller['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($worst_seller['product_name']); ?>">
+                        </div>
+                        <div class="product-name">
+                            <h4><?php echo htmlspecialchars($worst_seller['product_name']); ?></h4>
                         </div>
                     </div>
                 </div>
-
-            <!-- SẢN PHẨM BÁN Ế -->
-            <div class="product-section worst-sellers">
-                        <h3 class="tile-title">SẢN PHẨM BÁN Ế</h3>
-                        <div class="tile-body">
-                            <div class="row">
-                                <?php if (!empty($worst_sellers)): ?>
-                                    <?php foreach ($worst_sellers as $product): ?>
-                                        <div class="col-md-4">
-                                            <div class="product-card slow-seller">
-                                                <div class="product-image">
-                                                    <img src="../img/<?php echo htmlspecialchars($product['product_image']); ?>" 
-                                                        alt="<?php echo htmlspecialchars($product['product_name']); ?>">
-                                                </div>
-                                                <div class="product-info">
-                                                    <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
-                                                    <p><strong>Số lượng đã bán:</strong> <?php echo $product['total_sold']; ?>kg</p>
-                                                    <p><strong>Tổng doanh thu:</strong> <?php echo number_format($product['total_sold'] * $product['product_price'], 0, ',', '.'); ?>đ</p>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-info1 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa-solid fa-circle-info"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <?php if (!empty($product['orders'])): ?>
-                                                                <?php foreach ($product['orders'] as $index => $order): ?>
-                                                                    <?php 
-                                                                        $order_date = date('d/m/Y', strtotime($order['order_date'])); 
-                                                                    ?>
-                                                                    <a href="satictics_detail.php?id=<?php echo $order['order_id']; ?>">
-                                                                        Đơn <?php echo ($index + 1); ?>: <?php echo $order_date; ?>
-                                                                    </a>
-                                                                <?php endforeach; ?>
-                                                            <?php else: ?>
-                                                                <a href="javascript:void(0)" style="cursor: default; background-color: #f9f9f9;">Không có dữ liệu đơn hàng</a>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <div class="col-md-12">
-                                        <div class="no-data">Không có dữ liệu sản phẩm bán ế trong khoảng thời gian này</div>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
+            <?php elseif ($best_seller): ?>
+                <div class="product-comparison-wrapper single-product">
+                    <div class="product-card best-seller-card">
+                        <div class="product-badge"><i class="fa fa-trophy"></i> Bán chạy nhất</div>
+                        <div class="product-image-container">
+                            <img src="../img/<?php echo htmlspecialchars($best_seller['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($best_seller['product_name']); ?>">
+                        </div>
+                        <div class="product-name">
+                            <h4><?php echo htmlspecialchars($best_seller['product_name']); ?></h4>
+                            <p class="product-sold"><?php echo $best_seller['total_sold']; ?> kg đã bán</p>
                         </div>
                     </div>
-            </div>
+                </div>
+            <?php elseif ($worst_seller): ?>
+                <div class="product-comparison-wrapper single-product">
+                    <div class="product-card worst-seller-card">
+                        <div class="product-badge worst"><i class="fa fa-exclamation-circle"></i> Bán ít nhất</div>
+                        <div class="product-image-container">
+                            <img src="../img/<?php echo htmlspecialchars($worst_seller['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($worst_seller['product_name']); ?>">
+                        </div>
+                        <div class="product-name">
+                            <h4><?php echo htmlspecialchars($worst_seller['product_name']); ?></h4>
+                            <p class="product-sold"><?php echo $worst_seller['total_sold']; ?> kg đã bán</p>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="no-data">
+                    Không có dữ liệu sản phẩm
+                </div>
+            <?php endif; ?>
         </div>
+    </div>
+</div>
     </main>
 
     <script>
