@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>  
 <html lang="vi">  
 <head>  
@@ -229,7 +232,52 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-       
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .page-link {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover:not(.disabled) {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .page-link.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .page-link.disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .image-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .image-container {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 15px;
+            }
+        }
     </style>  
 </head>  
 <body>  
@@ -270,13 +318,10 @@
                     <li><a href="./declious-fruits-nologin.php">Trái cây ngon </a></li>
                     <li><a href="./VietNamese-fruits-nolog.php">Trái cây Việt  </a></li>
                     <li><a href="./Imported-fruits-nologin.php">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables-nologin.php">Rau củ  </a></li>
-                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
-                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="./usernologin.php" >Trang chủ</a>  
+                <a href="../index.php" >Trang chủ</a>  
                 <a href="./introduce.php">Giới thiệu</a>  
                 <a href="./news.php">Tin tức</a>  
                 <a href="./contact.php">Liên hệ</a>   
@@ -339,44 +384,80 @@
             <h1>TRÁI CÂY VIỆT</h1>  
         </div>  
         <?php
-include("connect.php");
+            include("connect.php");
 
-$sql = "SELECT * FROM sanpham WHERE product_type = 'Trái cây Việt'";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    echo '<div class="row image-container">';
-    while ($row = $result->fetch_assoc()) {
+            // Số sản phẩm mỗi trang
+            $limit = 6;
 
-        $productNameSlug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $row['product_name'])));
+            // Trang hiện tại
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            if ($page < 1) $page = 1;
 
-        echo '
-        <div class="image-container">
-            <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
-                <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
+            // Offset tính từ trang
+            $start = ($page - 1) * $limit;
 
-                <div class="caption" style="margin-top: 10px; font-weight: bold;">
-                    ' . htmlspecialchars($row['product_name']) . '<br>
-                    ' . number_format($row['product_price'], 0, ',', '.') . ' VND
-                </div>
+            // Tổng số sản phẩm
+            $totalQuery = "SELECT COUNT(*) AS total FROM sanpham WHERE product_type = 'Trái cây Việt'";
+            $totalResult = $conn->query($totalQuery);
+            $totalRow = $totalResult->fetch_assoc();
+            $totalProducts = $totalRow['total'];
+            $totalPages = ceil($totalProducts / $limit);
 
-                <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
-                    <a href="../itemInfo/' . $productNameSlug . '.php" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </a>
-                    <button class="add-to-cart-btn" title="Thêm vào giỏ hàng" onclick="confirmAddToCart(\'' . $row['product_id'] . '\')">
-                        <i class="fas fa-cart-plus fa-lg"></i>
-                    </button>
-                </div>
-            </div>
-        </div>';
-    }
-    echo '</div>';
-} else {
-    echo "<p>Không có sản phẩm còn hàng.</p>";
-}
+            // Truy vấn sản phẩm theo trang
+            $sql = "SELECT * FROM sanpham WHERE product_type = 'Trái cây Việt' LIMIT $start, $limit";
+            $result = $conn->query($sql);
 
-$conn->close();
-?>
+            // Hiển thị sản phẩm
+            if ($result->num_rows > 0) {
+                echo '<div class="image-container">';
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="fruit-background">
+                        <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '">
+                        <div class="caption">
+                            ' . htmlspecialchars($row['product_name']) . '<br>
+                            ' . number_format($row['product_price'], 0, ',', '.') . ' VND
+                        </div>
+                        <div class="icons">
+                            <a href="./itemInfo/' . $row['productnolog_link'] . '" class="info-icon" title="Xem thông tin chi tiết">
+                                <i class="fa-solid fa-circle-info fa-lg"></i>
+                            </a>
+                            <button class="add-to-cart-btn" title="Thêm vào giỏ hàng" onclick="confirmAddToCart(\'' . $row['product_id'] . '\')">
+                                <i class="fas fa-cart-plus fa-lg"></i>
+                            </button>
+                        </div>
+                    </div>';
+                }
+                echo '</div>';
+
+                // Hiển thị phân trang
+                echo '<div class="pagination" style="margin-top: 20px; text-align: center;">';
+
+                // Nút "Trang trước"
+                if ($page > 1) {
+                    echo '<a href="?page=' . ($page - 1) . '" class="page-link">&laquo; Trang trước</a>';
+                } else {
+                    echo '<span class="page-link disabled">&laquo; Trang trước</span>';
+                }
+
+                // Các số trang
+                for ($i = 1; $i <= $totalPages; $i++) {
+                    echo '<a href="?page=' . $i . '" class="page-link ' . ($i == $page ? 'active' : '') . '">' . $i . '</a>';
+                }
+
+                // Nút "Trang sau"
+                if ($page < $totalPages) {
+                    echo '<a href="?page=' . ($page + 1) . '" class="page-link">Trang sau &raquo;</a>';
+                } else {
+                    echo '<span class="page-link disabled">Trang sau &raquo;</span>';
+                }
+
+                echo '</div>';
+            } else {
+                echo "<p>Không có sản phẩm nào.</p>";
+            }
+
+            $conn->close();
+            ?>
 
     
     </div>
@@ -411,93 +492,48 @@ $conn->close();
         </div>
     </div>
 
-    <div class="grid wide" style="justify-content: space-evenly;">
-        <div class="row">
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Về chúng tôi 
-                </a>
-                <div>
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Tin khuyến mãi
-                </a>
-                <div >
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Dịch vụ
-                </a>
-                <div >
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../index.php"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="./introducelogin.php"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="./newslogin.php"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="./contactlogin.php"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col l-3 m-6 c-12">
-                <div >
-                    <div class="social_footer row">
-                        <div>Kết nối với chúng tôi</div>
-                        <ul class="follow_option col l-12 " style="margin-left: -30px;">	
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Facebook Sea Fruits"><i class="fab fa-facebook-f"></i></a>
-                            </li>
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Google Sea Fruits"><i class="fab fa-google"></i></a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Instagam Sea Fruits"><i class="fab fa-instagram"></i></a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Youtube Sea Fruits"><i class="fab fa-youtube"></i></a>
-                            </li>
-                            
-                        </ul>
-                        </div>
-                    </div>
-            </div>
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
     </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="./index.php">Trang chủ</a></li>
+                    <li><a href="./user/introduce.php">Giới thiệu</a></li>
+                    <li><a href="./user/news.php">Tin tức</a></li>
+                    <li><a href="./user/contact.php">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
     </div>
 
     <script>

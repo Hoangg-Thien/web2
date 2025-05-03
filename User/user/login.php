@@ -19,7 +19,7 @@ if(isset($_POST['submit'])) {
             $_SESSION['fullname'] = $row['fullname'];
             $_SESSION['user_email'] = $row['user_email']; 
 
-            echo "<script>alert('Đăng nhập thành công!'); window.location.href='../index.php';</script>";
+            echo "<script>alert('Đăng nhập thành công!'); window.location.href='./userlogin.php';</script>";
             exit();
         } else {
             echo "<script>alert('Sai mật khẩu!'); window.location.href='login-user.php';</script>";

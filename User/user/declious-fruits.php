@@ -1,4 +1,6 @@
-<!DOCTYPE html>  
+<?php
+session_start();
+?><!DOCTYPE html>  
 <html lang="vi">  
 <head>  
     <meta charset="UTF-8">  
@@ -400,13 +402,10 @@
                     <li><a href="./declious-fruits.php">Trái cây ngon </a></li>
                     <li><a href="./Vietnamese-fruits.php">Trái cây Việt  </a></li>
                     <li><a href="./Imported-fruits.php">Trái cây Nhập Khẩu </a></li>
-                    <li><a href="./vegetables.php">Rau củ  </a></li>
-                    <li><a href="./Imported-fruits.php">Trái cây Khô</a></li>
-                    <li><a href="./Imported-fruits.php">Các loại hạt  </a></li>
                 </ul>
             </div>  
             <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
+                <a href="../user/userlogin.php" >Trang chủ</a>  
                 <a href="../user/introducelogin.php">Giới thiệu</a>  
                 <a href="../user/newslogin.php">Tin tức</a>  
                 <a href="../user/contactlogin.php">Liên hệ</a>   
@@ -455,18 +454,21 @@
                 </div>  
                 </form>
             </div>
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                    <span>Hi,User!</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="../user/userinfo.php">Tài khoản</a>
-                  <a href="../user/history-user.php">Lịch sử</a>
-                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                  <a href="../user/usernologin.php">Đăng xuất</a>
-                </div>
-            </div>
+
+            <?php if (isset($_SESSION['user_name'])): ?>
+    <div class="dropdown">
+        <button class="dropdown-button">
+            <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
+            <span>Xin chào, <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong>!</span>
+        </button>
+        <div class="dropdown-menu">
+            <a href="./userinfo.php">Tài khoản</a>
+            <a href="./history-user.php">Lịch sử</a>
+            <a href="./invoice-summary.php">Tóm tắt hóa đơn</a>
+            <a href="../index.php">Đăng xuất</a> 
+        </div>
+    </div>
+<?php endif; ?>
         </div>  
     </div> 
 
@@ -601,7 +603,7 @@ $conn->close();
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
                 <ul>
-                <li><a href="../index.php">Trang chủ</a></li>
+                <li><a href="../user/userlogin.php">Trang chủ</a></li>
                     <li><a href="./introducelogin.php">Giới thiệu</a></li>
                     <li><a href="./newslogin.php">Tin tức</a></li>
                     <li><a href="./contactlogin.php">Liên hệ</a></li>

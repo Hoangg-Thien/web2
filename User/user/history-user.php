@@ -1,233 +1,362 @@
+<?php
+session_start();
+require_once('connect.php');
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user_name'])) {
+   header("Location: login.php");
+exit();
+}
+
+// Lấy thông tin người dùng
+$user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
+$user = null;
+
+if (!empty($user_name)) {
+$sql = "SELECT * FROM nguoidung WHERE user_name = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_name);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+}
+
+// Lấy lịch sử mua hàng
+$sql = "SELECT h.*, c.total_amount, c.quantity, c.unit_price, s.product_name, s.product_image 
+        FROM hoadon h 
+        JOIN chitiethoadon c ON h.order_id = c.order_id 
+        JOIN sanpham s ON c.product_id = s.product_id 
+        WHERE h.user_name = ? 
+        ORDER BY h.order_date DESC";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_name);
+$stmt->execute();
+$orders = $stmt->get_result();
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../styles/grid.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
     <link rel="stylesheet" href="../styles/index.css">
-    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon"> 
-
-    <title>Trang Lịch Sử Mua Hàng</title>
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
+    <title>Lịch Sử Mua Hàng - SEA FRUITS</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+        /* Order History Styles */
         .history-container {
-            padding: 20px;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        table th {
-            background-color: #f4f4f4;
-        }
-        .status {
-            font-weight: bold;
-            text-align: center;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        .status.processing {
-            color: #856404;
-            background-color: #fff3cd;
-        }
-        .status.shipping {
-            color: #155724;
-            background-color: #d4edda;
-        }
-        .status.canceled {
-            color: #721c24;
-            background-color: #f8d7da;
-        }
-        .status.completed {
-            color: #004085;
-            background-color: #cce5ff;
-        }
-        .fruit_order_items {
+
+        .history-title {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            gap: 10px;
         }
-        .fruit_order_items img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 5px;
+
+        .history-title i {
+            color: #4CAF50;
         }
-        .fruit_order_items div h5 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: bold;
+
+        .order-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            transition: transform 0.2s ease;
         }
-        .fruit_order_items div p {
-            margin: 0;
-            font-size: 12px;
+
+        .order-card:hover {
+            transform: translateY(-2px);
         }
-        .customer_service container{
-            position: relative;
-            width:100%;
-            padding-right: 15px;
-            padding-left: 15px;
+
+        .order-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
         }
-        .customer_service.container {
+
+        .order-info {
             display: flex;
             justify-content: space-between;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }       
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
 
-        .customer_service.container h3 {
-            font-size: 18px;
+        .order-date {
+            color: #666;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-items {
+            padding: 25px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
             color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .item-price {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .item-quantity {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .order-total {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+            font-size: 1.2em;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .no-orders i {
+            font-size: 3em;
+            color: #ddd;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .order-number {
+            font-size: 0.9em;
+            color: #666;
             margin-bottom: 10px;
         }
 
-        .customer_service.container p, .customer_service.container ul {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #555;
-            margin: 0;
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 0 20px 20px;
         }
 
-        .customer_service.container ul {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 10px;
+        .order-action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .customer_service.container ul li {
-            margin-bottom: 8px;
+        .view-details-btn {
+            background: #4CAF50;
+            color: white;
         }
 
-        .customer_service.container strong {
-            color: #000;
+        .view-details-btn:hover {
+            background: #45a049;
         }
 
-        .customer_service.container .col-md-4 {
-            width: 48%;
+        .cancel-order-btn {
+            background: #dc3545;
+            color: white;
         }
 
-        .customer_service.container .col-md-4:not(:last-child) {
-            margin-right: 4%;
+        .cancel-order-btn:hover {
+            background: #c82333;
         }
 
-        .customer_service.container a {
-            color: #007bff;
+        @media (max-width: 768px) {
+            .order-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .item-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .order-action-btn {
+                width: 100%;
+            }
+        }
+
+        /* Existing styles remain unchanged */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #searchBox {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #searchResults {
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        #searchResults a {
+            display: block;
+            padding: 5px;
+            color: #333;
             text-decoration: none;
+            margin-bottom: 5px;
         }
-
-        .customer_service.container a:hover {
+        #searchResults a:hover {
             text-decoration: underline;
         }
-        search-container {  
-            display: flex;  
-            align-items: center;  
-            margin-top: 20px;  
-        }  
-
-        #searchBox {  
-            padding: 10px;  
-            border-radius: 5px;  
-            border: 1px solid #ccc;  
-            width: 80%;  
-            margin-right: 10px;  
-        }  
-
-        button {  
-            padding: 10px 20px;  
-            border: none;  
-            background-color: #4CAF50;  
-            color: white;  
-            border-radius: 5px;  
-            cursor: pointer;  
-        }  
-        @media (max-width: 600px) {  
-        .sea-fruit-container {  
-            padding: 15px;
-            margin: 10px; 
-        }  
-        .sea-fruit {  
-            font-size: 20px;
-        }  
-        }  
-        
-        .sea-fruit {  
-            font-weight: bold;  
-            font-size: 24px;  
-        }  
-        
-        
-        @media (max-width: 400px) {  
-        .sea-fruit {  
-            font-size: 18px; 
-        }  
-        }  
-        @media (max-width: 768px) {
-        .menu {
-            justify-content: center;
-            margin: 10px 0; 
+        #priorityFruits {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            display: none;
+            border-radius: 5px;
         }
-        
-        .menu a {
-            margin: 10px 5px;
-            padding: 8px 10px; 
+        #priorityFruits ul {
+            list-style-type: none;
+            padding: 0;
         }
-        
-        .search-container {
-            width: 100%; 
-            justify-content: space-between; 
-            margin-top: 10px; 
+        #priorityFruits li {
+            margin-bottom: 8px;
         }
-        
-        .search-container input {
-            flex-grow: 1; 
-            margin-right: 5px; 
+        #priorityFruits a {
+            color: blue;
+            text-decoration: none;
         }
-        
-        .search-container button {
-            padding: 5px 8px; 
+        #priorityFruits a:hover {
+            text-decoration: underline;
         }
+        .search-result {
+            display: block;
+            margin: 5px 0;
+            color: #0066cc;
+            text-decoration: none;
         }
-        
-        @media (max-width: 480px) {
-        .menu {
-            flex-direction: column; 
-            align-items: center; 
+        .search-result:hover {
+            text-decoration: underline;
         }
-        
-        .search-container {
-            width: 100%; 
-            margin-top: 10px; 
+        .empty {
+            color: red;
+            font-weight: bold;
         }
-        
-        .search-container input {
-            margin-right: 5px;
-            font-size: 14px; 
-        
-        .search-container button {
-            font-size: 14px;
-        }
-        }
-        }       
         .dropdown {
             position: relative;
             display: inline-block;
         }
         .dropdown-button {
-            background: none !important;
-            border: none;
+            background: none;
+            border: none;      
             cursor: pointer;
             font-size: 18px;
             display: flex;
@@ -240,7 +369,7 @@
             left: 0;
             background-color: #f9f9f9;
             min-width: 160px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
             z-index: 1;
         }
         .dropdown-menu a {
@@ -255,19 +384,229 @@
         .dropdown.active .dropdown-menu {
             display: block;
         }
-        .dropdown-button i{
+        .dropdown-button i {
             color: #333;
         }
-        .dropdown-button span{
+        .dropdown-button span {
             color: #333;
         }
-        button:hover {
-            background-color: #45a049 !important;
+
+        /* News container styles */
+        .news-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .featured-news h2, .news-category h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .featured-article {
+            display: flex;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .featured-article img {
+            width: 45%;
+            object-fit: cover;
+        }
+        .category-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            padding: 8px 20px;
+            border: 2px solid #4CAF50;
+            background: white;
+            color: #4CAF50;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .news-item {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .news-item:hover {
+            transform: translateY(-5px);
+        }
+        .news-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .news-content {
+            padding: 20px;
+        }
+        .news-tag {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .news-content h4 {
+            color: #333;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        .date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .date i {
+            margin-right: 5px;
+        }
+        .read-more {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .featured-article {
+                flex-direction: column;
+            }
+            .featured-article img {
+                width: 100%;
+                height: 200px;
+            }
+            .category-buttons {
+                justify-content: center;
+            }
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation and performance optimizations */
+        .news-item {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading state */
+        .news-container {
+            min-height: 400px;
+            position: relative;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Performance optimization */
+        .news-grid {
+            contain: content;
+            will-change: transform;
+        }
+
+        /* Touch targets optimization */
+        @media (pointer: coarse) {
+            .category-btn,
+            .read-more,
+            .share-btn {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 12px 20px;
+            }
+            .article-meta span {
+                padding: 8px 0;
+            }
+        }
+
+        /* Read more button */
+        .read-more-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .read-more-btn:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none; /* Ban đầu ẩn */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Nội dung popup */
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        /* Hiệu ứng mở popup */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-   
     <header>  
         <a href="#" class="fruit">  
             <img src="../img/carrotheader.png" alt="Cà rốt" />  
@@ -295,122 +634,288 @@
         </a>  
     </header>  
 
-    <div class="sea-fruit-container" >  
+    <div class="sea-fruit-container">  
         <div>  
             <div class="sea-fruit">SEA FRUITS</div>  
-        </div>  
+        </div>
 
-        <div style="display: flex; align-items: center; padding: 10px 20px;">  
-            <div class="product-category">DANH MỤC SẢN PHẨM</div>  
+        <div style="display: flex; align-items: center; padding: 10px;">  
+            <div class="product-category">DANH MỤC SẢN PHẨM 
+                <ul>
+                    <li><a href="declious-fruits.php">Trái cây ngon</a></li>
+                    <li><a href="Vietnamese-fruits.php">Trái cây Việt</a></li>
+                    <li><a href="Imported-fruits.php">Trái cây nhập khẩu</a></li>
+                    <li><a href="vegetables.php">Rau củ</a></li>
+                    <li><a href="Imported-fruits.php">Trái cây nhập khẩu</a></li>
+                    <li><a href="Imported-fruits.php">Các loại khác</a></li>
+                </ul>
+            </div>  
+            
             <div class="menu">  
-                <a href="../index.php">Trang chủ</a>  
-                <a href="../user/introducelogin.php">Giới thiệu</a>  
-                <a href="../user/newslogin.php">Tin tức</a>  
-                <a href="../user/contactlogin.php">Liên hệ</a> 
-                <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
+                <a href="../index.php" class="active">Trang chủ</a>  
+                <a href="introducelogin.php">Giới thiệu</a>  
+                <a href="newslogin.php">Tin tức</a>  
+                <a href="contactlogin.php">Liên hệ</a> 
+                <a href="cart-user.php" target="_blank" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
+                    <span id="cart-count" style="margin-left: 5px; font-size: 14px;">0</span>
                 </a>
             </div>  
-            <div class="search-container">  
-                 
-                <div >
-                    <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProducts()">
-                    <button onclick="searchProducts()">Tìm kiếm</button>
-                </div>
-                <div class="dropdown">
-                    <button class="dropdown-button">
-                        <i class="fa-solid fa-user" style="margin-right: 10px;"></i> 
-                        <span>Hi,User!</span>
-                    </button>
-                    <div class="dropdown-menu">
-                      <a href="./userinfo.php">Tài khoản</a>
-                      <a href="./history-user.php">Lịch sử</a>
-                      <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
-                      <a href="./doan.php">Đăng xuất</a>
+            <div class="search-container">
+                <form action="searchProducts.php" method="GET">
+                    <div>
+                        <input type="text" name="search" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+                        <div id="suggestBox" class="autocomplete-suggestions"></div>
+                        <button type="submit">Tìm kiếm</button>
+                        <button type="button" id="toggleSearch">Tìm kiếm nâng cao</button>
                     </div>
-                  </div>
-            </div>  
+                
+                    <div id="searchResults"></div>
+                
+                    <div id="priorityFruits" class="hidden">
+                        <ul>
+                        </ul>
+                    </div>   
+                    <div id="searchModal" class="modal" style="display:none">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>Tìm kiếm nâng cao</h2>
+                            
+                            <label>Khoảng giá:</label>
+                            <select id="priceRange">
+                                <option>Tất cả</option>
+                                <option>30k-70k</option>
+                                <option>Trên 70k</option>
+                            </select>
+                    
+                            <label>Danh mục:</label>
+                            <select id="sortedList">
+                                <option>A->Z</option>
+                                <option>Z->A</option>
+                            </select>
+                    
+                            <button onclick="smartSearchProducts()">Lọc</button>
+                        </div>
+                    </div>  
+                </form>
+            </div>
+        
             
-            
+            <div class="dropdown">
+                <button class="dropdown-button">
+                    <i class="fa-solid fa-user" style="margin-right: 5px;"></i>
+                    <span>
+                        <?php
+                        if (isset($_SESSION['user_name'])) {
+                            echo "Xin chào, <strong>" . htmlspecialchars($_SESSION['user_name']) . "</strong>";
+                        } else {
+                            echo "Xin chào, khách!";
+                        }
+                        ?>
+                    </span>
+                </button>
+                <div class="dropdown-menu">
+                    <?php if (isset($_SESSION['user_name'])): ?>
+                        <a href="userinfo.php">Tài khoản</a>
+                        <a href="history-user.php">Lịch sử</a>
+                        <a href="invoice-summary.php">Tóm tắt hóa đơn</a>
+                        <a href="usernologin.php">Đăng xuất</a>
+                    <?php else: ?>
+                        <a href="login-user.php">Đăng nhập</a>
+                        <a href="regis.php">Đăng ký</a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>  
-    </div> 
-    
-    <div class="history-container">
-        <h1>Lịch Sử Đơn Hàng</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>Sản phẩm</th>
-                    <th>Tổng tiền</th>
-                    <th>Trạng thái</th>
-                    <th>Chi tiết</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>SF001</td>
-                    <td>
-                        <div class="fruit_order_items">  
-                            <img src="../img/trai-chuoi.jpg" alt="Chuối">  
-                            <div>  
-                                <h5>Chuối Chín</h5>  
-                                <p>Giá: <span>160.000 VNĐ</span></p>  
-                                <p>Số lượng: <span>x1</span> </p>
-                            </div>  
-                        </div>
-                        <div class="fruit_order_items">  
-                            <img src="../img/trai-man-do.jpg" alt="Mận">  
-                            <div>  
-                                <h5>Mận</h5>  
-                                <p>Giá: <span>45.000 VNĐ</span></p>  
-                                <p>Số lượng: <span>x1</span> </p> 
-                            </div>  
-                        </div>
-                    </td>
-                    <td>205,000₫</td>
-                    <td><span class="status completed">Đã hoàn thành</span></td>
-                    <td><a href="#"><i class="fas fa-eye"></i></a></td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
-    <section class="customer_service container">
-        <div class="col-md-4">
-            <h3>Dịch vụ khách hàng</h3>
-            <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn.</p>
-            <ul>
-                <li><strong>Hotline:</strong> 0123 456 789</li>
-                <li><strong>Email:</strong> AboutUs@shop.com</li>
-                <li><strong>Thời gian làm việc:</strong> 8h - 20h hàng ngày</li>
-            </ul>
+    <div class="history-container">
+        <h2 class="history-title">
+            <i class="fas fa-history"></i>
+            Lịch Sử Mua Hàng
+        </h2>
+        
+        <?php if ($orders->num_rows > 0): ?>
+            <?php while($order = $orders->fetch_assoc()): ?>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-number">
+                            <i class="fas fa-receipt"></i>
+                            Mã đơn hàng: #<?php echo str_pad($order['order_id'], 6, '0', STR_PAD_LEFT); ?>
+                        </div>
+                        <div class="order-info">
+                            <div class="order-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?>
+                            </div>
+                            <div class="order-status <?php echo 'status-' . strtolower($order['order_status']); ?>">
+                                <i class="fas fa-circle"></i>
+                                <?php echo htmlspecialchars($order['order_status']); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        <div class="item">
+                            <img src="../img/<?php echo htmlspecialchars($order['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($order['product_name']); ?>" 
+                                 class="item-image">
+                            <div class="item-details">
+                                <div class="item-name"><?php echo htmlspecialchars($order['product_name']); ?></div>
+                                <div class="item-price">
+                                    <i class="fas fa-tag"></i>
+                                    Giá: <?php echo number_format($order['unit_price']); ?> VNĐ
+                                </div>
+                                <div class="item-quantity">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Số lượng: <?php echo $order['quantity']; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-total">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Tổng tiền: <?php echo number_format($order['total_amount']); ?> VNĐ
+                    </div>
+                    <div class="order-actions">
+                        <a href="history-detail.php?id=<?php echo $order['order_id']; ?>" class="order-action-btn view-details-btn">
+                            <i class="fas fa-eye"></i> Xem chi tiết
+                        </a>
+                        <?php if ($order['order_status'] == 'Pending'): ?>
+                            <button class="order-action-btn cancel-order-btn">
+                                <i class="fas fa-times"></i> Hủy đơn hàng
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <div class="no-orders">
+                <i class="fas fa-shopping-bag"></i>
+                <p>Bạn chưa có đơn hàng nào.</p>
+                <a href="../index.php" class="order-action-btn view-details-btn" style="display: inline-block; margin-top: 15px;">
+                    <i class="fas fa-shopping-cart"></i> Mua sắm ngay
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="logo" style="color:#444444;padding-bottom:30px ; height: 150px;">
+        <img src="../img/seafruits-logo.png" alt="seafruits-logo">
+        <div style="padding:10px;">
+            <div>Hotline: 0123456789</div>
+            <div>Email: AboutUs@gmail.com</div>
         </div>
-        <div class="col-md-4">
-            <h3>Thông tin shop</h3>
-            <p>Tên shop: SeaFruits</p>
-            <p>Địa chỉ: 273, An Dương Vương, Quận 5, TPHCM</p>
-            <p>Chúng tôi cung cấp trái cây tươi ngon nhất.</p>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="newslogin.php">Tin tức</a></li>
+                    <li><a href="contactlogin.php">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
         </div>
-    </section>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
+    </div>
+
     <script>
         document.querySelector('.dropdown-button').addEventListener('click', function() {
-          const dropdown = this.parentElement;
-          dropdown.classList.toggle('active');
+            const dropdown = this.parentElement;
+            dropdown.classList.toggle('active');
         });
-        window.addEventListener('click', function(e) {
-          const dropdown = document.querySelector('.dropdown');
-          if (!dropdown.contains(e.target)) {
-            dropdown.classList.remove('active');
-          }
-        });
-      </script>
 
-    <footer>  
-        <div>
-            Copyright by us<b>&#8482</b>
-        </div>
-    </footer>  
+        window.addEventListener('click', function(e) {
+            const dropdown = document.querySelector('.dropdown');
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        function showFruits(category) {
+            let fruitList = document.getElementById("fruitList");
+            let categoryTitle = document.getElementById("categoryTitle");
+            let fruitItems = document.getElementById("fruitItems");
+            
+            categoryTitle.textContent = category;
+            fruitItems.innerHTML = "";
+            
+            const fruits = {
+                "Trái cây ngon": [
+                    { name: "Dâu tây", link: "product-detail.php?name=dautay" },
+                    { name: "Mận hậu", link: "product-detail.php?name=manhau" },
+                    { name: "Xoài cát", link: "product-detail.php?name=xoaicat" },
+                    { name: "Dưa hấu", link: "product-detail.php?name=duahau" },
+                    { name: "Chôm chôm", link: "product-detail.php?name=chomchom" },
+                    { name: "Ổi xá lị", link: "product-detail.php?name=oilaxi" }
+                ],
+                "Trái cây Việt": [
+                    { name: "Mít Thái", link: "product-detail.php?name=mitthai" },
+                    { name: "Sầu riêng Ri6", link: "product-detail.php?name=saurieng" },
+                    { name: "Bưởi da xanh", link: "product-detail.php?name=buoidx" },
+                    { name: "Bòn Bon", link: "product-detail.php?name=bonbon" },
+                    { name: "Quýt đường", link: "product-detail.php?name=quytduong" },
+                    { name: "Mận Hà Nội", link: "product-detail.php?name=manhn" }
+                ],
+                "Trái cây nhập khẩu": [
+                    { name: "Nho Mỹ", link: "product-detail.php?name=nhomy" },
+                    { name: "Táo Nhật", link: "product-detail.php?name=taonhat" },
+                    { name: "Lê Hàn Quốc", link: "product-detail.php?name=lehan" },
+                    { name: "Cherry Úc", link: "product-detail.php?name=cherryuc" },
+                    { name: "Kiwi", link: "product-detail.php?name=kiwi" },
+                    { name: "Lựu Ai Cập", link: "product-detail.php?name=luuaicap" }
+                ]
+            };
+
+            if (fruits[category]) {
+                fruits[category].forEach(fruit => {
+                    let li = document.createElement("li");
+                    let a = document.createElement("a");
+                    a.textContent = fruit.name;
+                    a.href = fruit.link;
+                    li.appendChild(a);
+                    fruitItems.appendChild(li);
+                });
+                fruitList.style.display = "block";
+            }
+        }
+
+        function hideFruits() {
+            let fruitList = document.getElementById("fruitList");
+            fruitList.style.display = "none";
+        }
+    </script>
 </body>
-</html>
+</html> 

@@ -50,7 +50,7 @@ session_start();
         <div style="display: flex; align-items: center; padding: 10px 20px;">  
             <div class="product-category">DANH MỤC SẢN PHẨM</div>  
             <div class="menu">  
-                <a href="../index.php" >Trang chủ</a>  
+                <a href="./userlogin.php" >Trang chủ</a>  
                 <a href="../user/introducelogin.php">Giới thiệu</a>  
                 <a href="../user/newslogin.php">Tin tức</a>  
                 <a href="../user/contactlogin.php">Liên hệ</a>   
@@ -66,38 +66,28 @@ session_start();
                     <button onclick="searchProducts()">Tìm kiếm</button>  
                 </div>  
             </div>  
+            
+            <?php if (isset($_SESSION['user_name'])): ?>
+    <div class="dropdown">
+        <button class="dropdown-button">
+            <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
+            <span>Xin chào, <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong>!</span>
+        </button>
+        <div class="dropdown-menu">
+            <a href="./userinfo.php">Tài khoản</a>
+            <a href="./history-user.php">Lịch sử</a>
+            <a href="./invoice-summary.php">Tóm tắt hóa đơn</a>
+            <a href="../index.php">Đăng xuất</a> 
+        </div>
+    </div>
+<?php endif; ?>
 
-            <div class="dropdown">
-                <button class="dropdown-button">
-                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
-                    <span>
-                        <?php
-                        if (isset($_SESSION['user_name'])) {
-                            echo "Xin chào, <strong>" . htmlspecialchars($_SESSION['user_name']) . "</strong>!";
-                        } else {
-                            echo "Xin chào, khách!";
-                        }
-                        ?>
-                    </span>
-                </button>
-                <div class="dropdown-menu">
-                    <?php if (isset($_SESSION['user_name'])): ?>
-                        <a href="./userinfo.php">Tài khoản</a>
-                        <a href="./history-user.php">Lịch sử</a>
-                        <a href="./invoice-summary.php">Tóm tắt hóa đơn</a>
-                        <a href="./usernologin.php">Đăng xuất</a> 
-                    <?php else: ?>
-                        <a href="./login-user.php">Đăng nhập</a>
-                        <a href="./regis.php">Đăng ký</a>
-                    <?php endif; ?>
-                </div>
-            </div>
         </div> 
     </div> 
 
     <main class="main-content">
     <div class="breadcrumb">
-        <a class="black" href="../index.php">Trang chủ</a> >
+        <a class="black" href="./userlogin.php">Trang chủ</a> >
         <a href="./userinfo.php">Trang khách hàng</a>
     </div>
 
@@ -148,23 +138,6 @@ session_start();
 </main>
 
 
-    <section class="customer_service container">
-        <div class="col-md-4">
-            <h3>Dịch vụ khách hàng</h3>
-            <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn.</p>
-            <ul>
-                <li><strong>Hotline:</strong> 0123 456 789</li>
-                <li><strong>Email:</strong> AboutUs@shop.com</li>
-                <li><strong>Thời gian làm việc:</strong> 8h - 20h hàng ngày</li>
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h3>Thông tin shop</h3>
-            <p>Tên shop: SeaFruits</p>
-            <p>Địa chỉ: 273, An Dương Vương, Quận 5, TPHCM</p>
-            <p>Chúng tôi cung cấp trái cây tươi ngon nhất.</p>
-        </div>
-    </section>
 
     <script>
         document.querySelector('.dropdown-button').addEventListener('click', function() {
@@ -180,11 +153,47 @@ session_start();
         });
     </script>
 
-    <footer>  
-        <div>
-            Copyright by us<b>&#8482</b>
+<div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
-    </footer>  
+    </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                <li><a href="./userlogin.php">Trang chủ</a></li>
+                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="./newslogin.php">Tin tức</a></li>
+                    <li><a href="./contactlogin.php">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
+    </div>
 </body>  
-</html>
-<script src="../User/js/cart.js"> </script>
