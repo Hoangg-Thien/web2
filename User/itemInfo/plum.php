@@ -9,6 +9,33 @@
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="stylesheet" href="../styles/index.css">
 </head>
+<style>
+    .go-back-btn {
+    background-color: #4CAF50; /* Xanh lá cây */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.go-back-btn i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.go-back-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+</style>
 <body>
     <header>
         <a href="#" class="fruit">  
@@ -47,14 +74,10 @@
                 HSD: 3 tuần sau ngày nhập kho<br>
                 Giá: 45.000đ/kg<br>
             </p>
-            <div class="quantity-container">
-                <button class="quantity-btn" id="decrease">-</button>
-                <input type="text" id="quantity" value="1">
-                <button class="quantity-btn" id="increase">+</button>
-            </div>
-            <button class="add-to-cart">
-                <i class="fas fa-shopping-basket"></i> Thêm vào giỏ hàng
-            </button>
+            <button class="go-back-btn">
+    <i class="fas fa-arrow-left"></i> Quay lại
+</button>
+
         </div>
       
         <div id="success-message">
@@ -199,4 +222,8 @@
 </footer>
 
     
-    <script src="../js/function.js"></script>
+<script>
+    document.querySelector('.go-back-btn').addEventListener('click', function () {
+        window.history.back();
+    });
+</script>
