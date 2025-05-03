@@ -40,7 +40,6 @@ $total_amount = $total_row['total_amount'];
 
 $order_date = date('d/m/Y', strtotime($order['order_date']));
 $order_time = date('H:i', strtotime($order['order_date']));
-
 session_start();
 if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
@@ -320,8 +319,8 @@ if (!isset($_SESSION['user_name'])) {
                         <img class="img-head" src="../img/admin.jpg" alt="User Image">
                     </div>
                     <?php if (isset($_SESSION['fullname'])): ?>
-                        <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
-                    <?php endif; ?>
+            <div> Chào mừng trở lại, <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>! </div>
+        <?php endif; ?>
                 </li>
             </ul>
         </nav>

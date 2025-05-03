@@ -166,9 +166,6 @@ if (!isset($_SESSION['user_name'])) {
                             <option value="Trái Cây Nhập Khẩu">Trái Cây Nhập Khẩu</option>
                             <option value="Trái Cây Việt">Trái Cây Việt</option>
                             <option value="Trái Cây Ngon">Trái Cây Ngon</option>
-                            <option value="Rau Củ">Rau Củ</option>
-                            <option value="Trái cây khô">Trái cây khô</option>
-                            <option value="Hạt">Hạt</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
