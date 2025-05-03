@@ -606,7 +606,7 @@ const input = document.getElementById("searchInput");
     input.addEventListener("keyup", function () {
         const query = input.value.trim();
         if (query.length > 0) {
-            fetch(`suggest.php?term=${encodeURIComponent(query)}`)
+            fetch(`./user/suggest.php?term=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     suggestBox.innerHTML = "";
