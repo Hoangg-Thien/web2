@@ -29,7 +29,7 @@
         }
 
         // Tự động set hidden theo status
-        $hidden = (strtolower($status) == 'hết hàng') ? 1 : 0;
+        $hidden = (strtolower($status) == 'đã bán') ? 1 : 0;
 
         // Tạm gán product_link và productnolo_link bằng chuỗi rỗng hoặc khoảng trắng
         $product_link = ' ';

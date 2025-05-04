@@ -30,20 +30,36 @@ function displayProducts(page) {
     let paginatedItems = products.slice(start, end);
 
     paginatedItems.forEach(product => {
-        let row = `
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>${product.product_id}</td>
-                <td>${product.product_name}</td>
-                <td><img src="../img/${product.product_image}" alt="${product.product_name}" width="50"></td>
-                <td><span class="${product.product_status === 'Còn hàng' ? 'available' : 'out-of-stock'}">${product.product_status}</span></td>
-                <td>${product.product_price}</td>
-                <td>${product.product_type}</td>
-                <td>
-                    <button class="btn btn-outline-danger btn-sm trash" title="Xóa" onclick="deleteProduct('${product.product_id}')"><i class="fas fa-trash-alt"></i></button>
-                    <button class="btn btn-outline-warning btn-sm edit" title="Sửa" onclick="editProduct('${product.product_id}')"><i class="fa fa-edit"></i></button>
-                </td>
-            </tr>`;
+        let row = '';
+
+        if (product.hidden === true) {
+            row = `
+                <tr>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                    <td>Ẩn</td>
+                </tr>`;
+        } else {
+            row = `
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>${product.product_id}</td>
+                    <td>${product.product_name}</td>
+                    <td><img src="../img/${product.product_image}" alt="${product.product_name}" width="50"></td>
+                    <td><span class="${product.product_status === 'Còn hàng' ? 'available' : 'out-of-stock'}">${product.product_status}</span></td>
+                    <td>${product.product_price}</td>
+                    <td>${product.product_type}</td>
+                    <td>
+                        <button class="btn btn-outline-danger btn-sm trash" title="Xóa" onclick="deleteProduct('${product.product_id}')"><i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-outline-warning btn-sm edit" title="Sửa" onclick="editProduct('${product.product_id}')"><i class="fa fa-edit"></i></button>
+                    </td>
+                </tr>`;
+        }
         productTable.innerHTML += row;
     });
 
@@ -72,7 +88,7 @@ function deleteProduct(productId) {
     } else {
         modalMessage = `
             <div class="alert alert-info">
-                <strong>Thông báo:</strong> Sản phẩm đã hết hàng. Sẽ ẩn khỏi giao diện.
+                <strong>Thông báo:</strong> Sản phẩm đã hết hàng, sẽ ẩn khỏi giao diện.
             </div>
             <p>Sản phẩm:</p>
             <h4><strong>${product.product_name}</strong></h4>
@@ -115,7 +131,6 @@ function deleteProduct(productId) {
         });
     });
 }
-
 
 // Sửa sản phẩm
 function editProduct(productId) {

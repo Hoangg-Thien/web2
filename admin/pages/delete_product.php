@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-$conn = new mysqli("localhost", "root", "", "website");
+$conn = new mysqli("localhost", "root", "", "c07db");
 if ($conn->connect_error) {
     echo json_encode(["success" => false, "message" => "Kết nối thất bại"]);
     exit;
@@ -14,7 +14,7 @@ if ($product_id === null || $status === null) {
     exit;
 }
 
-if ($status === 'Hết hàng') {
+if (strtolower(trim($status)) === 'hết hàng') {
     // Ẩn sản phẩm thay vì xóa
     $stmt = $conn->prepare("UPDATE sanpham SET hidden = 1 WHERE product_id = ?");
     $stmt->bind_param("s", $product_id);
