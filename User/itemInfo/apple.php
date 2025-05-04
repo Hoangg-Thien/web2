@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="../styles/index.css">
 
 </head>
-<style>
-    .go-back-btn {
+
+<style>.go-back-btn {
     background-color: #4CAF50; /* Xanh lá cây */
     color: white;
     border: none;
@@ -35,7 +35,6 @@
     background-color: #45a049;
     transform: translateY(-2px);
 }
-
 </style>
 <body>
     <header>
@@ -138,10 +137,10 @@
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
                 <ul>
-                    <li><a href="./userlogin.php">Trang chủ</a></li>
-                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
-                    <li><a href="./newslogin.php">Tin tức</a></li>
-                    <li><a href="./contactlogin.html">Liên hệ</a></li>
+                    <li><a href="../user/userlogin.php">Trang chủ</a></li>
+                    <li><a href="../user/introducelogin.php">Giới thiệu</a></li>
+                    <li><a href="../user/newslogin.php">Tin tức</a></li>
+                    <li><a href="../user/contactlogin.php">Liên hệ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -166,6 +165,7 @@
             <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
     </div>
+    </body>
     <script>
     document.querySelector('.go-back-btn').addEventListener('click', function () {
         window.history.back();

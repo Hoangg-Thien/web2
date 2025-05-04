@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="../styles/index.css">
 
 </head>
-<style>
-    .go-back-btn {
+<style>.go-back-btn {
     background-color: #4CAF50; /* Xanh lá cây */
     color: white;
     border: none;
@@ -35,7 +34,6 @@
     background-color: #45a049;
     transform: translateY(-2px);
 }
-
 </style>
 <body>
     <header>
@@ -132,10 +130,10 @@
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
                 <ul>
-                    <li><a href="./userlogin.php">Trang chủ</a></li>
-                    <li><a href="./introducelogin.php">Giới thiệu</a></li>
-                    <li><a href="./newslogin.php">Tin tức</a></li>
-                    <li><a href="./contactlogin.html">Liên hệ</a></li>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="../user/introduce.php">Giới thiệu</a></li>
+                    <li><a href="../user/news.php">Tin tức</a></li>
+                    <li><a href="../user/contact.php">Liên hệ</a></li>
                 </ul>
             </div>
             <div class="footer-section">

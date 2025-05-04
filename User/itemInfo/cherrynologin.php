@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Dưa lưới Bình An</title>  
+    <title>Cherry Úc</title>  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../styles/fruit-info.css">  
     <link rel="stylesheet" href="../styles/grid.css">
     <link rel="stylesheet" href="../styles/index.css">
-
 </head>
 <style>.go-back-btn {
     background-color: #4CAF50; /* Xanh lá cây */
@@ -64,28 +63,22 @@
     </header>
 
     <div class="item-container">
-        <img class="fruit-img" src="../img/dua-luoi-binh-an.jpg" alt="dualuoi">
+        <img class="fruit-img" src="../img/trai-cherry-Uc.jpg">
         <div class="item-info">
             <p>
-                Tên: Dưa lưới Bình An<br>
-                Xuất xứ: Bình Thuận <br>
-                Ngày nhập kho: 14/11/2024<br>
-                HSD: 3-5 ngày sau ngày nhập kho<br>
-                Giá: 16.000đ/kg<br>
+                Tên: Cherry Úc<br>
+                Xuất xứ: Úc <br>
+                Ngày nhập kho: 10/11/2024<br>
+                HSD: 3 tuần sau ngày nhập kho<br>
+                Giá: 160.000đ/kg<br>
             </p>
             <button class="go-back-btn">
     <i class="fas fa-arrow-left"></i> Quay lại
 </button>
 
         </div>
-        <div id="success-overlay"></div>
-        <div id="success-message">
-            <p>Đã thêm vào giỏ hàng thành công!</p>
-            <a href="../user/cart-user.html">Xem giỏ hàng</a>
-            <a href="../user/payment-user.html">Tiến tới thanh toán</a>
-        </div>
-    </div>
-    
+    </div>   
+  
     <div style="max-width: 1500px; overflow: hidden; margin: auto;  margin-top: 100px;">  
         <img src="../img/banner-quang-cao.jpg" alt="banner-quang-cao" style="width: 100%; height: 400px; display: block;">  
     </div>
@@ -136,10 +129,10 @@
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
                 <ul>
-                    <li><a href="../user/userlogin.php">Trang chủ</a></li>
-                    <li><a href="../user/introducelogin.php">Giới thiệu</a></li>
-                    <li><a href="../user/newslogin.php">Tin tức</a></li>
-                    <li><a href="../user/contactlogin.php">Liên hệ</a></li>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="../user/introduce.php">Giới thiệu</a></li>
+                    <li><a href="../user/news.php">Tin tức</a></li>
+                    <li><a href="../user/contact.php">Liên hệ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -164,10 +157,12 @@
             <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
         </div>
     </div>
-</body>
-
-<script>
+    <script>
     document.querySelector('.go-back-btn').addEventListener('click', function () {
         window.history.back();
     });
 </script>
+
+</body>
+
+    

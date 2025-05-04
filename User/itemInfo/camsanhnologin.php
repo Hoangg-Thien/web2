@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="../styles/index.css">
 
 </head>
-<style>
-    .go-back-btn {
+<style>.go-back-btn {
     background-color: #4CAF50; /* Xanh lá cây */
     color: white;
     border: none;
@@ -35,7 +34,6 @@
     background-color: #45a049;
     transform: translateY(-2px);
 }
-
 </style>
 <body>
     <header>
@@ -123,103 +121,48 @@
         </div>
     </div>
 
-    <div class="grid wide" style="justify-content: space-evenly;">
-        <div class="row">
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Về chúng tôi 
-                </a>
-                <div>
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Tin khuyến mãi
-                </a>
-                <div >
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col l-3 m-6 c-12">
-                <a role="button" class="collapsed" data-toggle="collapse" aria-expanded="false" data-target="#collapseListMenu01" aria-controls="collapseListMenu01">
-                    Dịch vụ
-                </a>
-                <div >
-                    <ul >
-                        
-                        <li class="li_menu"><a href="../user/usernologin.html"style="text-decoration: none; color: #333; ">Trang chủ</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Giới thiệu</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Sản phẩm</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Tin tức</a></li>
-                        
-                        <li class="li_menu"><a href="#"style="text-decoration: none;color: #333;">Liên hệ</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col l-3 m-6 c-12">
-                <div >
-    
-                    <div class="social_footer row">
-                        <div>Kết nối với chúng tôi</div>
-                        <ul class="follow_option col l-12 " style="margin-left: -50px;">	
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Facebook Sea Fruits"><i class="fab fa-facebook-f"></i></a>
-                            </li>
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Google Sea Fruits"><i class="fab fa-google"></i></a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Instagam Sea Fruits"><i class="fab fa-instagram"></i></a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="#" title="Theo dõi Youtube Sea Fruits"><i class="fab fa-youtube"></i></a>
-                            </li>
-                            
-                        </ul>
-                    </div>
-    
-
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Sea Fruits - Nơi cung cấp trái cây tươi ngon, chất lượng cao với giá cả hợp lý.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
-            </div>
     </div>
+            <div class="footer-section">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="../index.php">Trang chủ</a></li>
+                    <li><a href="../user/introduce.php">Giới thiệu</a></li>
+                    <li><a href="../user/news.php">Tin tức</a></li>
+                    <li><a href="../user/contact.php">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch vụ</h3>
+                <ul>
+                    <li><a href="#">Giao hàng nhanh</a></li>
+                    <li><a href="#">Đổi trả dễ dàng</a></li>
+                    <li><a href="#">Thanh toán an toàn</a></li>
+                    <li><a href="#">Bảo hành chất lượng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+                    <li><i class="fas fa-phone"></i> Hotline: 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> Email: AboutUs@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sea Fruits. All rights reserved.</p>
+        </div>
     </div>
 
     <script>
@@ -228,10 +171,4 @@
     });
 </script>
 
-
 </body>
-<footer style="width: 100% ;">
-    <div>
-        Copyright by us<b>&#8482</b>
-    </div>
-</footer>

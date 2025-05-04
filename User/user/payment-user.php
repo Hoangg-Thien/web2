@@ -54,7 +54,7 @@ if (isset($_POST['submit_payment'])) { // submit_payment là name="submit_paymen
 <div class="container">
   <h1>THANH TOÁN</h1>
 
-  <form action="process_payment.php" method="post">
+  <form action="invoice.php" method="post">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
   <a href="../index.php" style="text-decoration: none; background: #28a745; color: white; padding: 10px 20px; border-radius: 5px;">
     🏠 Về Trang chủ
