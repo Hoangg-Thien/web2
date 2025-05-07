@@ -282,8 +282,6 @@ if (!isset($_SESSION['user_name'])) {
                             if ($status_text === 'Giao thành công') {
                                 $recipient_name = $order['receipter']; 
                                 echo htmlspecialchars($recipient_name);
-                            } elseif($status_text === 'Đã hủy') {
-                                echo "Không có thông tin người nhận";
                             } else{
                                 echo $order['fullname'];
                             }

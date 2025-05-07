@@ -406,7 +406,7 @@ if (!isset($_SESSION['user_name'])) {
                         <i class="fas fa-map-marker-alt" style="width: 20px; color: #47b475;"></i> <strong>Địa chỉ:</strong> <?php echo $order['user_address']; ?>, <?php echo $order['district']; ?>, <?php echo $order['city']; ?>
                     </p>
             </div>
-            <?php elseif ($order['order_status'] === 'Đã hủy'): ?>
+            <?php ?>
                 <?php else: ?>
                     <div class="invoice-details-col">
                     <h4>THÔNG TIN NGƯỜI NHẬN</h4>
