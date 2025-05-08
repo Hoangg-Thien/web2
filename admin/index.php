@@ -1,4 +1,5 @@
 <?php
+session_name('ADMINSESSID');
 session_start();
 require './pages/connect.php';
 
@@ -51,6 +52,9 @@ if (isset($_SESSION['login_success'])) {
 if (isset($_SESSION['error_message'])) {
     $error_message = $_SESSION['error_message'];
     unset($_SESSION['error_message']);
+}
+
+if(!isset($_SESSION['user_name'])){
 }
 ?>
 

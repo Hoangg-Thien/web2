@@ -1,4 +1,5 @@
 <?php
+session_name('ADMINSESSID');
 session_start();
 if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
@@ -72,11 +73,9 @@ if (!isset($_SESSION['user_name'])) {
         <table>
             <thead>
                 <tr>
-                    <th>Chọn</th>
                     <th>Mã sản phẩm</th>
                     <th>Tên sản phẩm</th>
                     <th>Ảnh</th>
-                    <th>Trạng thái</th>
                     <th>Giá</th>
                     <th>Danh mục</th>
                     <th>Chức năng</th>
@@ -143,7 +142,7 @@ if (!isset($_SESSION['user_name'])) {
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label class="control-label">Mã sản phẩm</label>
-                        <input class="form-control" type="text" id="product-code">
+                        <input class="form-control" type="text" id="product-code" readonly value="">
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Tên sản phẩm</label>
@@ -156,8 +155,8 @@ if (!isset($_SESSION['user_name'])) {
                     <div class="form-group col-md-6">
                         <label class="control-label">Trạng thái</label>
                         <select class="form-control" id="product-status">
-                            <option value="Còn hàng">Còn hàng</option>
-                            <option value="Hết hàng">Hết hàng</option>
+                            <option value="Hiển thị">Hiển thị</option>
+                            <option value="Ẩn">Ẩn</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">

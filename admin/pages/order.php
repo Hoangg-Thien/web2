@@ -1,4 +1,6 @@
 <?php
+session_name('ADMINSESSID');
+session_start();
 require 'connect.php';
 
 $sql = "SELECT * FROM province";
@@ -95,8 +97,6 @@ $total_row = mysqli_fetch_assoc($total_result);
 $total_orders = $total_row['total'];
 $total_pages = ceil($total_orders / $limit);
 
-
-session_start();
 if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
     exit();

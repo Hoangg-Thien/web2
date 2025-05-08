@@ -1,4 +1,7 @@
 <?php
+session_name('ADMINSESSID');
+session_start();
+
 require 'connect.php';
 
 $sql = "SELECT user_name, fullname, user_address, user_email, phone, user_role, user_status, district, city FROM nguoidung";
@@ -19,11 +22,6 @@ $totalRow = $totalResult->fetch_assoc();
 $totalUsers = $totalRow['total'];
 $totalPages = ceil($totalUsers / $limit);
 
-session_start();
-if (!isset($_SESSION['user_name'])) {
-    header("Location: /web2/login.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">

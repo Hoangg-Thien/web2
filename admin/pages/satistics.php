@@ -1,4 +1,7 @@
 <?php
+session_name('ADMINSESSID');
+session_start();
+
 require 'connect.php';
  
 $where_clause = "";
@@ -194,7 +197,6 @@ if ($worst_seller_result && mysqli_num_rows($worst_seller_result) > 0) {
     }
 }
 
-session_start();
 if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
     exit();

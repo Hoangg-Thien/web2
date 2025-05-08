@@ -1,4 +1,6 @@
 <?php
+session_name('ADMINSESSID');
+session_start();
 require 'connect.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -40,7 +42,7 @@ $total_amount = $total_row['total_amount'];
 
 $order_date = date('d/m/Y', strtotime($order['order_date']));
 $order_time = date('H:i', strtotime($order['order_date']));
-session_start();
+
 if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
     exit();

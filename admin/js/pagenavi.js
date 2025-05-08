@@ -30,28 +30,12 @@ function displayProducts(page) {
     let paginatedItems = products.slice(start, end);
 
     paginatedItems.forEach(product => {
-        let row = '';
-
-        if (product.hidden === true) {
+        let row;
             row = `
                 <tr>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                    <td>Ẩn</td>
-                </tr>`;
-        } else {
-            row = `
-                <tr>
-                    <td><input type="checkbox"></td>
                     <td>${product.product_id}</td>
                     <td>${product.product_name}</td>
                     <td><img src="../img/${product.product_image}" alt="${product.product_name}" width="50"></td>
-                    <td><span class="${product.product_status === 'Còn hàng' ? 'available' : 'out-of-stock'}">${product.product_status}</span></td>
                     <td>${product.product_price}</td>
                     <td>${product.product_type}</td>
                     <td>
@@ -59,7 +43,6 @@ function displayProducts(page) {
                         <button class="btn btn-outline-warning btn-sm edit" title="Sửa" onclick="editProduct('${product.product_id}')"><i class="fa fa-edit"></i></button>
                     </td>
                 </tr>`;
-        }
         productTable.innerHTML += row;
     });
 
@@ -76,10 +59,10 @@ function deleteProduct(productId) {
     const status = product.product_status ? product.product_status.trim().toLowerCase() : '';
 
     let modalMessage = '';
-    if (product.product_status === 'Còn hàng') {
+    if (product.product_status === 'Hiển thị') {
         modalMessage = `
             <div class="alert alert-warning">
-                <strong>Cảnh báo!</strong> Sản phẩm này đang còn hàng.
+                <strong>Cảnh báo!</strong> Sản phẩm này đang còn hàng
             </div>
             <p>Bạn có chắc chắn muốn xóa sản phẩm:</p>
             <h4><strong>${product.product_name}</strong></h4>
@@ -88,7 +71,7 @@ function deleteProduct(productId) {
     } else {
         modalMessage = `
             <div class="alert alert-info">
-                <strong>Thông báo:</strong> Sản phẩm đã hết hàng, sẽ ẩn khỏi giao diện.
+                <strong>Thông báo:</strong> Sản phẩm đã hết hàng, sẽ ẩn khỏi giao diện
             </div>
             <p>Sản phẩm:</p>
             <h4><strong>${product.product_name}</strong></h4>
@@ -110,7 +93,7 @@ function deleteProduct(productId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                if (status === 'hết hàng') {
+                if (status === 'Ẩn') {
                     product.hidden = true;
                 } else {
                     const index = products.findIndex(p => p.product_id === productId);

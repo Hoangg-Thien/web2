@@ -225,14 +225,6 @@ th {
     text-align: center !important;
 }  
 
-.available {  
-    color: green;  
-}  
-
-.out-of-stock {  
-    color: red;  
-}  
-
 .btn.green{
     background-color: #4CAF50;
     color: #fff;

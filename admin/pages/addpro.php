@@ -1,4 +1,5 @@
 <?php
+session_name('ADMINSESSID');
 session_start();
 if (!isset($_SESSION['user_name'])) {
     header("Location: /web2/login.php");
