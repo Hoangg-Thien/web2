@@ -22,6 +22,34 @@ $totalRow = $totalResult->fetch_assoc();
 $totalUsers = $totalRow['total'];
 $totalPages = ceil($totalUsers / $limit);
 
+$where_clause = "";
+if (isset($_GET['province']) && !empty($_GET['province'])) {
+    $province_id = $_GET['province'];
+    // Lấy tên tỉnh/thành từ ID
+    $province_sql = "SELECT name FROM province WHERE province_id = '$province_id'";
+    $province_result = mysqli_query($conn, $province_sql);
+    if ($province_result && mysqli_num_rows($province_result) > 0) {
+        $province_data = mysqli_fetch_assoc($province_result);
+        $province_name = mysqli_real_escape_string($conn, trim($province_data['name']));
+        $where_clause .= " AND (hd.city LIKE '%$province_name%' OR hd.address LIKE '%$province_name%')";
+    }
+}
+
+if (isset($_GET['district']) && !empty($_GET['district'])){
+    $district_id = $_GET['district'];
+    // Lấy tên quận/huyện từ ID
+    $district_sql = "SELECT name FROM district WHERE district_id = '$district_id'";
+    $district_result = mysqli_query($conn, $district_sql);
+    if ($district_result && mysqli_num_rows($district_result) > 0) {
+        $district_data = mysqli_fetch_assoc($district_result);
+        $district_name = mysqli_real_escape_string($conn, trim($district_data['name']));
+        $where_clause .= " AND (hd.district LIKE '%$district_name%' OR hd.address LIKE '%$district_name%')";
+    }
+}
+
+// Lấy danh sách tỉnh/thành phố cho form thêm người dùng
+$province_sql = "SELECT province_id, name FROM province ORDER BY name";
+$province_result = $conn->query($province_sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +70,17 @@ $totalPages = ceil($totalUsers / $limit);
             padding-right: 0 !important;
         }
     </style>
+    <script>
+        var currentUsername = "<?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : ''; ?>";
+        console.log("User session hiện tại:", currentUsername);
+        
+        // Hiển thị giá trị session cho debugging
+        <?php if (isset($_SESSION['user_name'])): ?>
+        console.log("PHP session user_name: <?php echo htmlspecialchars($_SESSION['user_name']); ?>");
+        <?php else: ?>
+        console.log("Không có session user_name");
+        <?php endif; ?>
+    </script>
 </head>
 
 <body>
@@ -196,35 +235,35 @@ $totalPages = ceil($totalUsers / $limit);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="control-label">Tên người dùng</label>
-                            <input class="form-control" type="text" id="edit_username" placeholder="Nhập tên người dùng">
+                            <input class="form-control" type="text" id="edit_username" readonly value="">
                         </div>
                         <div class="form-group col-md-6">
                             <label class="control-label">Họ và tên</label>
-                            <input class="form-control" type="text" id="edit_fullname" placeholder="Nhập họ và tên">
+                            <input class="form-control" type="text" id="edit_fullname">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Địa chỉ</label>
-                            <input class="form-control" type="text" id="edit_address" placeholder="Nhập địa chỉ">
+                            <input class="form-control" type="text" id="edit_address">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Email</label>
-                            <input class="form-control" type="text" id="edit_email" placeholder="Nhập email">
+                            <input class="form-control" type="text" id="edit_email">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Số điện thoại</label>
-                            <input class="form-control" type="text" id="edit_phone" placeholder="Nhập số điện thoại">
+                            <input class="form-control" type="text" id="edit_phone">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
-                            <label class="control-label">Quận</label>
-                            <input class="form-control" type="text" id="edit_district" placeholder="Nhập quận">
+                            <label class="control-label">Thành phố/ Tỉnh</label>
+                            <input class="form-control" type="text" id="edit_city">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
-                            <label class="control-label">Thành phố</label>
-                            <input class="form-control" type="text" id="edit_city" placeholder="Nhập thành phố">
+                            <label class="control-label">Quận/ Huyện</label>
+                            <input class="form-control" type="text" id="edit_district">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Vai trò</label>
-                            <input class="form-control" type="text" id="edit_role" placeholder="Nhập vai trò">
+                            <input class="form-control" type="text" id="edit_role">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Trạng thái</label>
@@ -265,7 +304,7 @@ $totalPages = ceil($totalUsers / $limit);
         </div>
     </div>
 
-    <!--add user-->
+    <!--them-->
     <div class="modal fade" id="ModalKP" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -291,27 +330,43 @@ $totalPages = ceil($totalUsers / $limit);
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Số điện thoại</label>
-                            <input class="form-control" type="email" id="phone" placeholder="Nhập số điện thoại">
+                            <input class="form-control" type="text" id="phone" placeholder="Nhập số điện thoại">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Địa chỉ</label>
-                            <input class="form-control" type="email" id="address" placeholder="Nhập địa chỉ">
+                            <input class="form-control" type="text" id="address" placeholder="Nhập địa chỉ">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
-                            <label class="control-label">Quận</label>
-                            <input class="form-control" type="text" id="district" placeholder="Nhập quận">
+                            <label for="province">Tỉnh/Thành Phố</label>
+                            <select id="province" name="province" class="form-control">
+                            <option value="">Chọn một tỉnh/thành phố</option>
+                            <?php
+                                if ($province_result && $province_result->num_rows > 0) {
+                                    while ($row = $province_result->fetch_assoc()) {
+                                    ?>
+                                        <option value="<?php echo $row['province_id']; ?>"><?php echo $row['name']; ?></option>
+                                    <?php
+                                    }
+                                }
+                                ?>
+                            </select>
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
-                            <label class="control-label">Thành phố</label>
-                            <input class="form-control" type="text" id="city" placeholder="Nhập thành phố">
+                            <label for="district">Quận/Huyện</label>
+                            <select id="district" name="district" class="form-control">
+                                <option value="">Chọn một quận/huyện</option>
+                            </select>
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Email</label>
-                            <input class="form-control" type="email" id="email" placeholder="Nhập email">
+                            <input class="form-control" type="text" id="email" placeholder="Nhập email">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                             <label class="control-label">Vai trò</label>
-                            <input class="form-control" type="text" id="role" placeholder="Nhập vai trò">
+                            <select class="form-control" id="role">
+                            <option value="Khách hàng">Khách hàng</option>
+                            <option value="Quản lý">Quản lý</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -327,5 +382,45 @@ $totalPages = ceil($totalUsers / $limit);
 
     <script src="../js/adjust_user.js"></script>
     <script src = "../js/nextpage.js"></script>
+
+    <script>
+    $(document).ready(function(){
+        $('#province').change(function(){
+            var province_id = $(this).val();
+            if(province_id != ''){
+                $.ajax({
+                    url: 'get_district.php',
+                    type: 'GET',
+                    dataType: 'json',  
+                    data: {province_id: province_id},
+                    success: function(response){
+                        try {
+                            var data = typeof response === 'string' ? JSON.parse(response) : response;
+                            var options = '<option value="">Chọn một quận/huyện</option>';
+                            if(Array.isArray(data)) {
+                                data.forEach(function(item) {
+                                    if(item.id && item.name) {
+                                        options += '<option value="' + item.id + '">' + item.name + '</option>';
+                                    }
+                                });
+                            }
+                            $('#district').html(options);
+                        } catch(e) {
+                            console.error('Lỗi xử lý dữ liệu:', e);
+                            $('#district').html('<option value="">Chọn một quận/huyện</option>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Lỗi AJAX:', error);
+                        console.log('Response:', xhr.responseText);
+                        $('#district').html('<option value="">Chọn một quận/huyện</option>');
+                    }
+                });
+            } else {
+                $('#district').html('<option value="">Chọn một quận/huyện</option>');
+            }
+        });
+    });
+    </script>
 </body>
 </html>

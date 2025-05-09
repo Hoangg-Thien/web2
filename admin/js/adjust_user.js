@@ -76,13 +76,21 @@ $(document).ready(function () {
 
     $(".lock").click(function() {
         var row = $(this).closest("tr");
-        var username = row.find("td:eq(0)").text();
+        var username = row.find("td:eq(0)").text().trim();
         var status = row.find("td:eq(6)").text().trim();
         
-        $("#ModalRL .modal-body").html("Bạn có chắc chắn muốn khóa người dùng <strong>" + username + "</strong> không?");
-        $("#ModalRL").modal("show");
+        console.log("Người dùng hiện tại:", currentUsername);
+        console.log("Người dùng cần khóa:", username);
         
-        $("#ModalRL").data("username", username);
+        if(username.trim() === currentUsername.trim()) {
+            alert("Bạn không thể khóa tài khoản của chính mình!");
+            console.log("Khóa bị chặn: Đang cố khóa tài khoản của chính mình");
+            return;
+        } else {
+            $("#ModalRL .modal-body").html("Bạn có chắc chắn muốn khóa người dùng <strong>" + username + "</strong> không?");
+            $("#ModalRL").modal("show");
+            $("#ModalRL").data("username", username);
+        }
     });
 
     $("#ModalRL #saveBtn").click(function() {
@@ -151,10 +159,27 @@ $(document).ready(function () {
         var fullname = $("#fullname").val();
         var phone = $("#phone").val();
         var address = $("#address").val();
-        var district = $("#district").val();
-        var city = $("#city").val();
+        var district = $("#district option:selected").text();
+        var city = $("#province option:selected").text();
         var email = $("#email").val();
         var role = $("#role").val();
+        
+        console.log("Thông tin người dùng mới:", {
+            username: username,
+            password: password,
+            fullname: fullname,
+            phone: phone,
+            address: address,
+            district: district,
+            city: city,
+            email: email,
+            role: role
+        });
+        
+        if (!username || !password || !fullname || !phone || !email) {
+            alert("Vui lòng điền đầy đủ thông tin trong các trường bắt buộc!");
+            return;
+        }
         
         $.ajax({
             url: "add_user.php",
@@ -170,12 +195,25 @@ $(document).ready(function () {
                 email: email,
                 role: role
             },
+            dataType: "json",
             success: function(response) {
-                alert("Thêm người dùng mới thành công");
-                location.reload();
+                console.log("Phản hồi từ server:", response);
+                if (response.status === "success") {
+                    alert("Thêm người dùng mới thành công");
+                    location.reload();
+                } else {
+                    alert("Lỗi: " + response.message);
+                }
             },
             error: function(xhr, status, error) {
-                alert("Lỗi: " + error);
+                console.error("Lỗi AJAX:", error);
+                console.log("Phản hồi từ server:", xhr.responseText);
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    alert("Lỗi: " + response.message);
+                } catch (e) {
+                    alert("Lỗi khi thêm người dùng: " + error);
+                }
             }
         });
     });

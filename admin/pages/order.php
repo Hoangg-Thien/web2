@@ -191,7 +191,7 @@ if (!isset($_SESSION['user_name'])) {
                             ?>
                 </select>
             </div>
-            <div class="form-group">
+                <div class="form-group">
                           <label for="district">Quận/Huyện</label>
                           <select id="district" name="district" class="form-control">
                               <option value="">Chọn một quận/huyện</option>

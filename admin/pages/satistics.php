@@ -25,7 +25,7 @@ $orders_sql = "SELECT hd.order_id, hd.order_date, nd.fullname,
                WHERE cthd.order_id = hd.order_id) as total_amount
               FROM hoadon hd 
               LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
-              WHERE 1=1 $where_clause
+              WHERE 1=1 AND hd.order_status = 'Giao thành công' $where_clause
               ORDER BY hd.order_date DESC";
 
 $orders_result = mysqli_query($conn, $orders_sql);
@@ -83,7 +83,7 @@ $top_products_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp
                     FROM sanpham sp
                     JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
                     JOIN hoadon hd ON cthd.order_id = hd.order_id
-                    WHERE 1=1 $where_clause
+                    WHERE 1=1 AND hd.order_status = 'Giao thành công' $where_clause
                     GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
                     ORDER BY total_sold DESC
                     LIMIT 5";
@@ -99,7 +99,7 @@ if ($top_products_result && mysqli_num_rows($top_products_result) > 0) {
                       JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
                       LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
                       WHERE cthd.product_id = '{$product['product_id']}'
-                      $where_clause
+                      AND hd.order_status = 'Giao thành công' $where_clause
                       ORDER BY hd.order_date DESC";
 
         $product_orders_result = mysqli_query($conn, $product_orders_sql);
@@ -124,7 +124,7 @@ $best_seller_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp.
                     FROM sanpham sp
                     JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
                     JOIN hoadon hd ON cthd.order_id = hd.order_id
-                    WHERE 1=1 $where_clause
+                    WHERE 1=1 AND hd.order_status = 'Giao thành công' $where_clause
                     GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
                     ORDER BY total_sold DESC
                     LIMIT 1";
@@ -138,7 +138,7 @@ $worst_seller_sql = "SELECT sp.product_id, sp.product_name, sp.product_price, sp
                     COALESCE(SUM(cthd.quantity * sp.product_price), 0) as total_revenue
                     FROM sanpham sp
                     LEFT JOIN chitiethoadon cthd ON sp.product_id = cthd.product_id
-                    LEFT JOIN hoadon hd ON cthd.order_id = hd.order_id AND (1=1 $where_clause)
+                    LEFT JOIN hoadon hd ON cthd.order_id = hd.order_id AND (1=1 AND hd.order_status = 'Giao thành công' $where_clause)
                     GROUP BY sp.product_id, sp.product_name, sp.product_price, sp.product_image
                     HAVING total_sold > 0
                     ORDER BY total_sold ASC
@@ -157,7 +157,7 @@ if ($best_seller_result && mysqli_num_rows($best_seller_result) > 0) {
                       JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
                       LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
                       WHERE cthd.product_id = '{$best_seller['product_id']}'
-                      $where_clause
+                      AND hd.order_status = 'Giao thành công' $where_clause
                       ORDER BY hd.order_date DESC";
 
     $product_orders_result = mysqli_query($conn, $product_orders_sql);
@@ -182,7 +182,7 @@ if ($worst_seller_result && mysqli_num_rows($worst_seller_result) > 0) {
                       JOIN chitiethoadon cthd ON hd.order_id = cthd.order_id
                       LEFT JOIN nguoidung nd ON hd.user_name = nd.user_name
                       WHERE cthd.product_id = '{$worst_seller['product_id']}'
-                      $where_clause
+                      AND hd.order_status = 'Giao thành công' $where_clause
                       ORDER BY hd.order_date DESC";
 
     $product_orders_result = mysqli_query($conn, $product_orders_sql);

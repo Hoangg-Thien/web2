@@ -91,8 +91,8 @@ if (!isset($_SESSION['user_name'])) {
                         <label for="status">Tình trạng</label>
                         <select id="status" name="status">
                             <option value="">-- Chọn tình trạng --</option>
-                            <option value="Còn hàng">Còn hàng</option>
-                            <option value="Hết hàng">Hết hàng</option>
+                            <option value="Hiển thị">Hiển thị</option>
+                            <option value="Ẩn">Ẩn</option>
                         </select>
                     </div>
                     <div class="form-group">
