@@ -25,6 +25,7 @@ function displayProducts(page) {
     const productTable = document.getElementById("productTable");
     productTable.innerHTML = "";
 
+    // Hiển thị tất cả sản phẩm, không lọc theo hidden
     let start = (page - 1) * itemsPerPage;
     let end = start + itemsPerPage;
     let paginatedItems = products.slice(start, end);
@@ -48,6 +49,7 @@ function displayProducts(page) {
 
     setupPagination();
 }
+
 // Xóa sản phẩm
 function deleteProduct(productId) {
     const product = products.find(p => p.product_id === productId);
@@ -55,8 +57,6 @@ function deleteProduct(productId) {
         alert("Sản phẩm không tồn tại.");
         return;
     }
-
-    const status = product.product_status ? product.product_status.trim().toLowerCase() : '';
 
     let modalMessage = '';
     if (product.product_status === 'Hiển thị') {
@@ -83,6 +83,8 @@ function deleteProduct(productId) {
     $('#ModalRM').modal('show');
 
     $('#confirmDelete').off('click').on('click', function() {
+        console.log("Xóa sản phẩm với trạng thái:", product.product_status);
+        
         fetch('delete_product.php', {
             method: 'POST',
             headers: {
@@ -92,12 +94,18 @@ function deleteProduct(productId) {
         })
         .then(response => response.json())
         .then(data => {
+            console.log("Phản hồi từ server:", data);
+            
             if (data.success) {
-                if (status === 'Ẩn') {
-                    product.hidden = true;
-                } else {
-                    const index = products.findIndex(p => p.product_id === productId);
-                    if (index !== -1) {
+                const index = products.findIndex(p => p.product_id === productId);
+                if (index !== -1) {
+                    if (product.product_status === 'Ẩn') {
+                        // Nếu sản phẩm đang ẩn, cập nhật trạng thái hidden
+                        console.log("Cập nhật hidden = 1 cho sản phẩm:", productId);
+                        products[index].hidden = 1;
+                    } else {
+                        // Xóa sản phẩm khỏi mảng hiển thị
+                        console.log("Xóa sản phẩm khỏi mảng:", productId);
                         products.splice(index, 1);
                     }
                 }
@@ -139,6 +147,7 @@ function editProduct(productId) {
             alert("Có lỗi xảy ra khi tải dữ liệu sản phẩm.");
         });
 }
+
 function setupPagination() {
     const pagination = document.getElementById("pagination");
     const totalPages = Math.ceil(products.length / itemsPerPage);
