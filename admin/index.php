@@ -65,7 +65,6 @@ if(!isset($_SESSION['user_name'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <style>
-    /* CSS giữ nguyên như bạn gửi */
     * {
         margin: 0;
         padding: 0;
@@ -168,7 +167,7 @@ if(!isset($_SESSION['user_name'])){
         const loginSuccess = <?= json_encode($showAlert) ?>;
         if (loginSuccess) {
             alert("Đăng nhập thành công");
-            window.location.href = "/web2/admin/pages/usermanage.php";
+            window.location.replace("/web2/admin/pages/usermanage.php");
         }
     </script>
 </head>

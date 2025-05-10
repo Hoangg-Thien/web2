@@ -1,8 +1,18 @@
 <?php
 session_name('ADMINSESSID');
 session_start();
-if (!isset($_SESSION['user_name'])) {
-    header("Location: /web2/login.php");
+
+// Kiểm tra xem người dùng đã đăng nhập hay chưa
+if (!isset($_SESSION['user_name']) || empty($_SESSION['user_name'])) {
+    // Không cho phép truy cập trực tiếp, chuyển hướng về trang đăng nhập
+    header("Location: /web2/admin/index.php");
+    exit();
+}
+
+// Kiểm tra xem người dùng có quyền admin không
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Quản lý') {
+    // Không có quyền admin, chuyển hướng về trang chính
+    header("Location: /web2/admin/index.php");
     exit();
 }
 ?>
@@ -50,7 +60,7 @@ if (!isset($_SESSION['user_name'])) {
         <a class="icon-denim icon-denim-active" href="./prolist.php" target="_self"><i class="fa-solid fa-box-archive"></i> Tất cả sản phẩm</a>
         <a class="icon-denim" href="./addpro.php" target="_self"> <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
         <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê tình hình</a>
-        <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        <a class="icon-denim" href="./logout.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
         </ul>
     </div>
 

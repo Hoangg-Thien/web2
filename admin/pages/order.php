@@ -1,6 +1,21 @@
 <?php
 session_name('ADMINSESSID');
 session_start();
+
+// Kiểm tra xem người dùng đã đăng nhập hay chưa
+if (!isset($_SESSION['user_name']) || empty($_SESSION['user_name'])) {
+    // Không cho phép truy cập trực tiếp, chuyển hướng về trang đăng nhập
+    header("Location: /web2/admin/index.php");
+    exit();
+}
+
+// Kiểm tra xem người dùng có quyền admin không
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Quản lý') {
+    // Không có quyền admin, chuyển hướng về trang chính
+    header("Location: /web2/admin/index.php");
+    exit();
+}
+
 require 'connect.php';
 
 $sql = "SELECT * FROM province";
@@ -97,10 +112,6 @@ $total_row = mysqli_fetch_assoc($total_result);
 $total_orders = $total_row['total'];
 $total_pages = ceil($total_orders / $limit);
 
-if (!isset($_SESSION['user_name'])) {
-    header("Location: /web2/login.php");
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -148,7 +159,7 @@ if (!isset($_SESSION['user_name'])) {
             phẩm</a>
         <a class="icon-denim" href="./satistics.php" target="_self"> <i class="fa-solid fa-chart-column"></i> Thống kê
             tình hình</a>
-        <a class="icon-denim" href="../index.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
+        <a class="icon-denim" href="./logout.php" target="_self"><i class="fa-solid fa-user-xmark"></i> Đăng xuất</a>
         </ul>
     </div>
 
