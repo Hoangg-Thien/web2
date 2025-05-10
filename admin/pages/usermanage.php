@@ -152,6 +152,7 @@ $province_result = $conn->query($province_sql);
             <table>
                 <thead>
                     <tr>
+                        <th>Tên người dùng</th>
                         <th>Họ và tên</th>
                         <th>Địa chỉ</th>
                         <th>Email</th>
@@ -167,6 +168,7 @@ $province_result = $conn->query($province_sql);
                         while($row = $result->fetch_assoc()) {
                     ?>
                     <tr>
+                        <td><?php echo $row["user_name"]; ?></td>
                         <td><?php echo $row["fullname"]; ?></td>
                         <td><?php echo $row["user_address"] . ", " . $row["district"] . ", " . $row["city"]; ?></td>
                         <td><?php echo $row["user_email"]; ?> </td>
