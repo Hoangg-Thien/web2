@@ -62,16 +62,15 @@ function deleteProduct(productId) {
     if (product.product_status === 'Hiển thị') {
         modalMessage = `
             <div class="alert alert-warning">
-                <strong>Cảnh báo!</strong> Sản phẩm này đang còn hàng
+                <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa sản phẩm này:
             </div>
-            <p>Bạn có chắc chắn muốn xóa sản phẩm:</p>
             <h4><strong>${product.product_name}</strong></h4>
             <small>Mã sản phẩm: ${product.product_id}</small>
         `;
     } else {
         modalMessage = `
             <div class="alert alert-info">
-                <strong>Thông báo:</strong> Sản phẩm đã hết hàng, sẽ ẩn khỏi giao diện
+                <strong>Thông báo:</strong> Sẽ ẩn khỏi giao diện
             </div>
             <p>Sản phẩm:</p>
             <h4><strong>${product.product_name}</strong></h4>
