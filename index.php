@@ -475,20 +475,22 @@ $total = 0;
             $start = ($page - 1) * $limit;
 
             // Tổng số sản phẩm
-            $totalQuery = "SELECT COUNT(*) AS total FROM sanpham";
+            $totalQuery = "SELECT COUNT(*) as total FROM sanpham WHERE hidden = 0";
             $totalResult = $conn->query($totalQuery);
             $totalRow = $totalResult->fetch_assoc();
             $totalProducts = $totalRow['total'];
             $totalPages = ceil($totalProducts / $limit);
 
             // Truy vấn sản phẩm theo trang
-            $sql = "SELECT * FROM sanpham LIMIT $start, $limit";
+            $sql = "SELECT * FROM sanpham WHERE hidden = 0 LIMIT $start, $limit";
             $result = $conn->query($sql);
 
             // Hiển thị sản phẩm
             if ($result->num_rows > 0) {
                 echo '<div class="image-container">';
+                $count = 0;
                 while ($row = $result->fetch_assoc()) {
+                    $count++;
                     echo '<div class="fruit-background">
                         <img src="./User/img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '">
                         <div class="caption">
@@ -504,6 +506,14 @@ $total = 0;
                             </button>
                         </div>
                     </div>';
+                }
+                // Điền các ô trống nếu số sản phẩm không đủ 3 trong hàng cuối
+                $remainder = $count % 3;
+                if ($remainder > 0) {
+                    $emptySlots = 3 - $remainder;
+                    for ($i = 0; $i < $emptySlots; $i++) {
+                        echo '<div class="col l-4 m-6 c-6" style="visibility: hidden;"></div>';
+                    }
                 }
                 echo '</div>';
 

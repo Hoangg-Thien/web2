@@ -420,70 +420,81 @@ session_start();
     $start = ($page - 1) * $limit;
 
     // Lấy tổng số sản phẩm
-    $totalQuery = "SELECT COUNT(*) as total FROM sanpham";
+    $totalQuery = "SELECT COUNT(*) as total FROM sanpham WHERE hidden = 0";
     $totalResult = $conn->query($totalQuery);
     $totalRow = $totalResult->fetch_assoc();
     $totalProducts = $totalRow['total'];
     $totalPages = ceil($totalProducts / $limit);
 
     // Truy vấn sản phẩm theo trang
-    $sql = "SELECT * FROM sanpham LIMIT $start, $limit";
+    $sql = "SELECT * FROM sanpham WHERE hidden = 0 LIMIT $start, $limit";
     $result = $conn->query($sql);
 
     // Hiển thị sản phẩm
     if ($result->num_rows > 0) {
         echo '<div class="row image-container">';
+        $count = 0;
         while ($row = $result->fetch_assoc()) {
-        echo '
-        <div class="col l-4 m-6 c-6">
-            <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
-                <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
+            $count++;
+            echo '
+            <div class="col l-4 m-6 c-6">
+                <div class="fruit-background" style="padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1);">
+                    <img src="../img/' . $row['product_image'] . '" alt="' . htmlspecialchars($row['product_name']) . '" width="100%" style="border-radius: 12px;">
 
-                <div class="caption" style="margin-top: 10px; font-weight: bold;">
-                    ' . htmlspecialchars($row['product_name']) . '<br>
-                    ' . number_format($row['product_price'], 0, ',', '.') . ' VND
-                </div>
+                    <div class="caption" style="margin-top: 10px; font-weight: bold;">
+                        ' . htmlspecialchars($row['product_name']) . '<br>
+                        ' . number_format($row['product_price'], 0, ',', '.') . ' VND
+                    </div>
 
-                <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
-                    <a href="../itemInfo/' . $row['product_link'] . '" class="info-icon" title="Xem thông tin chi tiết">
-                        <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </a>
-                    <button class="add-to-cart"
-                data-id="' . $row['product_id'] . '"
-                data-name="' . htmlspecialchars($row['product_name']) . '"
-                data-price="' . $row['product_price'] . '">
-                <i class="fas fa-cart-plus fa-lg"></i>
-            </button>
+                    <div class="icons" style="margin-top: 10px; display: flex; gap: 10px;">
+                        <a href="../itemInfo/' . $row['product_link'] . '" class="info-icon" title="Xem thông tin chi tiết">
+                            <i class="fa-solid fa-circle-info fa-lg"></i>
+                        </a>
+                        <button class="add-to-cart"
+                    data-id="' . $row['product_id'] . '"
+                    data-name="' . htmlspecialchars($row['product_name']) . '"
+                    data-price="' . $row['product_price'] . '">
+                    <i class="fas fa-cart-plus fa-lg"></i>
+                </button>
+                    </div>
                 </div>
-            </div>
-        </div>';
+            </div>';
+        }
+        
+        // Điền các ô trống nếu số sản phẩm không đủ 3 trong hàng cuối
+        $remainder = $count % 3;
+        if ($remainder > 0) {
+            $emptySlots = 3 - $remainder;
+            for ($i = 0; $i < $emptySlots; $i++) {
+                echo '<div class="col l-4 m-6 c-6" style="visibility: hidden;"></div>';
+            }
+        }
+        echo '</div>';
+    } else {
+        echo "<p>Không có sản phẩm nào.</p>";
     }
+
+    // Hiển thị phân trang
+    echo '<div class="pagination">';
+
+    // Nút "Trang trước"
+    if ($page > 1) {
+        echo '<a href="?page=' . ($page - 1) . '" class="page-link">&laquo; Trước</a>';
+    }
+
+    // Hiển thị tất cả số trang (kể cả chỉ có 1 trang)
+    for ($i = 1; $i <= $totalPages; $i++) {
+        echo '<a href="?page=' . $i . '" class="page-link ' . ($i == $page ? 'active' : '') . '">' . $i . '</a>';
+    }
+
+    // Nút "Trang sau"
+    if ($page < $totalPages) {
+        echo '<a href="?page=' . ($page + 1) . '" class="page-link">Sau &raquo;</a>';
+    }
+
     echo '</div>';
-} else {
-    echo "<p>Không có sản phẩm nào.</p>";
-}
 
-// Hiển thị phân trang
-echo '<div class="pagination">';
-
-// Nút "Trang trước"
-if ($page > 1) {
-    echo '<a href="?page=' . ($page - 1) . '" class="page-link">&laquo; Trước</a>';
-}
-
-// Hiển thị tất cả số trang (kể cả chỉ có 1 trang)
-for ($i = 1; $i <= $totalPages; $i++) {
-    echo '<a href="?page=' . $i . '" class="page-link ' . ($i == $page ? 'active' : '') . '">' . $i . '</a>';
-}
-
-// Nút "Trang sau"
-if ($page < $totalPages) {
-    echo '<a href="?page=' . ($page + 1) . '" class="page-link">Sau &raquo;</a>';
-}
-
-echo '</div>';
-
-$conn->close();
+    $conn->close();
 ?>
 
 
