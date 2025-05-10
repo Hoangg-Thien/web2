@@ -148,7 +148,7 @@ $province_result = $conn->query($province_sql);
             <button style="outline: none; margin-bottom: 24px;" class="btn green1" onclick=""><i class="fa-solid fa-plus"></i> Thêm
                 mới</button>
 
-            <div class="table-responsive" style="overflow-x: auto; width: 100%;"">
+            <div class="table-responsive" style="overflow-x: auto; width: 100%;">
             <table>
                 <thead>
                     <tr>
@@ -351,7 +351,7 @@ $province_result = $conn->query($province_sql);
                             <input class="form-control" type="text" id="address" placeholder="Nhập địa chỉ">
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
-                            <label for="province">Tỉnh/Thành Phố</label>
+                            <label for="province">Thành Phố/ Tỉnh</label>
                             <select id="province" name="province" class="form-control">
                             <option value="">Chọn một tỉnh/thành phố</option>
                             <?php
@@ -366,7 +366,7 @@ $province_result = $conn->query($province_sql);
                             </select>
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
-                            <label for="district">Quận/Huyện</label>
+                            <label for="district">Quận/ Huyện</label>
                             <select id="district" name="district" class="form-control">
                                 <option value="">Chọn một quận/huyện</option>
                             </select>

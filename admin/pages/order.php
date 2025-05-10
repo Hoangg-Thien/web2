@@ -190,7 +190,7 @@ $total_pages = ceil($total_orders / $limit);
             </div>
 
             <div class="col-6 p-0" style="margin-bottom: 10px;">
-                <label for="locationFilter">Tỉnh/Thành Phố</label>
+                <label for="locationFilter">Thành Phố/ Tỉnh</label>
                 <select id="province" name="province" class="form-control">
                 <option value="">Chọn một tỉnh/thành phố</option>
                 <?php
@@ -203,7 +203,7 @@ $total_pages = ceil($total_orders / $limit);
                 </select>
             </div>
                 <div class="form-group">
-                          <label for="district">Quận/Huyện</label>
+                          <label for="district">Quận/ Huyện</label>
                           <select id="district" name="district" class="form-control">
                               <option value="">Chọn một quận/huyện</option>
                           </select>
