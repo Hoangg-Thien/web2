@@ -417,7 +417,9 @@
                 <a href="../user/contactlogin.php">Liên hệ</a>   
                 <a href="../user/cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">  
                     <i class="fas fa-shopping-cart"></i>  
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
+    <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
+</span>
                 </a>  
             </div>  
             <div class="search-container">
@@ -468,7 +470,7 @@
                 <div class="dropdown-menu">
                   <a href="../user/userinfo.php">Tài khoản</a>
                   <a href="../user/history-user.php">Lịch sử</a>
-                  <a href="../user/invoice-summary.php">Tóm tắt hóa đơn</a>
+                  <a href="../user/bill-summary.php.php">Tóm tắt hóa đơn</a>
                   <a href="../user/usernologin.php">Đăng xuất</a>
                 </div>
             </div>
@@ -710,6 +712,14 @@ const input = document.getElementById("searchInput");
     };
     </script>
 
-
+<script>
+function updateCart(action, productId) {
+    fetch('/web-final/User/user/cart-handle.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action, product_id: productId})
+    }).then(() => location.reload());
+}
+</script>
     </body>
 </html>

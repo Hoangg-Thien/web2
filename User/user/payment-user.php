@@ -147,7 +147,7 @@ if (isset($_SESSION['cart'])) {
 
       <!-- Thẻ tín dụng -->
       <label class="payment-option">
-        <input type="radio" name="payment_method" value="credit_card" checked onchange="togglePaymentMethod()">
+        <input type="radio" name="payment_method" value="credit_card" onchange="togglePaymentMethod()">
         Thẻ tín dụng
       </label>
       <div class="credit-card-info">

@@ -635,7 +635,7 @@ $total = 0;
                     <?php if (isset($_SESSION['user_name'])): ?>
                         <a href="userinfo.php">Tài khoản</a>
                         <a href="history-user.php">Lịch sử</a>
-                        <a href="invoice-summary.php">Tóm tắt hóa đơn</a>
+                        <a href="bill-summary.php">Tóm tắt hóa đơn</a>
                         <a href="usernologin.php">Đăng xuất</a>
                     <?php else: ?>
                         <a href="login-user.php">Đăng nhập</a>
