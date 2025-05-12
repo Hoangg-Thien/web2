@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 <!DOCTYPE html>  
 <html lang="vi">  
@@ -288,8 +289,10 @@ session_start();
                 <a href="./newslogin.php">Tin tức</a>  
                 <a href="./contactlogin.php">Liên hệ</a> 
                 <a href="./cart-user.php" target="_blank" class="cart-icon" title="Go to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">0</span>
+                    <i class="fas fa-shopping-cart"></i>  
+                    <span id="cart-count" style="margin-left: 5px; font-weight: bold;">
+    <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
+</span>
                 </a>
             </div>  
             <div class="search-container">
@@ -344,7 +347,7 @@ session_start();
         <div class="dropdown-menu">
             <a href="./userinfo.php">Tài khoản</a>
             <a href="./history-user.php">Lịch sử</a>
-            <a href="./invoice-summary.php">Tóm tắt hóa đơn</a>
+            <a href="./bill-summary.php">Tóm tắt hóa đơn</a>
             <a href="./logout.php">Đăng xuất</a> 
         </div>
     </div>
@@ -443,7 +446,8 @@ session_start();
                     <button class="add-to-cart"
                 data-id="' . $row['product_id'] . '"
                 data-name="' . htmlspecialchars($row['product_name']) . '"
-                data-price="' . $row['product_price'] . '">
+                data-price="' . $row['product_price'] . '"
+                data-link=" ' .  $row['product_link'] . '">
                 <i class="fas fa-cart-plus fa-lg"></i>
             </button>
                 </div>
@@ -570,15 +574,17 @@ $conn->close();
          const productId = this.dataset.id;
          const productName = this.dataset.name;
          const productPrice = this.dataset.price;
+           const productLink = this.dataset.link; // ✅ Thêm dòng này
  
-         fetch('/web2/User/user/cart-handle.php', {
+         fetch('/web-final/User/user/cart-handle.php', {
              method: 'POST',
              headers: {'Content-Type': 'application/json'},
              body: JSON.stringify({
                  action: 'add',
                  product_id: productId,
                  product_name: productName,
-                 product_price: productPrice
+                 product_price: productPrice,
+                 product_link: productLink 
              })
          }).then(res => res.json())
            .then(data => {
@@ -673,6 +679,14 @@ document.querySelector('.dropdown-button').addEventListener('click', function() 
         }
     };
     </script>  
+
+    <script>function updateCart(action, productId) {
+    fetch('/web-final/User/user/cart-handle.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action, product_id: productId})
+    }).then(() => location.reload());
+}</script>
 
      
 </body>  

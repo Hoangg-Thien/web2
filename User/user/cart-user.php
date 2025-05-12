@@ -2,6 +2,9 @@
 session_start();
 $cart = $_SESSION['cart'] ?? [];
 $total = 0;
+
+
+
 ?>
 <!DOCTYPE html>  
 <html lang="vi">  
@@ -345,7 +348,7 @@ $total = 0;
         <div class="dropdown-menu">
             <a href="./userinfo.php">Tài khoản</a>
             <a href="./history-user.php">Lịch sử</a>
-            <a href="./invoice-summary.php">Tóm tắt hóa đơn</a>
+            <a href="./bill-summary.php">Tóm tắt hóa đơn</a>
             <a href="../index.php">Đăng xuất</a> 
         </div>
     </div>
@@ -361,6 +364,7 @@ $total = 0;
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr style="background-color: #f7f7f7;">
+                 <th style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Thông tin</th>
                 <th style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Sản phẩm</th>
                 <th style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Đơn giá</th>
                 <th style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Số lượng</th>
@@ -375,6 +379,13 @@ $total = 0;
                     $total += $subtotal;
                 ?>
                     <tr>
+                         <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">
+  <a href="../itemInfo/<?= htmlspecialchars($item['product_link']) ?>" class="info-icon" title="Xem thông tin chi tiết">
+    <i class="fa-solid fa-circle-info fa-lg"></i>
+</a>
+
+</td>
+
                         <td style="padding: 12px; border: 1px solid #ddd; text-align: center;"> <?= htmlspecialchars($item['name']) ?> </td>
                         <td style="padding: 12px; border: 1px solid #ddd; text-align: center;"> <?= number_format($item['price']) ?>₫ </td>
                         <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">
@@ -565,7 +576,7 @@ document.querySelector('.dropdown-button').addEventListener('click', function() 
 
 <script>
 function updateCart(action, productId) {
-    fetch('/web2/User/user/cart-handle.php', {
+    fetch('/web-final/User/user/cart-handle.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action, product_id: productId})

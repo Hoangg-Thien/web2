@@ -3,8 +3,6 @@
 include 'connect.php';
 session_start();
 
-
-
 if (!isset($_SESSION['payment_info'])) {
     echo "Không có dữ liệu đơn hàng.";
     exit();
@@ -12,36 +10,40 @@ if (!isset($_SESSION['payment_info'])) {
 
 $payment_info = $_SESSION['payment_info']; // THIẾT YẾU
 
-
-// Xử lý khi người dùng xác nhận đơn hàng
-// Xử lý khi người dùng xác nhận đơn hàng
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_order'])) {
     $pdo = new PDO("mysql:host=localhost;dbname=c07db", "root", "");
 
     try {
         $pdo->beginTransaction();
 
-        // Thêm vào bảng đơn hàng
+        // ✅ Ánh xạ phương thức thanh toán sang tiếng Việt
+        $methods = [
+            'cod' => 'Thanh toán khi nhận hàng',
+            'credit_card' => 'Thẻ tín dụng',
+            'bank_transfer' => 'Chuyển khoản'
+        ];
+        $payment_method_vn = $methods[$payment_info['payment_method']] ?? 'Không xác định';
+
+        // Thêm vào bảng hoadon
         $stmt = $pdo->prepare("INSERT INTO hoadon (order_status, order_date, user_name, district, city, PaymentMethod, phone, address, customerName, receipter) 
                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        // Dữ liệu từ payment_info được thêm vào cột trong DB
         $stmt->execute([
-            'Chưa xác nhận', // order_status
-            $payment_info['order_date'], // order_date
-            $_SESSION['user_name'], // user_name
-            $payment_info['district'], // district
-            $payment_info['city'], // city
-            $payment_info['payment_method'] === 'cod' ? 'Thanh toán khi nhận hàng' : 'Thẻ tín dụng', // PaymentMethod
-            $payment_info['phone'], // phone
-            $payment_info['address'], // address
-            $payment_info['full_name'], // customerName
-            $payment_info['full_name'] // receipter (giả sử người nhận là khách hàng)
+            'Chưa xác nhận',                        // order_status
+            $payment_info['order_date'],            // order_date
+            $_SESSION['user_name'],                 // user_name
+            $payment_info['district'],              // district
+            $payment_info['city'],                  // city
+            $payment_method_vn,                     // ✅ PaymentMethod tiếng Việt
+            $payment_info['phone'],                 // phone
+            $payment_info['address'],               // address
+            $payment_info['full_name'],             // customerName
+            $payment_info['full_name']              // receipter
         ]);
 
-        $order_id = $pdo->lastInsertId(); // Lấy id của đơn hàng mới được tạo
+        $order_id = $pdo->lastInsertId(); // Lấy ID đơn hàng vừa thêm
 
-        // Thêm chi tiết đơn hàng vào bảng order_details
+        // Thêm chi tiết đơn hàng
         foreach ($_SESSION['cart'] as $product_id => $item) {
             $stmt_detail = $pdo->prepare("INSERT INTO chitiethoadon (order_id, product_id, total_amount, quantity, unit_price)
                                           VALUES (?, ?, ?, ?, ?)");
@@ -53,16 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_order'])) {
                 $item['price']
             ]);
         }
-        
-        
 
-        
-
-        // Commit transaction
         $pdo->commit();
 
-        // Chạy SweetAlert thông báo và chuyển trang
-        echo "<script>
+        // Hiển thị thông báo thành công
+        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+              <script>
                 setTimeout(function() {
                     Swal.fire({
                         title: 'Đặt hàng thành công!',
@@ -70,20 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_order'])) {
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then(function() {
-                        window.location.href = 'cart-user.php'; // Chuyển đến trang giỏ hàng
+                        window.location.href = 'bill-summary.php';
                     });
                 }, 1000);
               </script>";
     } catch (Exception $e) {
-        // Rollback transaction nếu có lỗi
         $pdo->rollBack();
         echo "Lỗi: " . $e->getMessage();
     }
-
 }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -257,7 +252,15 @@ td {
             <p>Địa chỉ: <?= htmlspecialchars($payment_info['address']) ?></p>
             <p>Số điện thoại: <?= htmlspecialchars($payment_info['phone']) ?></p>
             <p>Email: <?= htmlspecialchars($payment_info['email']) ?></p>
-            <p>Phương thức thanh toán: <?= $payment_info['payment_method'] === 'cod' ? 'Thanh toán khi nhận hàng' : 'Thẻ tín dụng' ?></p>
+            <?php
+$methods = [
+  'cod' => 'Thanh toán khi nhận hàng',
+  'credit_card' => 'Thẻ tín dụng',
+  'bank_transfer' => 'Chuyển khoản'
+];
+$method_display = $methods[$payment_info['payment_method']] ?? 'Không xác định';
+?>
+<p>Phương thức thanh toán: <?= $method_display ?></p>
         </div>
         
         <div class="order-details">
@@ -293,7 +296,7 @@ td {
        
             <div class="button-container">
                 <button type="submit" name="confirm_order" class="btn btn-success">Xác nhận đơn hàng</button>
-                <button onclick="window.location.href='cart-user.php';" class="btn btn-secondary">Quay lại giỏ hàng</button>
+                <button onclick="window.location.href='bill-summary.php';" class="btn btn-secondary">Quay lại giỏ hàng</button>
             </div>
         </form>
 </body>
